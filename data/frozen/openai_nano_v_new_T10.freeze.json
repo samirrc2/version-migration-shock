@@ -1,0 +1,9 @@
+{
+  "pair": "openai_nano",
+  "version": "v_new",
+  "tag": "_T10",
+  "csv": "runs_openai_nano_v_new_T10.csv",
+  "sha256": "98d40280e498a0c629552aad34aa315dc6a55ed696952b8df18883835eaad031",
+  "n_rows": 72,
+  "frozen_utc": "2026-07-04T18:25:57.241466+00:00"
+}

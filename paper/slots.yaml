@@ -1,0 +1,28 @@
+required_claims:
+  - excess_flip_rate.value
+  - excess_flip_rate.ci_low
+  - excess_flip_rate.ci_high
+  - cross_version_flip_rate.value
+  - within_version_flip_rate.value
+  - prevalence.marginal_shift
+  - prevalence.churn
+  - prevalence.cohen_kappa
+  - context_coverage.frac_real
+  - agreement.scott_pi
+  - agreement.gwet_ac1
+  - precision.excess_ci_halfwidth
+  - accuracy.hit_rate_old
+  - accuracy.hit_rate_new
+  - accuracy.flip_conditional_delta
+  - accuracy.flip_conditional_ci_low
+  - accuracy.flip_conditional_ci_high
+  - conviction_shift.value
+  - implied_turnover.fraction
+  - dose_response.instability_contrast
+  - dose_response.conviction_slope
+  - mcnemar.p_display
+  - n_matched_cells
+  - design.calls_per_version
+  - design.calls_per_pair
+  - design.calls_two_pairs
+tolerance: 0.0005

@@ -1,0 +1,55 @@
+seed_master: 20260703
+bootstrap_seed: 42
+bootstrap_draws: 2000
+forward_return_days: 20
+
+inputs_dir: "inputs"
+
+subgrids:
+  minipilot:
+    tickers: [AAPL, MSFT, JPM, XOM, UNH, CAT, GOOGL, PG]
+    dates: ["2026-04-17", "2026-05-15"]
+  tempsweep:
+    tickers: [AAPL, MSFT, NVDA, JPM, XOM, CAT, UNH, GOOGL]
+    dates: ["2026-02-06", "2026-04-17", "2026-05-15"]
+  pilot:
+    tickers: [AAPL, MSFT, NVDA, JPM, BAC, GS, XOM, CVX, SLB, LIN, FCX,
+              CAT, BA, HON, NEE, DUK, UNH, JNJ, LLY, AMZN, TSLA, PG, KO, GOOGL]
+    dates: ["2026-02-06", "2026-04-17", "2026-05-15"]
+  full:
+    tickers: [
+      AAPL, MSFT, NVDA, AVGO, CRM, ORCL, ADBE, AMD, CSCO, ACN,
+      JPM, BAC, WFC, GS, MS, C, AXP, SCHW, BLK, SPGI,
+      XOM, CVX, COP, SLB, EOG, MPC, PSX, WMB, OXY,
+      LIN, SHW, FCX, NEM, APD, ECL, DOW, NUE,
+      CAT, BA, HON, UNP, GE, RTX, DE, LMT, UPS, ETN,
+      NEE, DUK, SO, D, AEP, EXC, SRE, XEL,
+      UNH, JNJ, LLY, PFE, ABBV, MRK, TMO, ABT, DHR, BMY,
+      AMZN, TSLA, HD, MCD, NKE, LOW, SBUX, BKNG, TJX, GM,
+      PG, KO, PEP, COST, WMT, MDLZ, CL, MO, TGT,
+      GOOGL, META, NFLX, DIS, CMCSA, VZ, T, TMUS,
+      PLD, AMT, EQIX, SPG, O, CCI, PSA, DLR,
+    ]
+    dates: ["2026-01-09", "2026-01-23", "2026-02-06", "2026-02-20",
+            "2026-03-06", "2026-03-20", "2026-04-03", "2026-04-17",
+            "2026-05-01", "2026-05-15", "2026-05-22", "2026-05-29"]
+
+sectors:
+  Information Technology: [AAPL, MSFT, NVDA, AVGO, CRM, ORCL, ADBE, AMD, CSCO, ACN]
+  Financials: [JPM, BAC, WFC, GS, MS, C, AXP, SCHW, BLK, SPGI]
+  Energy: [XOM, CVX, COP, SLB, EOG, MPC, PSX, WMB, OXY]
+  Materials: [LIN, SHW, FCX, NEM, APD, ECL, DOW, NUE]
+  Industrials: [CAT, BA, HON, UNP, GE, RTX, DE, LMT, UPS, ETN]
+  Utilities: [NEE, DUK, SO, D, AEP, EXC, SRE, XEL]
+  Health Care: [UNH, JNJ, LLY, PFE, ABBV, MRK, TMO, ABT, DHR, BMY]
+  Consumer Discretionary: [AMZN, TSLA, HD, MCD, NKE, LOW, SBUX, BKNG, TJX, GM]
+  Consumer Staples: [PG, KO, PEP, COST, WMT, MDLZ, CL, MO, TGT]
+  Communication Services: [GOOGL, META, NFLX, DIS, CMCSA, VZ, T, TMUS]
+  Real Estate: [PLD, AMT, EQIX, SPG, O, CCI, PSA, DLR]
+
+spend_cap_usd: 15.0
+stop_margin_usd: 0.5
+max_retries: 5
+concurrency: 24
+rpm_limits: {openai: 3000, google: 1000, xai: 1000}
+tempsweep_temperatures: [0.0, 0.7, 1.0]

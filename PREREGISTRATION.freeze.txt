@@ -1,0 +1,12 @@
+PREREGISTRATION.md freeze receipt
+=================================
+task     : credit_health (SAFE / WATCH / DISTRESS from reported financials)
+sha256   : 4f1d0667a2551d3b71e19fe909dbc47d92e0695e7dd2fbb35ed22fbe877b5a2e
+frozen   : 2026-07-04T17:10:14Z
+status   : frozen BEFORE any credit-task data collection -> both pairs confirmatory
+
+Supersedes: the earlier directional-task pre-registration (withdrawn; in git history).
+
+To verify:
+  shasum -a 256 PREREGISTRATION.md
+  (must equal the sha256 above; any edit invalidates the freeze)

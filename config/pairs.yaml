@@ -1,0 +1,24 @@
+defaults:
+  temperature: 0.0
+  seed_policy: cell_parity
+  n_replicates: 3
+  unit: single_model
+
+pairs:
+  - id: openai_nano
+    provider: openai
+    v_old: gpt-5-nano-2025-08-07
+    v_new: gpt-5.4-nano
+    v_old_shutdown: "2026-12-11"
+    note: "Vendor-declared replacement (OpenAI deprecations page). Same family."
+
+  - id: gemini_flash
+    provider: google
+    v_old: gemini-2.5-flash
+    v_new: gemini-3.5-flash
+    v_old_shutdown: "2026-10-16"
+    note: "Tightest clock. Vendor-declared replacement (Gemini deprecations page)."
+
+pilot:
+  pair: openai_nano
+  subgrid: pilot

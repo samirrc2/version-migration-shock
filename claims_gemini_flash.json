@@ -1,0 +1,304 @@
+{
+  "meta": {
+    "pair": "gemini_flash",
+    "bootstrap_seed": 42,
+    "bootstrap_draws": 2000,
+    "data_mode": "REAL",
+    "context_mode": "price_derived",
+    "primary_endpoint": "excess_flip_rate = cross_version - within_version"
+  },
+  "excess_flip_rate.value": 0.3806,
+  "excess_flip_rate.ci_low": 0.3025,
+  "excess_flip_rate.ci_high": 0.4583,
+  "cross_version_flip_rate.value": 0.3886,
+  "within_version_flip_rate.value": 0.0081,
+  "prevalence.marginal_shift": 0.3186,
+  "prevalence.churn": 0.07,
+  "prevalence.churn_ci_low": 0.0292,
+  "prevalence.churn_ci_high": 0.12,
+  "prevalence.cohen_kappa": 0.3257,
+  "context_coverage.frac_real": 1.0,
+  "agreement.scott_pi": 0.2732,
+  "agreement.gwet_ac1": 0.4696,
+  "precision.excess_ci_halfwidth": 0.0779,
+  "accuracy.hit_rate_old": 0.4942,
+  "accuracy.hit_rate_new": 0.425,
+  "accuracy.flip_conditional_delta": -0.1785,
+  "accuracy.flip_conditional_ci_low": -0.38,
+  "accuracy.flip_conditional_ci_high": 0.0302,
+  "conviction_shift.value": 0.8211,
+  "implied_turnover.fraction": 0.2014,
+  "dose_response.instability_contrast": 0.2496,
+  "dose_response.conviction_slope": -0.2171,
+  "mcnemar.chi2": 265.0,
+  "mcnemar.p_display": "1.39e-59",
+  "n_matched_cells": 3600,
+  "detail": {
+    "pair": "gemini_flash",
+    "n_matched_cells": 3600,
+    "context_mode": "price_derived",
+    "context_coverage": {
+      "frac_real": 1.0
+    },
+    "agreement": {
+      "observed_agreement": 0.6113888888888889,
+      "cohen_kappa": 0.32573086990276756,
+      "scott_pi": 0.27315199030638415,
+      "gwet_ac1": 0.4695986949752022
+    },
+    "accuracy": {
+      "available": true,
+      "ground_truth": "altman_z",
+      "hit_rate_old": 0.49416666666666664,
+      "n_scored_old": 1200,
+      "ci_old": [
+        0.46594220917347995,
+        0.5224283538640491
+      ],
+      "hit_rate_new": 0.425,
+      "n_scored_new": 1200,
+      "ci_new": [
+        0.39731288362030154,
+        0.4531657840050736
+      ],
+      "flip_hit_rate_old": 0.41935483870967744,
+      "flip_hit_rate_new": 0.24086021505376345,
+      "flip_conditional_new_minus_old": -0.17849462365591398,
+      "flip_conditional_ci": [
+        -0.38004750593824227,
+        0.03017241379310348
+      ],
+      "n_flip_scored_old": 465,
+      "n_flip_scored_new": 465
+    },
+    "precision": {
+      "excess_ci_halfwidth": 0.07791666666666669
+    },
+    "decomposition": {
+      "within_version_v_old": {
+        "flip_rate": 0.01611111111111111,
+        "n_pairs": 3600
+      },
+      "within_version_v_new": {
+        "flip_rate": 0.0,
+        "n_pairs": 3600
+      },
+      "within_version_pooled": {
+        "flip_rate": 0.008055555555555555,
+        "n_pairs": 7200
+      },
+      "cross_version": {
+        "flip_rate": 0.38861111111111113,
+        "n_pairs": 3600
+      },
+      "excess_flip_rate_point": 0.3805555555555556
+    },
+    "excess_flip_rate": {
+      "value": 0.3805555555555556,
+      "ci": [
+        0.3025,
+        0.45833333333333337
+      ],
+      "cross": 0.38861111111111113,
+      "within": 0.008055555555555555,
+      "n_tickers": 100,
+      "n_boot": 2000
+    },
+    "prevalence": {
+      "n": 3600,
+      "gross_flip_rate": 0.38861111111111113,
+      "marginal_shift": 0.3186111111111111,
+      "churn": 0.07,
+      "marginals_v_old": {
+        "SAFE": 0.3888888888888889,
+        "WATCH": 0.5252777777777777,
+        "DISTRESS": 0.08583333333333333
+      },
+      "marginals_v_new": {
+        "SAFE": 0.7075,
+        "WATCH": 0.2808333333333333,
+        "DISTRESS": 0.011666666666666667
+      },
+      "cohen_kappa": 0.32573086990276756,
+      "churn_ci": [
+        0.029166666666666674,
+        0.12
+      ],
+      "cohen_kappa_ci": [
+        0.21762165355337915,
+        0.4387398740768913
+      ]
+    },
+    "conviction_shift": {
+      "value": 0.8211111111111111,
+      "n": 3600,
+      "ci": [
+        0.7033333333333334,
+        0.9236111111111112
+      ]
+    },
+    "implied_turnover": {
+      "mean_abs_dpos": 0.4027777777777778,
+      "turnover_fraction": 0.2013888888888889,
+      "n": 3600,
+      "ci": [
+        0.15958333333333333,
+        0.24375
+      ]
+    },
+    "dose_response_instability": {
+      "table": {
+        "stable": {
+          "flip_rate": 0.3825789923142613,
+          "n": 3513
+        },
+        "unstable": {
+          "flip_rate": 0.632183908045977,
+          "n": 87
+        }
+      },
+      "unstable_minus_stable": 0.24960491573171573,
+      "slope_per_instability": 0.7488147471951704
+    },
+    "dose_response_conviction": {
+      "table": {
+        "3": {
+          "flip_rate": 0.5891062929666843,
+          "n": 1891
+        },
+        "4": {
+          "flip_rate": 0.0890625,
+          "n": 1280
+        },
+        "5": {
+          "flip_rate": 0.3986013986013986,
+          "n": 429
+        }
+      },
+      "slope_per_conviction_point": -0.21714536002250195,
+      "n_distinct_conviction": 3
+    },
+    "mcnemar_directional": {
+      "b": 0,
+      "c": 267,
+      "chi2": 265.00374531835206,
+      "p_value": 1.3927022395064053e-59,
+      "n_discordant": 267
+    },
+    "strata": {
+      "by_sector": {
+        "Communication Services": {
+          "flip_rate": 0.15625,
+          "n": 288
+        },
+        "Consumer Discretionary": {
+          "flip_rate": 0.6555555555555556,
+          "n": 360
+        },
+        "Consumer Staples": {
+          "flip_rate": 0.5277777777777778,
+          "n": 324
+        },
+        "Energy": {
+          "flip_rate": 0.12345679012345678,
+          "n": 324
+        },
+        "Financials": {
+          "flip_rate": 0.6166666666666667,
+          "n": 360
+        },
+        "Health Care": {
+          "flip_rate": 0.2777777777777778,
+          "n": 360
+        },
+        "Industrials": {
+          "flip_rate": 0.4861111111111111,
+          "n": 360
+        },
+        "Information Technology": {
+          "flip_rate": 0.39166666666666666,
+          "n": 360
+        },
+        "Materials": {
+          "flip_rate": 0.3298611111111111,
+          "n": 288
+        },
+        "Real Estate": {
+          "flip_rate": 0.4166666666666667,
+          "n": 288
+        },
+        "Utilities": {
+          "flip_rate": 0.1875,
+          "n": 288
+        }
+      },
+      "by_date": {
+        "2026-01-09": {
+          "flip_rate": 0.39666666666666667,
+          "n": 300
+        },
+        "2026-01-23": {
+          "flip_rate": 0.3933333333333333,
+          "n": 300
+        },
+        "2026-02-06": {
+          "flip_rate": 0.4066666666666667,
+          "n": 300
+        },
+        "2026-02-20": {
+          "flip_rate": 0.37666666666666665,
+          "n": 300
+        },
+        "2026-03-06": {
+          "flip_rate": 0.37666666666666665,
+          "n": 300
+        },
+        "2026-03-20": {
+          "flip_rate": 0.4,
+          "n": 300
+        },
+        "2026-04-03": {
+          "flip_rate": 0.39666666666666667,
+          "n": 300
+        },
+        "2026-04-17": {
+          "flip_rate": 0.3933333333333333,
+          "n": 300
+        },
+        "2026-05-01": {
+          "flip_rate": 0.37,
+          "n": 300
+        },
+        "2026-05-15": {
+          "flip_rate": 0.38333333333333336,
+          "n": 300
+        },
+        "2026-05-22": {
+          "flip_rate": 0.39,
+          "n": 300
+        },
+        "2026-05-29": {
+          "flip_rate": 0.38,
+          "n": 300
+        }
+      }
+    },
+    "transition_matrix": {
+      "SAFE": {
+        "SAFE": 1382,
+        "WATCH": 18,
+        "DISTRESS": 0
+      },
+      "WATCH": {
+        "SAFE": 1114,
+        "WATCH": 777,
+        "DISTRESS": 0
+      },
+      "DISTRESS": {
+        "SAFE": 51,
+        "WATCH": 216,
+        "DISTRESS": 42
+      }
+    }
+  }
+}

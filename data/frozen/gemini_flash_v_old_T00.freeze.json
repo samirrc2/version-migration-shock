@@ -1,0 +1,9 @@
+{
+  "pair": "gemini_flash",
+  "version": "v_old",
+  "tag": "_T00",
+  "csv": "runs_gemini_flash_v_old_T00.csv",
+  "sha256": "94168235070472deaa95070c31f0d85d31a14eeb5bf9d3bf7a0eaf283ccc126d",
+  "n_rows": 72,
+  "frozen_utc": "2026-07-04T21:44:46.505533+00:00"
+}

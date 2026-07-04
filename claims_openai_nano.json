@@ -1,0 +1,308 @@
+{
+  "meta": {
+    "pair": "openai_nano",
+    "bootstrap_seed": 42,
+    "bootstrap_draws": 2000,
+    "data_mode": "REAL",
+    "context_mode": "price_derived",
+    "primary_endpoint": "excess_flip_rate = cross_version - within_version"
+  },
+  "excess_flip_rate.value": 0.1116,
+  "excess_flip_rate.ci_low": 0.0772,
+  "excess_flip_rate.ci_high": 0.1495,
+  "cross_version_flip_rate.value": 0.2166,
+  "within_version_flip_rate.value": 0.105,
+  "prevalence.marginal_shift": 0.0946,
+  "prevalence.churn": 0.1221,
+  "prevalence.churn_ci_low": 0.0834,
+  "prevalence.churn_ci_high": 0.1611,
+  "prevalence.cohen_kappa": 0.6032,
+  "context_coverage.frac_real": 1.0,
+  "agreement.scott_pi": 0.6007,
+  "agreement.gwet_ac1": 0.7027,
+  "precision.excess_ci_halfwidth": 0.0361,
+  "accuracy.hit_rate_old": 0.5392,
+  "accuracy.hit_rate_new": 0.5642,
+  "accuracy.flip_conditional_delta": 0.1235,
+  "accuracy.flip_conditional_ci_low": -0.1639,
+  "accuracy.flip_conditional_ci_high": 0.4179,
+  "conviction_shift.value": 0.1602,
+  "implied_turnover.fraction": 0.1083,
+  "dose_response.instability_contrast": 0.3295,
+  "dose_response.conviction_slope": 0.1066,
+  "mcnemar.chi2": 74.63,
+  "mcnemar.p_display": "5.67e-18",
+  "n_matched_cells": 3490,
+  "detail": {
+    "pair": "openai_nano",
+    "n_matched_cells": 3490,
+    "context_mode": "price_derived",
+    "context_coverage": {
+      "frac_real": 1.0
+    },
+    "agreement": {
+      "observed_agreement": 0.783381088825215,
+      "cohen_kappa": 0.6031953240803126,
+      "scott_pi": 0.6007431778266923,
+      "gwet_ac1": 0.7027414988726228
+    },
+    "accuracy": {
+      "available": true,
+      "ground_truth": "altman_z",
+      "hit_rate_old": 0.5391666666666667,
+      "n_scored_old": 1200,
+      "ci_old": [
+        0.5108832058801392,
+        0.5672001565821648
+      ],
+      "hit_rate_new": 0.5641666666666667,
+      "n_scored_new": 1200,
+      "ci_new": [
+        0.5359497216477651,
+        0.591974084939414
+      ],
+      "flip_hit_rate_old": 0.3950617283950617,
+      "flip_hit_rate_new": 0.5185185185185185,
+      "flip_conditional_new_minus_old": 0.12345679012345678,
+      "flip_conditional_ci": [
+        -0.16386554621848737,
+        0.41791044776119407
+      ],
+      "n_flip_scored_old": 243,
+      "n_flip_scored_new": 243
+    },
+    "precision": {
+      "excess_ci_halfwidth": 0.03611940467056197
+    },
+    "decomposition": {
+      "within_version_v_old": {
+        "flip_rate": 0.12001148435256963,
+        "n_pairs": 3483
+      },
+      "within_version_v_new": {
+        "flip_rate": 0.09007720903631684,
+        "n_pairs": 3497
+      },
+      "within_version_pooled": {
+        "flip_rate": 0.10501432664756447,
+        "n_pairs": 6980
+      },
+      "cross_version": {
+        "flip_rate": 0.2166189111747851,
+        "n_pairs": 3490
+      },
+      "excess_flip_rate_point": 0.11160458452722063
+    },
+    "excess_flip_rate": {
+      "value": 0.11160458452722063,
+      "ci": [
+        0.07724690051673404,
+        0.14948570985785797
+      ],
+      "cross": 0.2166189111747851,
+      "within": 0.10501432664756447,
+      "n_tickers": 100,
+      "n_boot": 2000
+    },
+    "prevalence": {
+      "n": 3490,
+      "gross_flip_rate": 0.2166189111747851,
+      "marginal_shift": 0.09455587392550144,
+      "churn": 0.12206303724928366,
+      "marginals_v_old": {
+        "SAFE": 0.30401146131805157,
+        "WATCH": 0.5879656160458453,
+        "DISTRESS": 0.10802292263610315
+      },
+      "marginals_v_new": {
+        "SAFE": 0.20945558739255013,
+        "WATCH": 0.6355300859598854,
+        "DISTRESS": 0.15501432664756448
+      },
+      "cohen_kappa": 0.6031953240803126,
+      "churn_ci": [
+        0.08338108882521489,
+        0.16112385321100914
+      ],
+      "cohen_kappa_ci": [
+        0.5053976375367082,
+        0.6876762901330852
+      ]
+    },
+    "conviction_shift": {
+      "value": 0.16017191977077364,
+      "n": 3490,
+      "ci": [
+        0.07358053302433372,
+        0.24957216200798632
+      ]
+    },
+    "implied_turnover": {
+      "mean_abs_dpos": 0.2166189111747851,
+      "turnover_fraction": 0.10830945558739255,
+      "n": 3490,
+      "ci": [
+        0.08537978298115363,
+        0.13334288169578917
+      ]
+    },
+    "dose_response_instability": {
+      "table": {
+        "stable": {
+          "flip_rate": 0.1583710407239819,
+          "n": 2873
+        },
+        "unstable": {
+          "flip_rate": 0.4878444084278768,
+          "n": 617
+        }
+      },
+      "unstable_minus_stable": 0.3294733677038949,
+      "slope_per_instability": 0.9737916570153857
+    },
+    "dose_response_conviction": {
+      "table": {
+        "2": {
+          "flip_rate": 0.3333333333333333,
+          "n": 3
+        },
+        "3": {
+          "flip_rate": 0.1518926689027312,
+          "n": 2087
+        },
+        "4": {
+          "flip_rate": 0.3338595106550908,
+          "n": 1267
+        },
+        "5": {
+          "flip_rate": 0.11278195488721804,
+          "n": 133
+        }
+      },
+      "slope_per_conviction_point": 0.10658345322283237,
+      "n_distinct_conviction": 4
+    },
+    "mcnemar_directional": {
+      "b": 260,
+      "c": 96,
+      "chi2": 74.63202247191012,
+      "p_value": 5.6715751423344896e-18,
+      "n_discordant": 356
+    },
+    "strata": {
+      "by_sector": {
+        "Communication Services": {
+          "flip_rate": 0.04225352112676056,
+          "n": 284
+        },
+        "Consumer Discretionary": {
+          "flip_rate": 0.3659942363112392,
+          "n": 347
+        },
+        "Consumer Staples": {
+          "flip_rate": 0.08038585209003216,
+          "n": 311
+        },
+        "Energy": {
+          "flip_rate": 0.4240506329113924,
+          "n": 316
+        },
+        "Financials": {
+          "flip_rate": 0.2964071856287425,
+          "n": 334
+        },
+        "Health Care": {
+          "flip_rate": 0.2257142857142857,
+          "n": 350
+        },
+        "Industrials": {
+          "flip_rate": 0.1069364161849711,
+          "n": 346
+        },
+        "Information Technology": {
+          "flip_rate": 0.07222222222222222,
+          "n": 360
+        },
+        "Materials": {
+          "flip_rate": 0.14893617021276595,
+          "n": 282
+        },
+        "Real Estate": {
+          "flip_rate": 0.3745583038869258,
+          "n": 283
+        },
+        "Utilities": {
+          "flip_rate": 0.2490974729241877,
+          "n": 277
+        }
+      },
+      "by_date": {
+        "2026-01-09": {
+          "flip_rate": 0.21107266435986158,
+          "n": 289
+        },
+        "2026-01-23": {
+          "flip_rate": 0.19863013698630136,
+          "n": 292
+        },
+        "2026-02-06": {
+          "flip_rate": 0.23367697594501718,
+          "n": 291
+        },
+        "2026-02-20": {
+          "flip_rate": 0.20689655172413793,
+          "n": 290
+        },
+        "2026-03-06": {
+          "flip_rate": 0.22448979591836735,
+          "n": 294
+        },
+        "2026-03-20": {
+          "flip_rate": 0.23711340206185566,
+          "n": 291
+        },
+        "2026-04-03": {
+          "flip_rate": 0.22184300341296928,
+          "n": 293
+        },
+        "2026-04-17": {
+          "flip_rate": 0.24041811846689895,
+          "n": 287
+        },
+        "2026-05-01": {
+          "flip_rate": 0.1952054794520548,
+          "n": 292
+        },
+        "2026-05-15": {
+          "flip_rate": 0.21575342465753425,
+          "n": 292
+        },
+        "2026-05-22": {
+          "flip_rate": 0.21649484536082475,
+          "n": 291
+        },
+        "2026-05-29": {
+          "flip_rate": 0.19791666666666666,
+          "n": 288
+        }
+      }
+    },
+    "transition_matrix": {
+      "SAFE": {
+        "SAFE": 696,
+        "WATCH": 365,
+        "DISTRESS": 0
+      },
+      "WATCH": {
+        "SAFE": 35,
+        "WATCH": 1757,
+        "DISTRESS": 260
+      },
+      "DISTRESS": {
+        "SAFE": 0,
+        "WATCH": 96,
+        "DISTRESS": 281
+      }
+    }
+  }
+}

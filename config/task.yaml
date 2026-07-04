@@ -1,0 +1,34 @@
+# Active task definition. Switching `active` re-points the whole pipeline (prompt,
+# category labels, ordinal severity for churn/turnover, and ground-truth scoring)
+# without touching the capture/analysis engine. Categories drive the 3-way flip /
+# churn / agreement machinery, which is label-agnostic.
+
+active: credit_health
+
+tasks:
+  credit_health:
+    prompt_file: prompt_credit.txt
+    categories: [SAFE, WATCH, DISTRESS]
+    ordinal: {SAFE: 0, WATCH: 1, DISTRESS: 2}   # severity; churn/turnover = mean |dtier|
+    drift_label: DISTRESS                        # McNemar tests drift TOWARD this label
+    abstain_label: null                          # no abstention in credit classification
+    ground_truth: altman_z                       # Altman Z'' band per filing
+    doc_kind: fundamentals
+
+  earnings_surprise:
+    prompt_file: prompt_earnings.txt
+    categories: [BEAT, MEET, MISS]
+    ordinal: {BEAT: 1, MEET: 0, MISS: -1}
+    drift_label: BEAT
+    abstain_label: null
+    ground_truth: earnings_surprise
+    doc_kind: fundamentals
+
+  directional:                                   # the original task, kept selectable
+    prompt_file: prompt_template.txt
+    categories: [BUY, HOLD, SELL]
+    ordinal: {BUY: 1, HOLD: 0, SELL: -1}
+    drift_label: BUY
+    abstain_label: HOLD
+    ground_truth: forward_return
+    doc_kind: price_derived
