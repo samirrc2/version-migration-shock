@@ -2,7 +2,7 @@ PY ?= python3
 PAIR ?= openai_nano
 SUBGRID ?= pilot
 
-.PHONY: all status pilot-mock inputs docs outcomes tempsweep figures paper capture freeze analyze render check clean clean-derived keys
+.PHONY: all status pilot-mock inputs docs outcomes tempsweep capture freeze analyze render check clean clean-derived keys
 
 all:
 	SUBGRID=$(SUBGRID) CONC=$(CONC) bash run_all.sh
@@ -18,12 +18,6 @@ outcomes:
 
 tempsweep:
 	PAIR=$(PAIR) CONC=$(CONC) bash run_tempsweep.sh
-
-figures:
-	$(PY) render/figures.py
-
-paper:
-	$(PY) render/fill_manuscript.py
 
 inputs:
 	$(PY) capture/build_inputs.py --subgrid $(SUBGRID)
@@ -57,7 +51,6 @@ keys:
 
 clean-derived:
 	-rm -f claims.json claims_*.json PILOT_RESULTS.md results_*.md tempsweep_*.json
-	-rm -f paper/manuscript_filled.md figures/*.png
 	@echo "[clean-derived] removed analysis outputs; kept data/raw, inputs, outcomes"
 
 clean: clean-derived

@@ -10,7 +10,7 @@ import yaml
 _HERE = Path(__file__).resolve().parent
 _ROOT = _HERE.parent
 _CLAIMS = _ROOT / "claims.json"
-_SLOTS = _ROOT / "paper" / "slots.yaml"
+_SLOTS = _ROOT / "config" / "slots.yaml"
 _REPORT = _ROOT / "PILOT_RESULTS.md"
 
 

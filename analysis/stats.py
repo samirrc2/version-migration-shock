@@ -73,6 +73,45 @@ def cluster_bootstrap_excess(pairs, rows_old, rows_new, draws=2000, seed=42):
             "cross": c0, "within": w0, "n_tickers": n, "n_valid": len(deltas)}
 
 
+def noise_floor_report(pairs, rows_old, rows_new, draws=2000, seed=42):
+    """Robustness of the excess estimate to the within-version noise floor.
+
+    The primary endpoint subtracts a *pooled* floor (old and new replicate
+    disagreement combined). A reviewer may reasonably ask whether the two
+    versions are equally noisy and whether the pooled subtraction flatters the
+    result. This reports the floor separately for each version and recomputes
+    excess = cross - floor under five floor rules; the conservative rule
+    (max(old, new)) is the hardest test and is given a cluster-bootstrap CI so
+    significance can be judged against the worst-case floor rather than the
+    pooled one."""
+    cross_bt = cross_flips_by_ticker(pairs)
+    old_bt = within_flips_by_ticker(rows_old, [])
+    new_bt = within_flips_by_ticker([], rows_new)
+    pooled_bt = within_flips_by_ticker(rows_old, rows_new)
+    tickers = sorted(set(cross_bt) | set(pooled_bt))
+    c = _rate(cross_bt, tickers)
+    wo, wn, wp = _rate(old_bt, tickers), _rate(new_bt, tickers), _rate(pooled_bt, tickers)
+    floors = {"old": wo, "new": wn, "pooled": wp,
+              "max": (max(wo, wn) if wo is not None and wn is not None else None),
+              "min": (min(wo, wn) if wo is not None and wn is not None else None)}
+    excess = {k: (c - v if (c is not None and v is not None) else None) for k, v in floors.items()}
+
+    rng = random.Random(seed)
+    n = len(tickers)
+    vals = []
+    for _ in range(draws):
+        samp = [tickers[rng.randrange(n)] for _ in range(n)]
+        cc, a, b = _rate(cross_bt, samp), _rate(old_bt, samp), _rate(new_bt, samp)
+        if cc is not None and a is not None and b is not None:
+            vals.append(cc - max(a, b))
+    vals.sort()
+    ci = ([vals[int(0.025 * len(vals))], vals[int(0.975 * len(vals)) - 1]]
+          if len(vals) >= 20 else [None, None])
+    return {"cross": c, "floors": floors, "excess_by_floor": excess,
+            "conservative_floor": floors["max"], "conservative_excess": excess["max"],
+            "conservative_ci": ci, "n_tickers": n}
+
+
 def cluster_bootstrap_scalar(pairs, fn, draws=2000, seed=42):
     """95% CI for any scalar statistic fn(pairs_subset), resampling tickers with
     replacement (the clustering unit). Returns point + CI."""

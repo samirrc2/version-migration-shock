@@ -14,21 +14,23 @@ We measure the decision discontinuity a **vendor model update** induces in a fix
 - **Pre-registered.** `PREREGISTRATION.md` was frozen (SHA-256 in `PREREGISTRATION.freeze.txt`) *before* any credit-task model call, so both pairs are confirmatory. Post-freeze changes are in `PREREGISTRATION_AMENDMENTS.md`.
 - **Version isolation.** A cell-parity seed keyed on `(ticker, date, replicate)` only is identical for both versions at each cell, so the version is the sole difference (zero seed mismatches verified).
 - **Primary endpoint.** `excess_flip_rate = cross_version_flip_rate − within_version_flip_rate`, cluster-bootstrapped over companies (seed 42, 2000 draws).
-- **Deterministic + gated.** `analysis/run.py` is a pure, seeded function of the frozen data; `render/check_claims.py` fails the build if any manuscript number disagrees with the frozen analysis or a slot is unfilled.
+- **Deterministic + gated.** `analysis/run.py` is a pure, seeded function of the frozen data; `render/check_claims.py` fails the run if any reported number disagrees with the frozen analysis or a required claim (contract in `config/slots.yaml`) is missing.
 
-## Repository layout
+## What is in this repository
+
+This repository is the **reproducible research artifact** — the code that captures model decisions and computes the results, plus those results and their provenance. The manuscript, LaTeX, and PDF are authored separately and are not tracked here.
 
 ```
-config/     task.yaml, models.yaml, pairs.yaml, grid.yaml, loader/taskcfg    # one schema; task is switchable
+config/     task.yaml, models.yaml, pairs.yaml, grid.yaml, loader.py, taskcfg.py, slots.yaml
 capture/    orchestrator.py, agent.py, build_docs/inputs/outcomes.py, freeze.py, secrets.py
 analysis/   metrics.py, stats.py, baseline.py, groundtruth.py, outcomes.py, tempsweep.py, run.py
-render/     report.py, figures.py, fill_manuscript.py, check_claims.py
-paper/      manuscript.md (auto-filling), paper_ieee_access.tex/.pdf, slots.yaml
-data/frozen/  per-capture SHA-256 receipts     figures/  generated figures
+render/     report.py (results report), check_claims.py (results gate)
+data/frozen/            per-capture SHA-256 receipts
+claims_<pair>.json, results_<pair>.md, tempsweep_<pair>.json   committed per-pair results
 PREREGISTRATION*.md   DATA_MANIFEST.md   Makefile   run_all.sh   run_tempsweep.sh
 ```
 
-Raw model-capture CSVs (`data/raw/`) and fetched context (`inputs/`, `docs/`) are **not** committed — they are large and require API access to regenerate. Their SHA-256 hashes are in `DATA_MANIFEST.md` and `data/frozen/*.freeze.json`; the released dataset can be verified byte-for-byte.
+Raw model-capture CSVs (`data/raw/`) and fetched context (`inputs/`, `docs/`) are **not** committed — they are large and require API access to regenerate. Their SHA-256 hashes are in `DATA_MANIFEST.md` and `data/frozen/*.freeze.json`, so a released dataset can be verified byte-for-byte against these results.
 
 ## Reproduce
 
@@ -42,18 +44,17 @@ make outcomes SUBGRID=full             # compute Altman ground-truth labels
 make all SUBGRID=full CONC=32          # capture both pairs in parallel + analyze
 make tempsweep PAIR=openai_nano        # temperature robustness (repeat for gemini_flash)
 make tempsweep PAIR=gemini_flash
-make figures && make paper             # regenerate figures and fill the manuscript
 ```
 
-`python3 status.py --subgrid full` shows live capture progress. Analysis (`make analyze render check`) is deterministic and free; only `make docs/outcomes/all/tempsweep` touch the network.
+`make all` runs capture → freeze → analyze → `render` (writes `results_<pair>.md`) → `check` (the results gate). `python3 status.py --subgrid full` shows live capture progress. Analysis (`make analyze render check`) is deterministic and free; only `make docs/outcomes/all/tempsweep` touch the network.
 
 ## Task is switchable
 
 `config/task.yaml` selects the active task (`credit_health` by default; `earnings_surprise` and the original `directional` task are also defined). The flip / churn / agreement machinery is label-agnostic, so a new task is a config + prompt change.
 
-## Citation
+## Paper
 
-See `paper/paper_ieee_access.tex`. Data and code availability, pre-registration, and the amendments log are included in the manuscript.
+The manuscript, LaTeX source, and PDF are maintained separately from this code artifact. Pre-registration (`PREREGISTRATION.md` + `.freeze.txt`), the amendments log, and the data manifest in this repository are the reproducibility record the paper cites.
 
 ## License
 

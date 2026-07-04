@@ -2,6 +2,8 @@
 
 Primary endpoint: excess_flip_rate = cross_version - within_version. Cluster bootstrap over tickers (seed 42, 2000 draws). Matched cells: 3600.
 
+Design: 3600 calls/version, 7200 calls/pair, 14400 across two pairs.
+
 ## Headline
 
 Excess flip rate 0.3806 (95% CI [0.3025, 0.4583]); cross-version 0.3886 vs within-version noise floor 0.0081.
@@ -107,4 +109,7 @@ dose_response.instability_contrast = 0.2496
 dose_response.conviction_slope = -0.2171
 mcnemar.p_display = 1.39e-59
 n_matched_cells = 3600
+design.calls_per_version = 3600
+design.calls_per_pair = 7200
+design.calls_two_pairs = 14400
 <!-- CLAIMS-END -->

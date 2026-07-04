@@ -23,6 +23,19 @@
   "precision.excess_ci_halfwidth": 0.0361,
   "accuracy.hit_rate_old": 0.5392,
   "accuracy.hit_rate_new": 0.5642,
+  "accuracy.balanced_old": 0.5379,
+  "accuracy.balanced_new": 0.5699,
+  "accuracy.macro_f1_old": 0.5167,
+  "accuracy.macro_f1_new": 0.5651,
+  "accuracy.majority_baseline": 0.3567,
+  "accuracy.hit_rate_old_ex_fin": 0.5904,
+  "accuracy.hit_rate_new_ex_fin": 0.562,
+  "noise.within_old": 0.12,
+  "noise.within_new": 0.0901,
+  "noise.within_pooled": 0.105,
+  "noise.excess_conservative": 0.0966,
+  "noise.excess_conservative_ci_low": 0.06,
+  "noise.excess_conservative_ci_high": 0.1346,
   "accuracy.flip_conditional_delta": 0.1235,
   "accuracy.flip_conditional_ci_low": -0.1639,
   "accuracy.flip_conditional_ci_high": 0.4179,
@@ -33,6 +46,9 @@
   "mcnemar.chi2": 74.63,
   "mcnemar.p_display": "5.67e-18",
   "n_matched_cells": 3490,
+  "design.calls_per_version": 3600,
+  "design.calls_per_pair": 7200,
+  "design.calls_two_pairs": 14400,
   "detail": {
     "pair": "openai_nano",
     "n_matched_cells": 3490,
@@ -69,7 +85,115 @@
         0.41791044776119407
       ],
       "n_flip_scored_old": 243,
-      "n_flip_scored_new": 243
+      "n_flip_scored_new": 243,
+      "quality_old": {
+        "balanced_accuracy": 0.5379016094018675,
+        "macro_f1": 0.5166915840170824,
+        "majority_class_baseline": 0.3566666666666667,
+        "n_scored": 1200,
+        "hit_rate_ex_financials": 0.5904471544715447,
+        "n_scored_ex_financials": 984,
+        "by_sector": {
+          "Communication Services": {
+            "hit_rate": 0.65625,
+            "n": 96
+          },
+          "Consumer Discretionary": {
+            "hit_rate": 0.5,
+            "n": 120
+          },
+          "Consumer Staples": {
+            "hit_rate": 0.5462962962962963,
+            "n": 108
+          },
+          "Energy": {
+            "hit_rate": 0.8055555555555556,
+            "n": 108
+          },
+          "Financials": {
+            "hit_rate": 0.19166666666666668,
+            "n": 120
+          },
+          "Health Care": {
+            "hit_rate": 0.825,
+            "n": 120
+          },
+          "Industrials": {
+            "hit_rate": 0.6833333333333333,
+            "n": 120
+          },
+          "Information Technology": {
+            "hit_rate": 0.5166666666666667,
+            "n": 120
+          },
+          "Materials": {
+            "hit_rate": 0.6875,
+            "n": 96
+          },
+          "Real Estate": {
+            "hit_rate": 0.4479166666666667,
+            "n": 96
+          },
+          "Utilities": {
+            "hit_rate": 0.03125,
+            "n": 96
+          }
+        }
+      },
+      "quality_new": {
+        "balanced_accuracy": 0.5699415801327533,
+        "macro_f1": 0.5651132563173157,
+        "majority_class_baseline": 0.3566666666666667,
+        "n_scored": 1200,
+        "hit_rate_ex_financials": 0.5619918699186992,
+        "n_scored_ex_financials": 984,
+        "by_sector": {
+          "Communication Services": {
+            "hit_rate": 0.6458333333333334,
+            "n": 96
+          },
+          "Consumer Discretionary": {
+            "hit_rate": 0.4666666666666667,
+            "n": 120
+          },
+          "Consumer Staples": {
+            "hit_rate": 0.5092592592592593,
+            "n": 108
+          },
+          "Energy": {
+            "hit_rate": 0.5740740740740741,
+            "n": 108
+          },
+          "Financials": {
+            "hit_rate": 0.475,
+            "n": 120
+          },
+          "Health Care": {
+            "hit_rate": 0.7583333333333333,
+            "n": 120
+          },
+          "Industrials": {
+            "hit_rate": 0.6666666666666666,
+            "n": 120
+          },
+          "Information Technology": {
+            "hit_rate": 0.5083333333333333,
+            "n": 120
+          },
+          "Materials": {
+            "hit_rate": 0.65625,
+            "n": 96
+          },
+          "Real Estate": {
+            "hit_rate": 0.6979166666666666,
+            "n": 96
+          },
+          "Utilities": {
+            "hit_rate": 0.23958333333333334,
+            "n": 96
+          }
+        }
+      }
     },
     "precision": {
       "excess_ci_halfwidth": 0.03611940467056197
@@ -103,6 +227,30 @@
       "within": 0.10501432664756447,
       "n_tickers": 100,
       "n_boot": 2000
+    },
+    "noise_sensitivity": {
+      "cross": 0.2166189111747851,
+      "floors": {
+        "old": 0.12001148435256963,
+        "new": 0.09007720903631684,
+        "pooled": 0.10501432664756447,
+        "max": 0.12001148435256963,
+        "min": 0.09007720903631684
+      },
+      "excess_by_floor": {
+        "old": 0.09660742682221547,
+        "new": 0.12654170213846827,
+        "pooled": 0.11160458452722063,
+        "max": 0.09660742682221547,
+        "min": 0.12654170213846827
+      },
+      "conservative_floor": 0.12001148435256963,
+      "conservative_excess": 0.09660742682221547,
+      "conservative_ci": [
+        0.06,
+        0.13460147574188405
+      ],
+      "n_tickers": 100
     },
     "prevalence": {
       "n": 3490,
@@ -186,7 +334,7 @@
       "b": 260,
       "c": 96,
       "chi2": 74.63202247191012,
-      "p_value": 5.6715751423344896e-18,
+      "p_value": 5.671575142334489e-18,
       "n_discordant": 356
     },
     "strata": {

@@ -13,6 +13,19 @@ required_claims:
   - precision.excess_ci_halfwidth
   - accuracy.hit_rate_old
   - accuracy.hit_rate_new
+  - accuracy.balanced_old
+  - accuracy.balanced_new
+  - accuracy.macro_f1_old
+  - accuracy.macro_f1_new
+  - accuracy.majority_baseline
+  - accuracy.hit_rate_old_ex_fin
+  - accuracy.hit_rate_new_ex_fin
+  - noise.within_old
+  - noise.within_new
+  - noise.within_pooled
+  - noise.excess_conservative
+  - noise.excess_conservative_ci_low
+  - noise.excess_conservative_ci_high
   - accuracy.flip_conditional_delta
   - accuracy.flip_conditional_ci_low
   - accuracy.flip_conditional_ci_high

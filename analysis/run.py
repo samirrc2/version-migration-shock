@@ -47,7 +47,8 @@ def analyse_pair(pair_id: str, draws: int, seed: int, sectors: dict) -> dict:
         pairs, lambda ps: M.implied_turnover(ps)["turnover_fraction"], draws, seed)
 
     agr = M.agreement_statistics(pairs)
-    acc = O.accuracy(rows_old, rows_new)
+    acc = O.accuracy(rows_old, rows_new, sectors)
+    noise = S.noise_floor_report(pairs, rows_old, rows_new, draws=draws, seed=seed)
     all_rows = rows_old + rows_new
     n_real = sum(1 for r in all_rows if r.get("snippet_source") == "inputs_file")
     frac_real = (n_real / len(all_rows)) if all_rows else 0.0
@@ -70,6 +71,7 @@ def analyse_pair(pair_id: str, draws: int, seed: int, sectors: dict) -> dict:
         "excess_flip_rate": {"value": boot["point"], "ci": [boot["ci_low"], boot["ci_high"]],
                              "cross": boot["cross"], "within": boot["within"],
                              "n_tickers": boot["n_tickers"], "n_boot": boot["n_valid"]},
+        "noise_sensitivity": noise,
         "prevalence": {**prev, "churn_ci": [ci_churn["ci_low"], ci_churn["ci_high"]],
                        "cohen_kappa_ci": [ci_kappa["ci_low"], ci_kappa["ci_high"]]},
         "conviction_shift": {"value": conv, "n": n_conv,
@@ -121,6 +123,19 @@ def main() -> int:
         "precision.excess_ci_halfwidth": _r(res["precision"]["excess_ci_halfwidth"]),
         "accuracy.hit_rate_old": _r(res["accuracy"].get("hit_rate_old")),
         "accuracy.hit_rate_new": _r(res["accuracy"].get("hit_rate_new")),
+        "accuracy.balanced_old": _r((res["accuracy"].get("quality_old") or {}).get("balanced_accuracy")),
+        "accuracy.balanced_new": _r((res["accuracy"].get("quality_new") or {}).get("balanced_accuracy")),
+        "accuracy.macro_f1_old": _r((res["accuracy"].get("quality_old") or {}).get("macro_f1")),
+        "accuracy.macro_f1_new": _r((res["accuracy"].get("quality_new") or {}).get("macro_f1")),
+        "accuracy.majority_baseline": _r((res["accuracy"].get("quality_old") or {}).get("majority_class_baseline")),
+        "accuracy.hit_rate_old_ex_fin": _r((res["accuracy"].get("quality_old") or {}).get("hit_rate_ex_financials")),
+        "accuracy.hit_rate_new_ex_fin": _r((res["accuracy"].get("quality_new") or {}).get("hit_rate_ex_financials")),
+        "noise.within_old": _r(res["noise_sensitivity"]["floors"]["old"]),
+        "noise.within_new": _r(res["noise_sensitivity"]["floors"]["new"]),
+        "noise.within_pooled": _r(res["noise_sensitivity"]["floors"]["pooled"]),
+        "noise.excess_conservative": _r(res["noise_sensitivity"]["conservative_excess"]),
+        "noise.excess_conservative_ci_low": _r(res["noise_sensitivity"]["conservative_ci"][0]),
+        "noise.excess_conservative_ci_high": _r(res["noise_sensitivity"]["conservative_ci"][1]),
         "accuracy.flip_conditional_delta": _r(res["accuracy"].get("flip_conditional_new_minus_old")),
         "accuracy.flip_conditional_ci_low": _r(res["accuracy"].get("flip_conditional_ci", [None, None])[0]),
         "accuracy.flip_conditional_ci_high": _r(res["accuracy"].get("flip_conditional_ci", [None, None])[1]),

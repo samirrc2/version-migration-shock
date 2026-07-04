@@ -56,13 +56,72 @@ def _rate(mv, signs):
     return (hits / n if n else None), n
 
 
-def accuracy(rows_old, rows_new) -> dict:
+_FIN_SECTORS = ("Financials", "Real Estate")
+
+
+def _label_quality(mv, signs, tk_sector) -> dict:
+    """Class-balanced scoring for a label task (credit-health). Reports balanced
+    accuracy (mean per-class recall), macro-F1, the majority-class baseline (the
+    accuracy of always predicting the most common ground-truth class), per-sector
+    hit-rate, and hit-rate with Altman-inappropriate sectors (Financials, Real
+    Estate) excluded. Guarded to label ground truths; returns {} otherwise."""
+    if taskcfg.GROUND_TRUTH == "forward_return":
+        return {}
+    classes = list(taskcfg.CATEGORIES)
+    conf = {g: {"tp": 0, "fp": 0, "support": 0} for g in classes}
+    gt_dist = Counter()
+    by_sector = defaultdict(lambda: [0, 0])
+    ex_hits = ex_n = 0
+    for cell, pred in mv.items():
+        gt = signs.get(f"{cell[0]}|{cell[1]}")
+        if gt is None:
+            continue
+        if taskcfg.ABSTAIN_LABEL and pred == taskcfg.ABSTAIN_LABEL:
+            continue
+        gt_dist[gt] += 1
+        if gt in conf:
+            conf[gt]["support"] += 1
+            if pred == gt:
+                conf[gt]["tp"] += 1
+        if pred != gt and pred in conf:
+            conf[pred]["fp"] += 1
+        sec = tk_sector.get(cell[0], "Unknown")
+        by_sector[sec][1] += 1
+        by_sector[sec][0] += 1 if pred == gt else 0
+        if sec not in _FIN_SECTORS:
+            ex_n += 1
+            ex_hits += 1 if pred == gt else 0
+    recalls, f1s = [], []
+    for g in classes:
+        sup, tp, fp = conf[g]["support"], conf[g]["tp"], conf[g]["fp"]
+        if sup == 0:
+            continue
+        rec = tp / sup
+        prec = tp / (tp + fp) if (tp + fp) else 0.0
+        recalls.append(rec)
+        f1s.append(0.0 if (prec + rec) == 0 else 2 * prec * rec / (prec + rec))
+    tot = sum(gt_dist.values())
+    return {
+        "balanced_accuracy": (sum(recalls) / len(recalls)) if recalls else None,
+        "macro_f1": (sum(f1s) / len(f1s)) if f1s else None,
+        "majority_class_baseline": (max(gt_dist.values()) / tot) if tot else None,
+        "n_scored": tot,
+        "hit_rate_ex_financials": (ex_hits / ex_n) if ex_n else None,
+        "n_scored_ex_financials": ex_n,
+        "by_sector": {s: {"hit_rate": v[0] / v[1] if v[1] else None, "n": v[1]}
+                      for s, v in sorted(by_sector.items())},
+    }
+
+
+def accuracy(rows_old, rows_new, sectors: dict | None = None) -> dict:
     if not _OUTC.exists():
         return {"available": False}
     signs = json.loads(_OUTC.read_text())
+    tk_sector = {t: sec for sec, ts in (sectors or {}).items() for t in ts}
     mv_o, mv_n = _majority_by_cell(rows_old), _majority_by_cell(rows_new)
     ho, no = _rate(mv_o, signs)
     hn, nn = _rate(mv_n, signs)
+    ql_o, ql_n = _label_quality(mv_o, signs, tk_sector), _label_quality(mv_n, signs, tk_sector)
 
     flip_cells = []
     for cell in set(mv_o) & set(mv_n):
@@ -83,6 +142,7 @@ def accuracy(rows_old, rows_new) -> dict:
         "flip_hit_rate_old": fo, "flip_hit_rate_new": fn,
         "flip_conditional_new_minus_old": delta, "flip_conditional_ci": ci,
         "n_flip_scored_old": no_f, "n_flip_scored_new": nn_f,
+        "quality_old": ql_o, "quality_new": ql_n,
     }
 
 
