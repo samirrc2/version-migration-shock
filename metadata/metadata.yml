@@ -1,0 +1,15 @@
+metadata_version: 1
+name: "Version Migration as a Correlated Shock"
+description: >
+  Reproducibility artifact for the IEEE Access article "Version Migration as a
+  Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based
+  Financial Systems." Regenerates the excess-flip-rate primary endpoint (cross-
+  version minus within-version noise floor) with ticker cluster-bootstrap CIs,
+  the prevalence/churn decomposition, three chance-corrected agreement statistics,
+  class-balanced accuracy against an Altman Z'' ground truth, the noise-floor
+  sensitivity, and the temperature-robustness check, for two real vendor model
+  migrations (OpenAI gpt-5-nano-2025-08-07 -> gpt-5.4-nano; Google
+  gemini-2.5-flash -> gemini-3.5-flash), all from the frozen 14,400-call dataset.
+authors:
+  - name: "Samir Chincholikar"
+  - name: "Robin Chawla"
