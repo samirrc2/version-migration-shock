@@ -1,6 +1,6 @@
 # Data Manifest
 
-Raw model-capture CSVs are released separately (they are large and require API access to regenerate); this file records the SHA-256 of each frozen, immutable capture so a released dataset can be verified byte-for-byte against the analysis in this repository. Each capture is also accompanied by a machine-readable receipt in `data/frozen/`.
+The frozen model-capture CSVs are committed to this repository (`data/raw/*.csv`), so the analysis reproduces from a clone with no external download. This file records the SHA-256 of each frozen, immutable capture so any copy can be verified byte-for-byte; each capture also carries a machine-readable receipt in `data/frozen/`.
 
 Generated 2026-07-04. Grid: 100 companies x 12 dates x 3 replicates = 3,600 calls per version; 7,200 per pair; 14,400 across both pairs (plus 8x3 temperature subgrids).
 

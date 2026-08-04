@@ -16,6 +16,7 @@ cd "$ROOT"
 PY="${PY:-python3}"
 PAIRS=(openai_nano gemini_flash)
 
+sha256() { if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | awk '{print $1}'; else shasum -a 256 "$1" | awk '{print $1}'; fi; }
 usage() { sed -n '2,13p' "$0"; exit 0; }
 MODE="run"
 case "${1:-}" in
@@ -44,8 +45,8 @@ if [[ "$MODE" == "verify" ]]; then
   echo "[reproduce] determinism check: analyzing each pair twice and hash-comparing"
   ok=1
   for p in "${PAIRS[@]}"; do
-    $PY analysis/run.py --pair "$p" >/dev/null; h1=$(shasum -a 256 claims.json | awk '{print $1}')
-    $PY analysis/run.py --pair "$p" >/dev/null; h2=$(shasum -a 256 claims.json | awk '{print $1}')
+    $PY analysis/run.py --pair "$p" >/dev/null; h1=$(sha256 claims.json)
+    $PY analysis/run.py --pair "$p" >/dev/null; h2=$(sha256 claims.json)
     if [[ "$h1" == "$h2" ]]; then echo "  $p: IDENTICAL  ${h1:0:16}"; else echo "  $p: MISMATCH ($h1 vs $h2)"; ok=0; fi
   done
   [[ "$ok" == 1 ]] && echo "[reproduce] deterministic: byte-identical across re-runs" || { echo "[reproduce] NON-DETERMINISTIC"; exit 1; }
@@ -58,5 +59,7 @@ for p in "${PAIRS[@]}"; do
   analyze_pair "$p"
   $PY render/check_claims.py | sed "s/^/     [$p] /"
 done
-echo "[reproduce] done. Per-pair results in claims_<pair>.json and results_<pair>.md."
+# mirror outputs into results/ (Code Ocean /results convention; harmless locally)
+mkdir -p results && cp claims_*.json results_*.md results/ 2>/dev/null || true
+echo "[reproduce] done. Per-pair results in claims_<pair>.json and results_<pair>.md (also copied to results/)."
 echo "[reproduce] optional live re-collection (needs API keys, ~costed): make all SUBGRID=full"

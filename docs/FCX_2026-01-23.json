@@ -1,0 +1,16 @@
+{
+  "asof": "2025-11-06",
+  "period": "2025 Q3",
+  "text": "Fiscal period 2025 Q3 (filed 2025-11-06). Revenue 6,972M, gross margin 30%, operating income 1,956M (operating margin 28%), net income 674M, diluted EPS 0.47. Total assets 56,828M, total liabilities 26,431M, shareholders' equity 18,685M. Current assets 13,564M vs current liabilities 5,526M (current ratio 2.45), retained earnings 1,196M.",
+  "fin": {
+    "revenue": 6972000000.0,
+    "ebit": 1956000000.0,
+    "total_assets": 56828000000.0,
+    "total_liabilities": 26431000000.0,
+    "equity": 18685000000.0,
+    "current_assets": 13564000000.0,
+    "current_liabilities": 5526000000.0,
+    "retained_earnings": 1196000000.0
+  },
+  "source_provenance": "fmp_reported_quarterly"
+}

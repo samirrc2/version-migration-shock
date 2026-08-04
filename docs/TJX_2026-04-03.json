@@ -1,0 +1,16 @@
+{
+  "asof": "2026-03-31",
+  "period": "2026 Q4",
+  "text": "Fiscal period 2026 Q4 (filed 2026-03-31). Revenue 17,743M, gross margin 31%, operating income 2,354M (operating margin 13%), net income 1,773M, diluted EPS 1.58. Total assets 35,767M, total liabilities 25,577M, shareholders' equity 10,190M. Current assets 15,202M vs current liabilities 13,361M (current ratio 1.14), retained earnings 9,434M.",
+  "fin": {
+    "revenue": 17743000000.0,
+    "ebit": 2354000000.0,
+    "total_assets": 35767000000.0,
+    "total_liabilities": 25577000000.0,
+    "equity": 10190000000.0,
+    "current_assets": 15202000000.0,
+    "current_liabilities": 13361000000.0,
+    "retained_earnings": 9434000000.0
+  },
+  "source_provenance": "fmp_reported_quarterly"
+}
