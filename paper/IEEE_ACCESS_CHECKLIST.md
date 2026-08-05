@@ -31,8 +31,8 @@ author instructions. Status as of this audit.
 
 Canonical submission file: **`paper/main.tex`**.
 
-Data & Code Availability cites GitHub + pending Code Ocean DOI (no Zenodo /
-anonymous placeholder). Author bios match the companion paper. Figures live
+Data & Code Availability cites GitHub + Code Ocean DOI
+`10.24433/CO.2874343.v1`. Author bios match the companion paper. Figures live
 only under `paper/figures/`.
 
 Optional (not required): graphical abstract, `\IEEEmembership` tags, and removing "LLMs"/"95\% CI"

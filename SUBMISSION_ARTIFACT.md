@@ -11,19 +11,17 @@ Analysis outputs live under **`results/`** (`claims_<pair>.json`, `results_<pair
 | SHA-256 of every CSV | `DATA_MANIFEST.md` + `data/frozen/*.freeze.json` |
 | Keys-free reproduction | `./code/run` or `bash code/reproduce.sh` |
 | Determinism check | `bash code/reproduce.sh --verify` |
-| Code Ocean capsule | Prepared (`environment/Dockerfile`, `/code/run`); public DOI inserted when minted |
+| Code Ocean capsule | https://doi.org/10.24433/CO.2874343.v1 (`environment/Dockerfile`, `/code/run`) |
 
-Raw CSVs are **committed** under `data/raw/` — no Zenodo deposit is required for
-reproduction. Fundamentals under `docs/` are for optional live re-collection /
-rebuilding labels; they are **not** required for the default keys-free path
-(analysis uses `data/outcomes/ground_truth.json`).
+Raw CSVs are **committed** under `data/raw/`. Fundamentals under `docs/` are for
+optional live re-collection / rebuilding labels; they are **not** required for
+the default keys-free path (analysis uses `data/outcomes/ground_truth.json`).
 
 ## Paper wording
 
-Data & Code Availability in `paper/main.tex` cites the GitHub URL and notes that a
-Code Ocean DOI will be inserted when issued. After Code Ocean publishes the
-capsule, replace the placeholder sentence with the minted DOI
-(`10.24433/CO.…`).
+Data & Code Availability in `paper/main.tex` cites the GitHub URL and the Code
+Ocean DOI `10.24433/CO.2874343.v1`
+(\url{https://doi.org/10.24433/CO.2874343.v1}).
 
 ## Figures
 

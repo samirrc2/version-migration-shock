@@ -27,7 +27,7 @@ This repository is the frozen dataset and deterministic analysis pipeline that r
 | **Authors** | Samir Chincholikar, Robin Chawla |
 | **Affiliations** | Independent researchers |
 | **Code repository** | https://github.com/samirrc2/version-migration-shock |
-| **Persistent DOI** | Code Ocean capsule prepared for submission (public DOI to be inserted here when minted). Until then, use this GitHub repository. |
+| **Persistent DOI** | https://doi.org/10.24433/CO.2874343.v1 (`10.24433/CO.2874343.v1`) |
 | **Contact** | Samir Chincholikar: samir.chincholikar@gmail.com; Robin Chawla: robin.chawla.cse14@iitbhu.ac.in |
 | **ORCID** | Samir Chincholikar: https://orcid.org/0009-0007-2779-3492; Robin Chawla: https://orcid.org/0009-0007-2807-3948 |
 
@@ -48,16 +48,18 @@ The artifact enables independent reproduction of the article's computational res
 
 ## Code Ocean
 
-A [Code Ocean](https://codeocean.com/) compute capsule for this artifact is prepared for submission; a persistent DOI will be assigned after Code Ocean's reproducibility verification.
+A [Code Ocean](https://codeocean.com/) compute capsule for this artifact is available at
+[https://doi.org/10.24433/CO.2874343.v1](https://doi.org/10.24433/CO.2874343.v1)
+(DOI `10.24433/CO.2874343.v1`).
 
 | Status | Detail |
 |--------|--------|
-| Capsule | Prepared (keys-free Reproducible Run via `/code/run` → `code/reproduce.sh`) |
+| Capsule | Keys-free Reproducible Run via `/code/run` → `code/reproduce.sh` |
 | Environment | `environment/Dockerfile` (Code Ocean `py-r` base + pinned pip; default path needs PyYAML) |
-| Public link / DOI | Not yet issued — will be added to this README and the manuscript when available |
-| Until then | Reproduce from this GitHub repository (`bash code/reproduce.sh` or `./code/run`) |
+| Public link / DOI | https://doi.org/10.24433/CO.2874343.v1 |
+| Local reproduce | `bash code/reproduce.sh` or `./code/run` |
 
-The frozen dataset is committed to the repository, so the capsule reproduces every number with **no external download, no API keys, and no inference cost**. After publication, replace the **Persistent DOI** placeholder in Section 1 with the minted DOI.
+The frozen dataset is committed to the repository, so the capsule reproduces every number with **no external download, no API keys, and no inference cost**.
 
 ---
 
@@ -213,7 +215,7 @@ These are the same quantities reported in the article's Results section (Table 1
 - **Provenance:** every capture is SHA-256-stamped in `DATA_MANIFEST.md` and `data/frozen/*.freeze.json`; the frozen CSVs are the object of record and must not be regenerated (a correction requires a new versioned file plus a manifest changelog entry).
 - **Anti-drift gate:** `code/render/check_claims.py` fails if any reported number disagrees with the frozen analysis or a required claim (`code/config/slots.yaml`) is missing.
 - **Manuscript source:** official IEEE Access LaTeX under `paper/` (`paper/main.tex` is canonical; compiles to `paper/main.pdf`). Figures live only in `paper/figures/`.
-- **Submission notes:** see `SUBMISSION_ARTIFACT.md` (GitHub + Code Ocean; no Zenodo required).
+- **Submission notes:** see `SUBMISSION_ARTIFACT.md` (GitHub + Code Ocean).
 - **Issues and support:** GitHub Issues, or the author emails in Section 1.
 
 ### Repository structure

@@ -104,7 +104,8 @@ receipts; deterministic seeded analysis regenerates every claim; a build gate
 rejects any manuscript number that disagrees with the frozen analysis.
 Pre-registration and amendments log are included. Code and data:
 https://github.com/samirrc2/version-migration-shock. A Code Ocean capsule for
-keys-free reproduction is prepared; the public DOI will be inserted when issued.
+keys-free reproduction is available at https://doi.org/10.24433/CO.2874343.v1
+(DOI 10.24433/CO.2874343.v1).
 
 ## References
 
