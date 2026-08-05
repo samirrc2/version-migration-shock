@@ -12,11 +12,11 @@ cd "/Users/samirchincholikar/Desktop/NIW/Paper 2"
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-bash reproduce.sh            # analyze both pairs + gate-check
-bash reproduce.sh --verify   # determinism: analyze each pair twice, hash-compare
+bash code/reproduce.sh            # analyze both pairs + gate-check
+bash code/reproduce.sh --verify   # determinism: analyze each pair twice, hash-compare
 ```
 
-Outputs: `claims_<pair>.json`, `results_<pair>.md`. The gate (`render/check_claims.py`)
+Outputs: `results/claims_<pair>.json`, `results/results_<pair>.md`. The gate (`code/render/check_claims.py`)
 fails if any reported number disagrees with the frozen analysis.
 
 ## B. Re-collect the dataset (optional; needs keys; costed)

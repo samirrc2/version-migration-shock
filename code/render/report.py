@@ -5,11 +5,13 @@ import json, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import taskcfg
+from _paths import results_dir
 
-_HERE = Path(__file__).resolve().parent
-_CLAIMS = _HERE.parent / "claims.json"
-_OUT = _HERE.parent / "PILOT_RESULTS.md"
+_RES = results_dir()
+_CLAIMS = _RES / "claims.json"
+_OUT = _RES / "PILOT_RESULTS.md"
 
 H1 = "#"
 H2 = "##"

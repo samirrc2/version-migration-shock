@@ -6,9 +6,12 @@ import argparse, hashlib, json, os, stat, sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-_HERE = Path(__file__).resolve().parent
-_RAW = _HERE.parent / "data" / "raw"
-_FROZEN = _HERE.parent / "data" / "frozen"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import repo_root
+
+_ROOT = repo_root()
+_RAW = _ROOT / "data" / "raw"
+_FROZEN = _ROOT / "data" / "frozen"
 
 
 def sha256(path: Path) -> str:

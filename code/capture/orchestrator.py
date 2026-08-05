@@ -27,6 +27,8 @@ except ImportError:
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import repo_root
 
 import agent as agentmod
 import secrets as secretstore
@@ -34,7 +36,7 @@ import loader as C
 import taskcfg
 
 _HERE = Path(__file__).resolve().parent
-_DATA = _HERE.parent / "data" / "raw"
+_DATA = repo_root() / "data" / "raw"
 
 CSV_FIELDS = [
     "pair", "version", "mode", "model_key", "api_model", "provider",
@@ -154,7 +156,7 @@ def main() -> int:
     if args.inputs_dir:
         inputs_dir = Path(args.inputs_dir)
     else:
-        own = _HERE.parent / taskcfg.DOC_DIR
+        own = repo_root() / taskcfg.DOC_DIR
         inputs_dir = own if (own.exists() and any(own.glob("*.json"))) else None
 
     mock = os.environ.get("PILOT_MOCK") == "1"

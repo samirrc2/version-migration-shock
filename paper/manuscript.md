@@ -99,7 +99,12 @@ Two routine vendor updates each inflicted a large, significant shift in credit a
 
 ## Data and Code Availability
 
-Immutable, SHA-256-stamped raw data and freeze receipts; deterministic seeded analysis regenerates every claim; a build gate rejects any manuscript number that disagrees with the frozen analysis, or any unfilled slot. The pre-registration and amendments log are included. **For review**, the complete artifact — code, exact version strings, seeds, prompts, raw responses, and a SHA-256 manifest — is available anonymously at [anonymized repository URL], with the raw-response dataset deposited under an embargoed Zenodo record whose reviewer access token is provided in the submission system. The public DOI is released, and the repository de-anonymized, on acceptance; the frozen hashes let any reader verify the released data against the reported numbers.
+Immutable, SHA-256-stamped raw data (`data/raw/`, 14,400 calls) and freeze
+receipts; deterministic seeded analysis regenerates every claim; a build gate
+rejects any manuscript number that disagrees with the frozen analysis.
+Pre-registration and amendments log are included. Code and data:
+https://github.com/samirrc2/version-migration-shock. A Code Ocean capsule for
+keys-free reproduction is prepared; the public DOI will be inserted when issued.
 
 ## References
 

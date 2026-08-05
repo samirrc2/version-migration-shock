@@ -23,11 +23,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import repo_root
 import secrets as secretstore
 import loader as C
 
 _HERE = Path(__file__).resolve().parent
-_INPUTS = _HERE.parent / "inputs"
+_INPUTS = repo_root() / "inputs"
 # FMP stable API (the legacy /api/v3/ path 403s for keys issued after 2025-08-31).
 _FMP = ("https://financialmodelingprep.com/stable/historical-price-eod/full"
         "?symbol={t}&from={f}&to={to}&apikey={k}")

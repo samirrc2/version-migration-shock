@@ -1,5 +1,6 @@
 """Generate manuscript figures from the per-pair claims_<pair>.json files (falls
-back to claims.json). Writes PNGs to figures/. Pure: no data capture."""
+back to claims.json). Writes PNGs to paper/figures/ (single source for LaTeX).
+Pure: no data capture."""
 from __future__ import annotations
 import json, sys
 from pathlib import Path
@@ -15,10 +16,13 @@ def _f3(x):
     return str(Decimal(str(x)).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP))
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import repo_root, results_dir
 import taskcfg
 
-_ROOT = Path(__file__).resolve().parent.parent
-_FIG = _ROOT / "figures"
+_ROOT = repo_root()
+_RES = results_dir()
+_FIG = _ROOT / "paper" / "figures"
 PAIRS = ["openai_nano", "gemini_flash"]
 _PAIR_LABEL = {"openai_nano": "OpenAI migration", "gemini_flash": "Gemini migration"}
 
@@ -26,11 +30,11 @@ _PAIR_LABEL = {"openai_nano": "OpenAI migration", "gemini_flash": "Gemini migrat
 def load_claims():
     out = {}
     for p in PAIRS:
-        f = _ROOT / f"claims_{p}.json"
+        f = _RES / f"claims_{p}.json"
         if f.exists():
             out[p] = json.loads(f.read_text())
-    if not out and (_ROOT / "claims.json").exists():
-        c = json.loads((_ROOT / "claims.json").read_text())
+    if not out and (_RES / "claims.json").exists():
+        c = json.loads((_RES / "claims.json").read_text())
         out[c["meta"]["pair"]] = c
     return out
 

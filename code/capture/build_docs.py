@@ -17,10 +17,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import repo_root
 import secrets as secretstore
 import loader as C
 
-_DOCS = Path(__file__).resolve().parent.parent / "docs"
+_DOCS = repo_root() / "docs"
 _BASE = "https://financialmodelingprep.com/stable/{ep}?symbol={t}&period=quarter&limit=40&apikey={k}"
 
 

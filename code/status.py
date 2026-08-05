@@ -9,9 +9,11 @@ import argparse, sys, time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "config"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 import loader as C
+from _paths import repo_root
 
-_RAW = Path(__file__).resolve().parent / "data" / "raw"
+_RAW = repo_root() / "data" / "raw"
 
 
 def rows(path: Path) -> int:

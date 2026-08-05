@@ -561,15 +561,31 @@ The evidence is limited to two migration pairs, one structured classification ta
 Exact model versions should therefore be treated as governed artifacts, and vendor migrations should trigger documented testing, effective challenge, and change approval. The frozen, preregistered analytical package provides a reproducible basis for conducting and auditing such evaluations without assuming that future proprietary-endpoint calls will reproduce the archived responses.
 
 \section*{Data and Code Availability}
-We release: (i) the immutable, read-only, SHA-256-stamped raw data (per-call model, seed, prompt hash, timestamp, tokens, cost, and raw response); (ii) the preregistration, its cryptographic freeze receipt, and the amendments log; (iii) the deterministic, seeded analysis pipeline that regenerates every table byte-for-byte, with a build gate that rejects any manuscript number disagreeing with the frozen analysis; and (iv) the capture and monitoring harness (the pre-migration parallel-run metric). \textbf{For review}, the complete artifact (code, exact version strings, seeds, prompts, raw responses, and a manifest of SHA-256 hashes) is available anonymously at \url{[anonymized repository URL]}, with the raw-response dataset deposited under an embargoed Zenodo record whose reviewer access token is provided in the submission system. The public Zenodo DOI will be released, and the repository de-anonymized, on acceptance; the frozen hashes let any reader verify the released data against the numbers reported here.
+To support reproduction, we release: (i)~the immutable, read-only,
+SHA-256-stamped raw dataset (\texttt{data/raw/}), containing 14{,}400 logged
+calls with the per-call model, seed, prompt hash, timestamp, token usage, cost,
+and raw response; (ii)~the pre-registration materials and the cryptographic
+freeze receipt; (iii)~the deterministic, seeded analysis pipeline that
+regenerates every table and figure in this paper, together with a replication
+check; and (iv)~the capture and monitoring harness (the pre-migration
+parallel-run metric). Code and data are available at
+\url{https://github.com/samirrc2/version-migration-shock}.
+A Code Ocean compute capsule enabling keys-free reproduction has been prepared
+for submission; the public capsule link and DOI will be inserted here when
+issued.
+The dataset SHA-256 hashes and analysis commit hash are recorded in the
+supplementary manifest.
 
 \section*{Acknowledgment}
+The authors thank colleagues and reviewers for feedback.
+
+\section*{Use of Generative AI}
 The authors acknowledge the use of artificial intelligence (AI) tools for the
-preparation of this manuscript. Specifically, OpenAI's ChatGPT and Anthropic's
-Claude (2026) were employed to support tasks such as text drafting, language
-polishing, formatting guidance, and code review. All outputs from these tools
-were critically examined, verified, and edited by the authors to ensure accuracy
-and originality.
+preparation of this manuscript. Specifically, OpenAI's ChatGPT (GPT-5, 2025)
+and Anthropic's Claude were employed to support tasks such as text drafting,
+language polishing, formatting guidance, and code review. All outputs from
+these tools were critically examined, verified, and edited by the authors to
+ensure accuracy and originality.
 
 \begin{thebibliography}{99}
 \small

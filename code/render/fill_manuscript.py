@@ -6,7 +6,11 @@ from __future__ import annotations
 import json, re, sys
 from pathlib import Path
 
-_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import repo_root, results_dir
+
+_ROOT = repo_root()
+_RES = results_dir()
 _SRC = _ROOT / "paper" / "manuscript.md"
 _DST = _ROOT / "paper" / "manuscript_filled.md"
 
@@ -23,10 +27,10 @@ def main() -> int:
 
     def _load_pair(pair):
         d = {}
-        cf = _ROOT / f"claims_{pair}.json"
+        cf = _RES / f"claims_{pair}.json"
         if cf.exists():
             d.update(json.loads(cf.read_text()))
-        tf = _ROOT / f"tempsweep_{pair}.json"
+        tf = _RES / f"tempsweep_{pair}.json"
         if tf.exists():
             ts = json.loads(tf.read_text())
             d["tempsweep.sign_stable"] = ts.get("sign_stable")

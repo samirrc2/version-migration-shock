@@ -8,16 +8,18 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import metrics as M
 import stats as S
 import baseline as B
 import outcomes as O
 import loader as C
+from _paths import repo_root, results_dir
 
-_HERE = Path(__file__).resolve().parent
-_RAW = _HERE.parent / "data" / "raw"
-_OUT = _HERE.parent / "claims.json"
+_ROOT = repo_root()
+_RAW = _ROOT / "data" / "raw"
+_OUT = results_dir() / "claims.json"
 
 
 def analyse_pair(pair_id: str, draws: int, seed: int, sectors: dict) -> dict:

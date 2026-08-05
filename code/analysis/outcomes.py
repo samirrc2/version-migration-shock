@@ -12,10 +12,12 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import repo_root
 import taskcfg
 import stats as S
 
-_OUTC = Path(__file__).resolve().parent.parent / "data" / "outcomes" / "ground_truth.json"
+_OUTC = repo_root() / "data" / "outcomes" / "ground_truth.json"
 
 
 def available() -> bool:

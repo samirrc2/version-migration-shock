@@ -16,12 +16,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "analysis"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import repo_root
 import secrets as secretstore
 import loader as C
 import taskcfg
 import groundtruth as GT
 
-_ROOT = Path(__file__).resolve().parent.parent
+_ROOT = repo_root()
 _OUT = _ROOT / "data" / "outcomes"
 _DOCS = _ROOT / "docs"
 

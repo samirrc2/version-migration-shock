@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Code Ocean Reproducible Run entry point. Regenerates the article's numbers for
-# both migrations from the frozen dataset (keys-free, $0) and runs the build gate.
+# Convenience wrapper: delegates to code/run (Code Ocean entry).
 set -euo pipefail
-exec bash "$(cd "$(dirname "$0")" && pwd)/reproduce.sh" "$@"
+exec bash "$(cd "$(dirname "$0")" && pwd)/code/run" "$@"

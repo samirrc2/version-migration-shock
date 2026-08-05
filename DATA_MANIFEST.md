@@ -23,6 +23,10 @@ Generated 2026-07-04. Grid: 100 companies x 12 dates x 3 replicates = 3,600 call
 | `runs_openai_nano_v_old_T07.csv` | 72 | `71a8cf2d6d67676c933cabdde3e78883aaf8ec606bfb20d145a04d5a56c06a8d` |
 | `runs_openai_nano_v_old_T10.csv` | 72 | `2260acea700c6af86fcd838b1adc491696d2d7504cc0aa3f0a26c2b1c941b739` |
 
+## Outcomes
+
+Analysis uses only `data/outcomes/ground_truth.json` (no other files under `data/outcomes/`).
+
 ## Verifying
 
 ```

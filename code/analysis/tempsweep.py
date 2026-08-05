@@ -12,11 +12,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import repo_root, results_dir
 import metrics as M
 import stats as S
 import loader as C
 
-_RAW = Path(__file__).resolve().parent.parent / "data" / "raw"
+_RAW = repo_root() / "data" / "raw"
 _TAGS = {0.0: "_T00", 0.7: "_T07", 1.0: "_T10"}
 
 
@@ -43,7 +45,7 @@ def main() -> int:
                      "within": boot["within"], "n": len(pairs)})
     out = {"pair": args.pair, "by_temperature": rows,
            "sign_stable": all(r["excess"] is not None and r["excess"] > 0 for r in rows) if rows else None}
-    dest = Path(__file__).resolve().parent.parent / f"tempsweep_{args.pair}.json"
+    dest = results_dir() / f"tempsweep_{args.pair}.json"
     dest.write_text(json.dumps(out, indent=2))
     def f(x):
         return "n/a" if x is None else f"{x:.4f}"

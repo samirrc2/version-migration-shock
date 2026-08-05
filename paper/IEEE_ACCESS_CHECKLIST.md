@@ -29,7 +29,11 @@ author instructions. Status as of this audit.
 
 ## Status
 
-All four previously pending items are resolved. No open IEEE Access compliance blockers remain.
+Canonical submission file: **`paper/main.tex`**.
+
+Data & Code Availability cites GitHub + pending Code Ocean DOI (no Zenodo /
+anonymous placeholder). Author bios match the companion paper. Figures live
+only under `paper/figures/`.
 
 Optional (not required): graphical abstract, `\IEEEmembership` tags, and removing "LLMs"/"95\% CI"
 from the abstract. The `\history`/`\doi` fields are IEEE-filled at publication.

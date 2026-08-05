@@ -7,11 +7,13 @@ import json, re, sys
 from pathlib import Path
 import yaml
 
-_HERE = Path(__file__).resolve().parent
-_ROOT = _HERE.parent
-_CLAIMS = _ROOT / "claims.json"
-_SLOTS = _ROOT / "config" / "slots.yaml"
-_REPORT = _ROOT / "PILOT_RESULTS.md"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from _paths import code_root, results_dir
+
+_RES = results_dir()
+_CLAIMS = _RES / "claims.json"
+_SLOTS = code_root() / "config" / "slots.yaml"
+_REPORT = _RES / "PILOT_RESULTS.md"
 
 
 def _num(x):
