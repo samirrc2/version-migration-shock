@@ -29,13 +29,13 @@
 \author{\uppercase{Samir Chincholikar}\authorrefmark{1},
 \uppercase{Robin Chawla}\authorrefmark{1}}
 \address[1]{Independent Researcher (e-mail: samir.chincholikar@gmail.com, ORCID: 0009-0007-2779-3492; robin.chawla.cse14@iitbhu.ac.in, ORCID: 0009-0007-2807-3948)}
-\tfootnote{This work received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors. Manuscript submitted August 4, 2026.}
+\tfootnote{This work received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors. Manuscript submitted August 5, 2026.}
 
 \markboth
 {Chincholikar \headeretal: Version Migration as a Correlated Shock}
 {Chincholikar \headeretal: Version Migration as a Correlated Shock}
 
-\corresp{Corresponding author: Samir Chincholikar (e-mail: samir.chincholikar@gmail.com).}
+\corresp{Corresponding author: Robin Chawla (e-mail: robin.chawla.cse14@iitbhu.ac.in).}
 
 \begin{abstract}
 Financial institutions increasingly deploy large language models (LLMs) within credit and other decision-support workflows. However, vendor-driven model updates can alter behavior even when an institution holds its prompts, inputs, and downstream processes fixed. We quantify the decision instability associated with two prespecified model-version transitions: an OpenAI efficient-model update and a Google Gemini Flash update. Across both transitions, the experiment covers 100 companies, 12 analysis dates, and three replicates per version, producing 14,400 model calls. Identical inputs and matched per-cell seeds hold sampling conditions fixed, and within-version replicate disagreement provides an empirical noise floor. The primary endpoint is the excess cross-version flip rate above this floor. For the OpenAI migration, the cross-version disagreement rate exceeds the within-version noise floor by 11.2 percentage points (95\% CI: 7.7--15.0); for the Gemini migration this excess is 38.1 percentage points (95\% CI: 30.3--45.8). A prevalence--churn decomposition shows that the OpenAI update primarily reconsiders individual companies and shifts decisions toward greater severity, while the Gemini update produces a broad distributional shift toward the SAFE category. Neither migration shows clear improvement among observations whose labels change; the Gemini successor also shows lower aggregate class-balanced performance. Vendor version migration can therefore create material, directionally unpredictable decision discontinuities within otherwise unchanged LLM pipelines. We propose a pre-migration parallel-run control that measures excess flip rate, label-distribution shift, per-company churn, and directional drift before production cutover. The findings provide controlled evidence of deployment-level migration risk; broader cross-task and cross-institution effects remain for future study.
