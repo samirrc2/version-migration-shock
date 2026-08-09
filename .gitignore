@@ -45,6 +45,16 @@ __pycache__/
 # Not part of this artifact
 IEEE-Access-Submission-Checklist.pdf
 
+# Scratch / working artifacts (not part of the manuscript or the reproducible artifact)
+*.bak
+section_text_for_sheets.*
+section_para_for_sheets.*
+humanized_corrected_paragraphs.md
+ssrn/*.aux
+ssrn/*.log
+ssrn/*.out
+ssrn/*.synctex.gz
+
 # ── Intentionally COMMITTED under results/ ──
 #   results/claims_<pair>.json, results/results_<pair>.md, results/tempsweep_*
 # Transient scratch inside results/ (overwritten every reproduce):

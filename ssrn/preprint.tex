@@ -1,55 +1,36 @@
-\documentclass{ieeeaccess}
-\usepackage{cite}
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
-\usepackage{textcomp}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{array}
 \usepackage{url}
-\usepackage{bm}
-\makeatletter
-\AtBeginDocument{\DeclareMathVersion{bold}
-\SetSymbolFont{operators}{bold}{T1}{times}{b}{n}
-\SetSymbolFont{NewLetters}{bold}{T1}{times}{b}{it}
-\SetMathAlphabet{\mathrm}{bold}{T1}{times}{b}{n}
-\SetMathAlphabet{\mathit}{bold}{T1}{times}{b}{it}
-\SetMathAlphabet{\mathbf}{bold}{T1}{times}{b}{n}
-\SetMathAlphabet{\mathtt}{bold}{OT1}{pcr}{b}{n}
-\SetSymbolFont{symbols}{bold}{OMS}{cmsy}{b}{n}
-\renewcommand\boldmath{\@nomath\boldmath\mathversion{bold}}}
-\makeatother
-\graphicspath{{./}{figures/}}
+\usepackage{cite}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\graphicspath{{../paper/figures/}{../paper/}}
+\setlength{\parskip}{2pt}
+
+\title{\textbf{Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems}%
+\thanks{This work received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors. Corresponding author: Robin Chawla (robin.chawla.cse14@iitbhu.ac.in).}}
+\author{Samir Chincholikar\thanks{Independent Researcher. Email: samir.chincholikar@gmail.com; ORCID 0009-0007-2779-3492.}
+\and Robin Chawla\thanks{Independent Researcher. Email: robin.chawla.cse14@iitbhu.ac.in; ORCID 0009-0007-2807-3948.}}
+\date{Preprint --- August 2026. This is a preprint and has not been peer reviewed.}
 
 \begin{document}
-\history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
-\doi{10.1109/ACCESS.2026.0000000}
-
-\title{Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems}
-
-\author{\uppercase{Samir Chincholikar}\authorrefmark{1},
-\uppercase{Robin Chawla}\authorrefmark{1}}
-\address[1]{Independent Researcher (e-mail: samir.chincholikar@gmail.com, ORCID: 0009-0007-2779-3492; robin.chawla.cse14@iitbhu.ac.in, ORCID: 0009-0007-2807-3948)}
-\tfootnote{This work received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors. Manuscript submitted August 5, 2026.}
-
-\markboth
-{Chincholikar \headeretal: Version Migration as a Correlated Shock}
-{Chincholikar \headeretal: Version Migration as a Correlated Shock}
-
-\corresp{Corresponding author: Robin Chawla (e-mail: robin.chawla.cse14@iitbhu.ac.in).}
+\maketitle
 
 \begin{abstract}
 Financial institutions increasingly deploy large language models (LLMs) within credit and other decision-support workflows. However, vendor-driven model updates can alter behavior even when an institution holds its prompts, inputs, and downstream processes fixed. We quantify the decision instability associated with two prespecified model-version transitions: an OpenAI efficient-model update and a Google Gemini Flash update. Across both transitions, the experiment covers 100 companies, 12 analysis dates, and three replicates per version, producing 14,400 model calls. Identical inputs and matched per-cell seeds hold sampling conditions fixed, and within-version replicate disagreement provides an empirical noise floor. The primary endpoint is the excess cross-version flip rate above this floor. For the OpenAI migration, the cross-version disagreement rate exceeds the within-version noise floor by 11.2 percentage points (95\% CI: 7.7--15.0); for the Gemini migration this excess is 38.1 percentage points (95\% CI: 30.3--45.8). A prevalence--churn decomposition shows that the OpenAI update primarily reconsiders individual companies and shifts decisions toward greater severity, while the Gemini update produces a broad distributional shift toward the SAFE category. Neither migration shows clear improvement among observations whose labels change; the Gemini successor also shows lower aggregate class-balanced performance. Vendor version migration can therefore create material, directionally unpredictable decision discontinuities within otherwise unchanged LLM pipelines. We propose a pre-migration parallel-run control that measures excess flip rate, label-distribution shift, per-company churn, and directional drift before production cutover. The findings provide controlled evidence of deployment-level migration risk; broader cross-task and cross-institution effects remain for future study.
 \end{abstract}
 
-\begin{keywords}
-Algorithmic monoculture, credit risk, financial artificial intelligence, large language models, model drift, model risk management, model version migration, reproducible evaluation, third-party model risk.
-\end{keywords}
+\noindent\textbf{Keywords:} Algorithmic monoculture, credit risk, financial artificial intelligence, large language models, model drift, model risk management, model version migration, reproducible evaluation, third-party model risk
 
-\titlepgskip=-21pt
-\maketitle
+\medskip
 
 \section{Introduction}
-\PARstart{L}{arge} language models (LLMs) are increasingly being integrated into financial decision-support workflows~\cite{bloomberggpt,finbert} such as credit screening, counterparty assessment, disclosure review, and operational triage. In these applications, model outputs can feed into downstream classifications, escalation decisions, and review priorities. However, many LLMs are accessed via application programming interfaces (APIs) provided by third parties, in which case the provider determines the versions and availability of the underlying models. This differs from conventional models developed within an institution and governed by existing model-risk processes~\cite{sr117,sr2602}. When an existing model version is deprecated or replaced, institutions may therefore be forced to migrate to a successor version even if their prompts, data, application logic, and downstream processes remain unchanged.
+Large language models (LLMs) are increasingly being integrated into financial decision-support workflows~\cite{bloomberggpt,finbert} such as credit screening, counterparty assessment, disclosure review, and operational triage. In these applications, model outputs can feed into downstream classifications, escalation decisions, and review priorities. However, many LLMs are accessed via application programming interfaces (APIs) provided by third parties, in which case the provider determines the versions and availability of the underlying models. This differs from conventional models developed within an institution and governed by existing model-risk processes~\cite{sr117,sr2602}. When an existing model version is deprecated or replaced, institutions may therefore be forced to migrate to a successor version even if their prompts, data, application logic, and downstream processes remain unchanged.
 
 These migrations are a distinct form of model-change risk. A successor version could act like its predecessor, with little impact on operations. But the same inputs can also lead to materially different decisions depending on changes in training data, architecture, optimization, or alignment~\cite{muscle,underspec,bommasani}. Just because a provider marks a version as the recommended replacement does not mean that it is behaviorally equivalent to its predecessor~\cite{wei}. The magnitude, direction, and structure of any resulting decision changes thus have to be empirically measured under controlled input and sampling conditions.
 
@@ -247,7 +228,7 @@ Because the $Z''$ model is not equally applicable across all industries, the ful
 \subsection{Models and Migration Pairs}
 The study evaluates two vendor-declared model-version migrations, each involving an incumbent model and a vendor-positioned successor version. We record the exact snapshot identifiers and treat them as experimental artifacts, so that the analysis refers to specific deployed versions rather than broader model-family names, whose capabilities providers typically document only at the level of aggregate technical reports~\cite{gpt4}. The evaluated migration pairs are summarized in Table~\ref{tab:models}; the exact model identifiers and each announced shutdown date are recorded from the providers' deprecation documentation as of the protocol-freeze date (4~July~2026)~\cite{openai_dep,google_dep}. The successor versions actually evaluated are fixed by the frozen experiment and are reported as run.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \caption{Evaluated migration pairs. Exact snapshot identifiers are pinned; the hash-frozen call-level dataset is the object of record.}
 \label{tab:models}
@@ -259,7 +240,7 @@ OpenAI & \texttt{gpt-5-nano-2025-08-07} & \texttt{gpt-5.4-nano} & December 11, 2
 Google & \texttt{gemini-2.5-flash} & \texttt{gemini-3.5-flash} & October 16, 2026 \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
 For each migration pair, the incumbent and successor versions are evaluated on the same company universe, analysis dates, financial inputs, prompt template, response schema, and matched cell-level seeds. No prompt modification, feature change, or downstream decision-rule adjustment is introduced between versions. This design isolates model version as the principal experimental factor.
 
@@ -415,12 +396,12 @@ Gemini $v_{\mathrm{new}}$ & 0.708 & 0.281 & 0.012 \\
 \end{tabular}
 \end{table}
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.72\textwidth]{fig3_transition.png}
 \caption{Decision transition matrices ($v_{\mathrm{old}}\to v_{\mathrm{new}}$) for each migration. OpenAI's mass moves off the diagonal toward more-severe tiers; Gemini's moves sharply into SAFE.}
 \label{fig:trans}
-\end{figure*}
+\end{figure}
 
 \subsection{Robustness of Cross-Version Agreement}
 The comparison between the two migrations is not sensitive to the choice of chance-corrected agreement statistic~\cite{cohen,scott,gwet}. For OpenAI,
@@ -518,7 +499,7 @@ together with the prevalence--churn decomposition and a directional-drift test. 
 
 Cutover criteria should be specified before testing. Excess disagreement above an institution-defined materiality threshold, material directional drift, or disproportionate movement among high-risk cases should trigger expanded validation and documented approval rather than automatic deployment. Institutions should also inventory exact snapshot identifiers, seek advance deprecation notice, preserve access to the incumbent throughout the validation window, and retain frozen incumbent outputs as a challenger benchmark. The resulting parallel-run package provides evidence for monitoring, effective challenge, and change approval. This proposal is a practitioner-oriented control interpretation rather than authoritative supervisory guidance.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \caption{Mapping vendor version migration to SR 11-7 provisions and the proposed control.}
 \label{tab:gov}
@@ -534,7 +515,7 @@ Model inventory, change control, documentation & Frozen documentation undermined
 Aggregate (institution-level) model risk & Not contemplated as correlated \emph{across} institutions via a shared vendor update & Systemic gap; flagged for supervisory attention \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
 \section{Threats to Validity}
 \noindent\textbf{Endpoint variability.} Hosted LLM endpoints can remain stochastic even when temperature is set to zero and a seed is supplied. The study therefore does not assume deterministic model behavior. Instead, repeated within-version calls estimate residual variability, which is subtracted from the cross-version flip rate in the primary endpoint.
@@ -625,7 +606,8 @@ ensure accuracy and originality.
 \bibitem{google_dep} Google, ``Gemini deprecations,'' Google AI for Developers, 2026. [Online]. Available: \url{https://ai.google.dev/gemini-api/docs/deprecations} (accessed Jul.~4, 2026).
 \end{thebibliography}
 
-\begin{IEEEbiographynophoto}{Samir Chincholikar}
+\section*{Author Biographies}
+\noindent\textbf{Samir Chincholikar.} 
 received the B.E. degree from the University of Mumbai, India, in 2013, the
 M.B.A. degree in finance from the Jamnalal Bajaj Institute of Management
 Studies, University of Mumbai, in 2016, and the M.S. degree in financial
@@ -635,9 +617,11 @@ analytics and machine learning in the financial services industry. His research
 interests include large language models, multi-agent systems, the use of AI to
 automate engineering workflows, machine learning evaluation, and reproducible
 empirical methods in computational finance.
-\end{IEEEbiographynophoto}
 
-\begin{IEEEbiographynophoto}{Robin Chawla}
+
+
+
+\medskip\noindent\textbf{Robin Chawla.} 
 received the B.Tech. degree in computer science and engineering from the Indian
 Institute of Technology (BHU), Varanasi, India. He has about eight years of
 professional experience as a software engineer at a proprietary trading firm,
@@ -646,8 +630,8 @@ AI to automate engineering workflows. His research interests include large
 language models, multi-agent systems, machine learning for engineering
 workflows and automation, and reproducible evaluation of generative AI
 for decision-making.
-\end{IEEEbiographynophoto}
 
-\EOD
+
+
 
 \end{document}
