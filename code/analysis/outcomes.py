@@ -145,6 +145,88 @@ def accuracy(rows_old, rows_new, sectors: dict | None = None) -> dict:
         "flip_conditional_new_minus_old": delta, "flip_conditional_ci": ci,
         "n_flip_scored_old": no_f, "n_flip_scored_new": nn_f,
         "quality_old": ql_o, "quality_new": ql_n,
+        "restricted": _restricted_quality(mv_o, mv_n, signs, tk_sector),
+        "quality_ci": _quality_ci(mv_o, mv_n, signs, tk_sector),
+    }
+
+
+def _restricted_quality(mv_o, mv_n, signs, tk_sector) -> dict:
+    """Class-balanced scoring on the Altman-appropriate subset (R2.4).
+
+    The manuscript previously reported only a raw hit rate for the subset that drops
+    Financials and Real Estate, while arguing elsewhere that imbalanced classes require
+    balanced accuracy and macro-F1. The referee is right that the same two statistics have to
+    be given here, because this is the subset on which the Z'' reference model is defensible
+    and it is where the OpenAI direction reverses.
+    """
+    keep_o = {c: v for c, v in mv_o.items() if tk_sector.get(c[0], "Unknown") not in _FIN_SECTORS}
+    keep_n = {c: v for c, v in mv_n.items() if tk_sector.get(c[0], "Unknown") not in _FIN_SECTORS}
+    qo = _label_quality(keep_o, signs, tk_sector)
+    qn = _label_quality(keep_n, signs, tk_sector)
+    ho, no = _rate(keep_o, signs)
+    hn, nn = _rate(keep_n, signs)
+    return {
+        "excluded_sectors": list(_FIN_SECTORS),
+        "hit_rate_old": ho, "hit_rate_new": hn, "n_scored_old": no, "n_scored_new": nn,
+        "balanced_accuracy_old": qo.get("balanced_accuracy"),
+        "balanced_accuracy_new": qn.get("balanced_accuracy"),
+        "macro_f1_old": qo.get("macro_f1"), "macro_f1_new": qn.get("macro_f1"),
+        "majority_class_baseline": qo.get("majority_class_baseline"),
+    }
+
+
+def _quality_ci(mv_o, mv_n, signs, tk_sector, draws=2000, seed=42) -> dict:
+    """Ticker-clustered bootstrap intervals for balanced accuracy and macro-F1 (R2.5).
+
+    These aggregate comparisons were reported as bare point estimates while the
+    flip-conditional analysis carried an interval, leaving their inferential status unstated.
+    Tickers are the resampling unit, as everywhere else in the paper, and the paired change
+    (new minus old) is resampled on the same draw so the two versions stay coupled.
+    """
+    cells = sorted(set(mv_o) & set(mv_n))
+    by_tk = defaultdict(list)
+    for c in cells:
+        by_tk[c[0]].append(c)
+    tks = sorted(by_tk)
+    if len(tks) < 2:
+        return {}
+
+    def stat(sel):
+        so = {c: mv_o[c] for c in sel}
+        sn = {c: mv_n[c] for c in sel}
+        a, b = _label_quality(so, signs, tk_sector), _label_quality(sn, signs, tk_sector)
+        return (a.get("balanced_accuracy"), b.get("balanced_accuracy"),
+                a.get("macro_f1"), b.get("macro_f1"))
+
+    pt = stat(cells)
+    rng = random.Random(seed)
+    acc = {k: [] for k in ("ba_old", "ba_new", "ba_delta", "f1_old", "f1_new", "f1_delta")}
+    for _ in range(draws):
+        sel = []
+        for _i in range(len(tks)):
+            sel.extend(by_tk[tks[rng.randrange(len(tks))]])
+        bo, bn, fo, fn = stat(sel)
+        if None in (bo, bn, fo, fn):
+            continue
+        acc["ba_old"].append(bo); acc["ba_new"].append(bn); acc["ba_delta"].append(bn - bo)
+        acc["f1_old"].append(fo); acc["f1_new"].append(fn); acc["f1_delta"].append(fn - fo)
+
+    def ci(v):
+        if len(v) < 20:
+            return [None, None]
+        v = sorted(v)
+        return [v[int(0.025 * len(v))], v[int(0.975 * len(v)) - 1]]
+
+    return {
+        "n_tickers": len(tks), "draws": draws,
+        "balanced_accuracy_old": pt[0], "balanced_accuracy_old_ci": ci(acc["ba_old"]),
+        "balanced_accuracy_new": pt[1], "balanced_accuracy_new_ci": ci(acc["ba_new"]),
+        "balanced_accuracy_delta": (pt[1] - pt[0]) if None not in pt[:2] else None,
+        "balanced_accuracy_delta_ci": ci(acc["ba_delta"]),
+        "macro_f1_old": pt[2], "macro_f1_old_ci": ci(acc["f1_old"]),
+        "macro_f1_new": pt[3], "macro_f1_new_ci": ci(acc["f1_new"]),
+        "macro_f1_delta": (pt[3] - pt[2]) if None not in pt[2:] else None,
+        "macro_f1_delta_ci": ci(acc["f1_delta"]),
     }
 
 

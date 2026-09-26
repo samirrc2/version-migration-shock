@@ -1,41 +1,89 @@
 required_claims:
-  - excess_flip_rate.value
-  - excess_flip_rate.ci_low
-  - excess_flip_rate.ci_high
-  - cross_version_flip_rate.value
-  - within_version_flip_rate.value
-  - prevalence.marginal_shift
-  - prevalence.churn
-  - prevalence.cohen_kappa
-  - context_coverage.frac_real
-  - agreement.scott_pi
-  - agreement.gwet_ac1
-  - precision.excess_ci_halfwidth
-  - accuracy.hit_rate_old
-  - accuracy.hit_rate_new
-  - accuracy.balanced_old
-  - accuracy.balanced_new
-  - accuracy.macro_f1_old
-  - accuracy.macro_f1_new
-  - accuracy.majority_baseline
-  - accuracy.hit_rate_old_ex_fin
-  - accuracy.hit_rate_new_ex_fin
-  - noise.within_old
-  - noise.within_new
-  - noise.within_pooled
-  - noise.excess_conservative
-  - noise.excess_conservative_ci_low
-  - noise.excess_conservative_ci_high
-  - accuracy.flip_conditional_delta
-  - accuracy.flip_conditional_ci_low
-  - accuracy.flip_conditional_ci_high
-  - conviction_shift.value
-  - implied_turnover.fraction
-  - dose_response.instability_contrast
-  - dose_response.conviction_slope
-  - mcnemar.p_display
-  - n_matched_cells
-  - design.calls_per_version
-  - design.calls_per_pair
-  - design.calls_two_pairs
+- excess_flip_rate.value
+- excess_flip_rate.ci_low
+- excess_flip_rate.ci_high
+- cross_version_flip_rate.value
+- within_version_flip_rate.value
+- prevalence.marginal_shift
+- prevalence.churn
+- prevalence.cohen_kappa
+- context_coverage.frac_real
+- agreement.scott_pi
+- agreement.gwet_ac1
+- precision.excess_ci_halfwidth
+- accuracy.hit_rate_old
+- accuracy.hit_rate_new
+- accuracy.balanced_old
+- accuracy.balanced_new
+- accuracy.macro_f1_old
+- accuracy.macro_f1_new
+- accuracy.majority_baseline
+- accuracy.hit_rate_old_ex_fin
+- accuracy.hit_rate_new_ex_fin
+- noise.within_old
+- noise.within_new
+- noise.within_pooled
+- noise.excess_conservative
+- noise.excess_conservative_ci_low
+- noise.excess_conservative_ci_high
+- accuracy.flip_conditional_delta
+- accuracy.flip_conditional_ci_low
+- accuracy.flip_conditional_ci_high
+- conviction_shift.value
+- implied_turnover.fraction
+- dose_response.instability_contrast
+- dose_response.conviction_slope
+- mcnemar.p_display
+- n_matched_cells
+- design.calls_per_version
+- design.calls_per_pair
+- design.calls_two_pairs
+- matched.repeat_floor_pooled
+- matched.repeat_floor_n
+- matched.repeat_floor_ci_low
+- matched.repeat_floor_ci_high
+- matched.excess_vs_repeat_floor
+- matched.excess_vs_repeat_ci_low
+- matched.excess_vs_repeat_ci_high
+- distance.tvd
+- distance.tvd_ci_low
+- distance.tvd_ci_high
+- subgrid.excess_on_subgrid_cells
+- subgrid.n_cells
+- restricted.cross_version_flip_rate
+- restricted.hit_rate_old
+- restricted.hit_rate_new
+- restricted.balanced_old
+- restricted.balanced_new
+- restricted.macro_f1_old
+- restricted.macro_f1_new
+- quality.balanced_delta
+- quality.balanced_delta_ci_low
+- quality.balanced_delta_ci_high
+- quality.macro_f1_delta
+- quality.macro_f1_delta_ci_low
+- quality.macro_f1_delta_ci_high
 tolerance: 0.0005
+# Figures in the manuscript that are NOT analysis outputs. Each entry is anchored to the
+# context it is allowed in: a bare value would wave the same digits through anywhere in the
+# paper, including a result that happened to print them. `context` is a regular expression
+# that must match within 60 characters of the figure.
+manuscript_number_allowlist:
+- value: '2.6'
+  context: "Z''"
+  reason: Altman Z'' SAFE/WATCH cut-off, an external constant from the scoring model
+- value: '1.1'
+  context: "Z''"
+  reason: Altman Z'' WATCH/DISTRESS cut-off, same source
+- value: '2.5'
+  context: 'gemini-2\.5-flash'
+  reason: part of the incumbent Google model identifier, not a measurement
+- value: '3.5'
+  context: 'gemini-3\.5-flash'
+  reason: part of the successor Google model identifier
+- value: '5.4'
+  context: 'gpt-5\.4-nano'
+  reason: part of the successor OpenAI model identifier
+- value: '10.24433'
+  context: 'doi|DOI'
+  reason: Code Ocean DOI prefix

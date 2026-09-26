@@ -1,0 +1,30 @@
+{
+  "document": "SR 26-2, Revised Guidance on Model Risk Management",
+  "issuers": [
+    "Board of Governors of the Federal Reserve System",
+    "OCC",
+    "FDIC"
+  ],
+  "url": "https://www.federalreserve.gov/supervisionreg/srletters/SR2602.pdf",
+  "retrieved_utc": "2026-09-24",
+  "sha256": "956b3bc642dac3b7a1ce6b2ac0f4fc1421b13d7b4f06db6fcfa022a90e7b38a7",
+  "supersedes": [
+    "SR 11-7 (April 4, 2011)",
+    "SR 21-8 (April 9, 2021)"
+  ],
+  "applicability": "most relevant to banking organizations with over $30 billion in total assets",
+  "sections": [
+    "I. Introduction",
+    "II. Purpose and Scope",
+    "III. Overview of Model Risk and Model Risk Management",
+    "IV. Model Development and Model Use",
+    "V. Model Validation and Monitoring",
+    "VI. Governance and Controls",
+    "VII. Vendor and Other Third-Party Products"
+  ],
+  "provisions_cited_by_the_paper": {
+    "footnote_3": "Generative AI and agentic AI models are novel and rapidly evolving. As such, they are not within the scope of this guidance. Nonetheless, a banking organization's risk management and governance practices should guide the determination of appropriate governance and controls for any tools, processes, or systems not covered in this document. However, the principles described in this guidance apply to traditional statistical and quantitative models and non-generative, non-agentic AI models.",
+    "section_III_aggregate_risk": "Sound practice involves assessing model risk both individually and in aggregate. Aggregate risk reflects interactions and dependencies among models; reliance on common assumptions, data, or methodologies; and any other factors that could adversely affect several models and their outputs simultaneously.",
+    "section_VII_vendor": "The widespread use of customized vendor and other third-party products--including data, parameter values, or complete models--can present unique challenges for validation and other model risk management activities."
+  }
+}

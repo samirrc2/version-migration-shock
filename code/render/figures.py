@@ -12,8 +12,31 @@ import matplotlib.pyplot as plt
 
 
 def _f3(x):
-    """Round-half-up to 3 decimals so figure labels match the manuscript tables/body."""
-    return str(Decimal(str(x)).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP))
+    """Round-half-up to 3 decimals so figure labels match the manuscript tables/body.
+
+    Feed this the full-precision analysis value, never a flat claims_<pair>.json key: those
+    are already rounded to four decimals, and rounding again to three double-rounds. That is
+    how the excess-flip interval came to be labelled [0.077, 0.150] when the bootstrap bound
+    is 0.14948571 -- 0.1495 at four decimals, then 0.150 at three, instead of 0.149.
+    """
+    # Decimal(x), not Decimal(str(x)): repr() already shortens the double to the fewest
+    # digits that round-trip, so str() rounds once before quantize rounds again. The Gemini
+    # lower bound is 0.30249999999999999, whose repr is "0.3025" and which then rounds up to
+    # 0.303 instead of down to 0.302.
+    return str(Decimal(x).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP))
+
+
+def _exact(c, key, *path):
+    """Full-precision value from the detail block, falling back to the rounded flat key."""
+    d = c.get("detail")
+    for k in path:
+        if isinstance(d, dict) and k in d:
+            d = d[k]
+        elif isinstance(d, list) and isinstance(k, int) and -len(d) <= k < len(d):
+            d = d[k]
+        else:
+            return c[key]
+    return d if isinstance(d, (int, float)) and not isinstance(d, bool) else c[key]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "config"))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -42,12 +65,22 @@ def load_claims():
 def fig_excess_forest(cl):
     fig, ax = plt.subplots(figsize=(6, 2.4))
     ys = list(range(len(cl)))
+    # Headroom above the top series and to the right of the widest interval: the value label
+    # sits above its marker, and without this the topmost label runs into the title and past
+    # the right spine.
     for y, (p, c) in zip(ys, cl.items()):
-        v, lo, hi = c["excess_flip_rate.value"], c["excess_flip_rate.ci_low"], c["excess_flip_rate.ci_high"]
+        v = _exact(c, "excess_flip_rate.value", "excess_flip_rate", "value")
+        lo = _exact(c, "excess_flip_rate.ci_low", "excess_flip_rate", "ci", 0)
+        hi = _exact(c, "excess_flip_rate.ci_high", "excess_flip_rate", "ci", 1)
         ax.errorbar(v, y, xerr=[[v - lo], [hi - v]], fmt="o", capsize=4, color="#1f4e79")
         ax.annotate(f"{_f3(v)} [{_f3(lo)}, {_f3(hi)}]", (v, y), textcoords="offset points",
                     xytext=(8, 6), fontsize=8)
     ax.axvline(0, ls="--", color="gray", lw=1)
+    ax.set_ylim(-0.55, len(ys) - 1 + 0.85)
+    lo_all = min(_exact(c, "excess_flip_rate.ci_low", "excess_flip_rate", "ci", 0) for c in cl.values())
+    hi_all = max(_exact(c, "excess_flip_rate.ci_high", "excess_flip_rate", "ci", 1) for c in cl.values())
+    span = hi_all - min(0.0, lo_all)
+    ax.set_xlim(min(0.0, lo_all) - 0.08 * span, hi_all + 0.26 * span)
     ax.set_yticks(ys); ax.set_yticklabels([_PAIR_LABEL.get(p, p) for p in cl])
     ax.set_xlabel("excess flip rate (cross - within), 95% CI")
     ax.set_title("Version-migration excess flip rate by pair")
@@ -57,8 +90,8 @@ def fig_excess_forest(cl):
 def fig_prevalence(cl):
     fig, ax = plt.subplots(figsize=(6, 3))
     labels = list(cl); x = range(len(labels)); w = 0.38
-    marg = [cl[p]["prevalence.marginal_shift"] for p in labels]
-    churn = [cl[p]["prevalence.churn"] for p in labels]
+    marg = [_exact(cl[p], "prevalence.marginal_shift", "prevalence", "marginal_shift") for p in labels]
+    churn = [_exact(cl[p], "prevalence.churn", "prevalence", "churn") for p in labels]
     ax.bar([i - w / 2 for i in x], marg, w, label="marginal (rating-mix) shift", color="#c0504d")
     ax.bar([i + w / 2 for i in x], churn, w, label="residual company-level churn", color="#4f81bd")
     ax.set_xticks(list(x)); ax.set_xticklabels([_PAIR_LABEL.get(l, l) for l in labels])

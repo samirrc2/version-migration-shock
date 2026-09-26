@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{booktabs}
+\usepackage{array}   % >{\raggedright\arraybackslash}p{} in Table 5
 \usepackage{multirow}
 \usepackage{url}
 \usepackage{bm}
@@ -38,7 +39,7 @@
 \corresp{Corresponding author: Robin Chawla (e-mail: robin.chawla.cse14@iitbhu.ac.in).}
 
 \begin{abstract}
-Financial institutions increasingly deploy large language models (LLMs) within credit and other decision-support workflows. However, vendor-driven model updates can alter behavior even when an institution holds its prompts, inputs, and downstream processes fixed. We quantify the decision instability associated with two prespecified model-version transitions: an OpenAI efficient-model update and a Google Gemini Flash update. Across both transitions, the experiment covers 100 companies, 12 analysis dates, and three replicates per version, producing 14,400 model calls. Identical inputs and matched per-cell seeds hold sampling conditions fixed, and within-version replicate disagreement provides an empirical noise floor. The primary endpoint is the excess cross-version flip rate above this floor. For the OpenAI migration, the cross-version disagreement rate exceeds the within-version noise floor by 11.2 percentage points (95\% CI: 7.7--15.0); for the Gemini migration this excess is 38.1 percentage points (95\% CI: 30.3--45.8). A prevalence--churn decomposition shows that the OpenAI update primarily reconsiders individual companies and shifts decisions toward greater severity, while the Gemini update produces a broad distributional shift toward the SAFE category. Neither migration shows clear improvement among observations whose labels change; the Gemini successor also shows lower aggregate class-balanced performance. Vendor version migration can therefore create material, directionally unpredictable decision discontinuities within otherwise unchanged LLM pipelines. We propose a pre-migration parallel-run control that measures excess flip rate, label-distribution shift, per-company churn, and directional drift before production cutover. The findings provide controlled evidence of deployment-level migration risk; broader cross-task and cross-institution effects remain for future study.
+Financial institutions increasingly deploy large language models (LLMs) within credit and other decision-support workflows. However, vendor-driven model updates can alter behavior even when an institution holds its prompts, inputs, and downstream processes fixed. We quantify the decision instability associated with two prespecified model-version transitions: an OpenAI efficient-model update and a Google Gemini Flash update. Across both transitions, the experiment covers 100 companies, 12 analysis dates, and three replicates per version, producing 14,400 model calls. Identical inputs and matched per-cell seeds hold sampling conditions fixed, and within-version replicate disagreement provides an empirical noise floor. The primary endpoint is the excess cross-version flip rate above this floor. For the OpenAI migration, the cross-version disagreement rate exceeds the within-version noise floor by 11.2 percentage points (95\% CI: 7.7--14.9); for the Gemini migration this excess is 38.1 percentage points (95\% CI: 30.2--45.8). A prevalence--churn decomposition shows that the OpenAI update primarily reconsiders individual companies and shifts decisions toward greater severity, while the Gemini update produces a broad distributional shift toward the SAFE category. Neither migration shows clear improvement among observations whose labels change; the Gemini successor also shows lower aggregate class-balanced performance. Vendor version migration can therefore create material, directionally unpredictable decision discontinuities within otherwise unchanged LLM pipelines. We propose a pre-migration parallel-run control that measures excess flip rate, label-distribution shift, per-company churn, and directional drift before production cutover. The findings provide controlled evidence of deployment-level migration risk; broader cross-task and cross-institution effects remain for future study.
 \end{abstract}
 
 \begin{keywords}
@@ -51,7 +52,7 @@ Algorithmic monoculture, credit risk, financial artificial intelligence, large l
 \section{Introduction}
 \PARstart{L}{arge} language models (LLMs) are increasingly being integrated into financial decision-support workflows~\cite{bloomberggpt,finbert} such as credit screening, counterparty assessment, disclosure review, and operational triage. In these applications, model outputs can feed into downstream classifications, escalation decisions, and review priorities. However, many LLMs are accessed via application programming interfaces (APIs) provided by third parties, in which case the provider determines the versions and availability of the underlying models. This differs from conventional models developed within an institution and governed by existing model-risk processes~\cite{sr117,sr2602}. When an existing model version is deprecated or replaced, institutions may therefore be forced to migrate to a successor version even if their prompts, data, application logic, and downstream processes remain unchanged.
 
-These migrations are a distinct form of model-change risk. A successor version could act like its predecessor, with little impact on operations. But the same inputs can also lead to materially different decisions depending on changes in training data, architecture, optimization, or alignment~\cite{muscle,underspec,bommasani}. Just because a provider marks a version as the recommended replacement does not mean that it is behaviorally equivalent to its predecessor~\cite{wei}. The magnitude, direction, and structure of any resulting decision changes thus have to be empirically measured under controlled input and sampling conditions.
+These migrations are a distinct form of model-change risk. A successor version could act like its predecessor, with little impact on operations. But the same inputs can also lead to materially different decisions depending on changes in training data, architecture, optimization, or alignment~\cite{muscle,underspec,bommasani}. Just because a provider marks a version as the recommended replacement does not mean that it is behaviorally equivalent to its predecessor. The magnitude, direction, and structure of any resulting decision changes thus have to be empirically measured under controlled input and sampling conditions.
 
 There are two main measurement challenges in model update evaluation. First, repeated calls to the same model version can yield different outputs because of residual sampling variability. Therefore, a simple before-and-after disagreement rate may mistakenly attribute normal within-version variation to the migration itself. Second, the aggregate flip rate does not capture how decisions are changing. A successor version may change the overall distribution of labels across the portfolio being evaluated, or it may move individual companies in offsetting directions with little change in the aggregate distribution. These two types of changes have different operational and governance implications and should therefore be measured separately.
 
@@ -134,13 +135,70 @@ The preregistered primary endpoint is the excess flip rate,
 \begin{equation}
 F_{\mathrm{excess}} = F_{\mathrm{cross}} - F_{\mathrm{noise}}.
 \end{equation}
-This is the cross-version disagreement rate above the estimated within-version noise floor. It quantifies how much more the incumbent and successor versions disagree than repeated calls to a single version, and we view it as a noise-adjusted measure of cross-version disagreement rather than a formal estimate of the causal share of decisions changed by the migration. A positive value indicates that the two versions disagree more than ordinary within-version sampling variability alone would produce.
+This is the cross-version disagreement rate above the estimated within-version noise floor. It quantifies how much more the incumbent and successor versions disagree than repeated calls to a single version, and we view it as a noise-adjusted measure of cross-version disagreement rather than a formal estimate of the causal share of decisions changed by the migration. A positive value indicates that the defined cross-version disagreement exceeds the estimated within-version baseline.
 
 Because the two versions may have different intrinsic variability, we also report a conservative robustness estimate that subtracts the larger of the two within-version floors:
 \begin{equation}
 F_{\mathrm{excess}}^{\mathrm{max}} = F_{\mathrm{cross}} - \max\!\left( F_{\mathrm{within},v_{\mathrm{old}}}, F_{\mathrm{within},v_{\mathrm{new}}} \right).
 \end{equation}
 The pooled estimator is used as the primary measure, while the maximum-floor specification provides a stricter sensitivity analysis. We consider the migration effect to be supported when the estimated excess flip rate is positive and its 95\% confidence interval excludes zero.
+
+
+
+\subsection{What the Two Baselines Measure, and a Repeat-Call Sensitivity}
+\label{subsec:estimand}
+The two rates entering $F_{\mathrm{excess}}$ are not constructed identically, and the difference
+matters for interpretation. $F_{\mathrm{within},v}$ compares different replicate seeds inside one
+version, whereas $F_{\mathrm{cross}}$ compares the same nominal seed across versions. Seed handling
+is provider-specific and is not guaranteed to be honored across versions, so the two quantities need
+not share a common coupling and $F_{\mathrm{excess}}$ should not be read as a variance-reduced
+within-cell contrast.
+
+The design intent is the weaker and sufficient one. $F_{\mathrm{within},v}$ answers how much a
+single pinned version disagrees with itself when the same input is resubmitted, which is the
+disagreement a deployment already absorbs before any migration. Subtracting it asks whether the
+version change adds disagreement beyond that. The alternative repeat-call baseline differs by
+provider. Under either baseline, excess cross-version disagreement remains positive for both
+migrations, leaving the substantive conclusion unchanged.
+
+As an additional sensitivity check, we estimate residual same-seed repeat-call disagreement on a
+stratified subgrid. Each selected cell is reissued using the identical seed, replicate index,
+temperature, and model version, so only the call occasion differs. The resulting same-seed
+repeat-call floor is $0.028$ for OpenAI (Wilson 95\% CI $[0.011,0.069]$, $n=144$) and $0.014$ for
+Gemini ($[0.004,0.049]$, $n=144$). Applying these alternative empirical noise-floor estimates to the
+full-grid cross-version disagreement rates gives excess disagreement of $0.189$ $[0.147,0.206]$ for
+OpenAI and $0.375$ $[0.339,0.385]$ for Gemini, compared with the preregistered values of $0.112$ and
+$0.381$. The alternative noise-floor estimate therefore leaves the substantive conclusion unchanged.
+We retain the preregistered definition as primary and report this repeat-call analysis as a
+sensitivity check because the repeat-call subgrid covers eight companies on three dates and is not
+intended as a second full-scale confirmatory experiment.
+
+A secondary observation follows from the same comparison. Of the 144 reissued OpenAI calls, four
+returned a different label, three of the 72 on the incumbent version and one of the 72 on the
+successor; of the 144 reissued Gemini calls, two did, both on the incumbent. Neither endpoint is
+therefore deterministic under a fixed seed.
+
+\subsection{Distribution Distance Is Not Per-Call Flip Probability}
+\label{subsec:distance}
+Two distinct quantities are reported and are not interchangeable. The total variation distance
+between the two versions' marginal label distributions,
+\begin{equation}
+\mathrm{TVD} = \tfrac{1}{2}\sum_{c\in\mathcal{C}}
+\left| \Pr(y_{v_{\mathrm{new}}}=c) - \Pr(y_{v_{\mathrm{old}}}=c) \right|,
+\end{equation}
+measures how far the aggregate rating mix moved. It is a property of the two distributions and is
+insensitive to which company moved; it equals the marginal component $M$ of the
+prevalence--churn decomposition. $F_{\mathrm{cross}}$ is the observed fraction of matched evaluation
+decisions whose label changes across versions; under the study's evaluation distribution it estimates
+per-call cutover disagreement, which is the operational quantity for a deployment holding a specific
+book. The two can diverge sharply: a permutation of labels across companies leaves TVD at zero while
+flipping most decisions, and a shift confined to one stratum moves TVD while leaving the rest of the
+book untouched. In this study TVD is $0.095$ $[0.060,0.138]$ for OpenAI against a per-call flip
+probability of $0.217$, and $0.319$ $[0.241,0.394]$ for Gemini against $0.389$. The gap between the
+two is exactly what the decomposition in Section~\ref{sec:results} attributes to churn. A governance
+process concerned with aggregate exposure should read TVD; one concerned with how many decisions in a
+representative parallel-run book change should read $F_{\mathrm{cross}}$, and $F_{\mathrm{excess}}$ is the latter net
+of the version's own resampling noise.
 
 \subsection{Prevalence--Churn Decomposition}
 The cross-version flip rate measures the total proportion of decisions that change after migration, but it does not identify the structure of that change. A successor version may alter the overall distribution of SAFE, WATCH, and DISTRESS labels, or it may reclassify individual companies in offsetting directions while leaving the aggregate label shares approximately unchanged. We therefore decompose the gross cross-version flip rate into a marginal-distribution component and a company-level churn component.
@@ -245,7 +303,7 @@ The rule-based reference is used only for the secondary accuracy analysis. The p
 Because the $Z''$ model is not equally applicable across all industries, the full-sector analysis is supplemented by a robustness evaluation that excludes Financials and Real Estate. This distinction allows the migration effect to be measured over the complete company grid while limiting the interpretation of classification accuracy to sectors for which the reference model is more appropriate.
 
 \subsection{Models and Migration Pairs}
-The study evaluates two vendor-declared model-version migrations, each involving an incumbent model and a vendor-positioned successor version. We record the exact snapshot identifiers and treat them as experimental artifacts, so that the analysis refers to specific deployed versions rather than broader model-family names, whose capabilities providers typically document only at the level of aggregate technical reports~\cite{gpt4}. The evaluated migration pairs are summarized in Table~\ref{tab:models}; the exact model identifiers and each announced shutdown date are recorded from the providers' deprecation documentation as of the protocol-freeze date (4~July~2026)~\cite{openai_dep,google_dep}. The successor versions actually evaluated are fixed by the frozen experiment and are reported as run.
+The study evaluates two vendor-declared model-version migrations, each involving an incumbent model and a vendor-positioned successor version. We record the exact snapshot identifiers and treat them as experimental artifacts, so that the analysis refers to specific deployed versions rather than broader model-family names, whose capabilities providers typically document only at the level of aggregate technical reports~\cite{gpt4}. The evaluated migration pairs are summarized in Table~\ref{tab:models}; the exact model identifiers and each announced shutdown date are recorded from the providers' deprecation documentation as of the protocol-freeze date (4~July~2026)~\cite{openai_dep,google_dep}. So that the designation is independently verifiable rather than resting on a live page, an archived capture of the Google deprecation page dated 1~July~2026 is included in the reproducibility artifact~\cite{google_dep_archive}. It records \texttt{gemini-2.5-flash} with a release date of 17~June~2025, a shutdown date of 16~October~2026, and \texttt{gemini-3.5-flash} as the recommended replacement, which is the pairing evaluated here. Provider deprecation pages are revisable without notice, which is one reason the designation is recorded from an archived capture rather than a live URL. The successor versions actually evaluated are fixed by the frozen experiment and are reported as run.
 
 \begin{table*}[t]
 \centering
@@ -282,6 +340,7 @@ Analyses defined before data collection are treated as confirmatory. Additional 
 Because proprietary endpoints may not remain available or behaviorally identical after the study period, reproducibility is based primarily on the archived call-level responses rather than on the assumption that future API calls will reproduce the same outputs. The released package therefore includes the frozen inputs, raw responses, exact version strings, prompts, seeds, configuration files, analysis code, protocol hash, amendment log, and dataset manifests required to regenerate the reported results.
 
 \section{Results}
+\label{sec:results}
 \subsection{Migration-Induced Decision Instability}
 Both evaluated version migrations produce cross-version decision changes well above their respective within-version noise floors (Table~\ref{tab:main}, Fig.~\ref{fig:forest}). The preregistered primary endpoint is therefore supported for both migration pairs.
 
@@ -289,15 +348,15 @@ For the OpenAI migration, 3{,}490 company--date--replicate cells contain valid, 
 \begin{equation}
 F_{\mathrm{excess}}^{\mathrm{OpenAI}} = 0.217-0.105 = 0.112,
 \end{equation}
-with a 95\% cluster-bootstrap confidence interval of $[0.077,\,0.150]$. This is an excess of 11.2 percentage points over the estimated within-version floor.
+with a 95\% cluster-bootstrap confidence interval of $[0.077,\,0.149]$. This is an excess of 11.2 percentage points over the estimated within-version floor.
 
 For the Gemini migration, all 3{,}600 planned cells contain valid, matched labels. The gross cross-version flip rate is 0.389, compared with a pooled within-version noise floor of 0.008. The excess flip rate is therefore
 \begin{equation}
 F_{\mathrm{excess}}^{\mathrm{Gemini}} = 0.389-0.008 = 0.381,
 \end{equation}
-with a 95\% cluster-bootstrap confidence interval of $[0.303,\,0.458]$. For the Gemini migration, the cross-version disagreement rate therefore exceeds the within-version noise floor by 38.1 percentage points, beyond ordinary within-version variation.
+with a 95\% cluster-bootstrap confidence interval of $[0.302,\,0.458]$. For the Gemini migration, the cross-version disagreement rate therefore exceeds the within-version noise floor by 38.1 percentage points, beyond ordinary within-version variation.
 
-There is a substantial difference between the two estimates. The Gemini migration produces an excess flip rate more than three times that of the OpenAI migration. However, both confidence intervals exclude zero, so neither result can be explained solely by residual sampling variability within the evaluated versions.
+There is a substantial difference between the two estimates. The Gemini migration produces an excess flip rate more than three times that of the OpenAI migration. Both confidence intervals exclude zero. Under the estimator's assumptions this establishes that the cross-version disagreement defined in Section~\ref{subsec:noisefloor} exceeds the within-version replicate baseline defined alongside it; it is a statement about those two defined quantities, not a general exclusion of every sampling-related explanation.
 
 The matched-cell counts differ because the OpenAI endpoints did not return valid outputs for every planned call. Of 3{,}600 planned cells per version, the incumbent produced 3{,}540 valid labels and the successor produced 3{,}548. Requiring valid outputs from both versions at the same matched cell yielded 3{,}490 observations for the paired analysis. The missing observations resulted primarily from transient provider errors and one JSON-parsing failure and were distributed across sectors and dates. Gemini returned valid labels for all 3{,}600 cells per version after quota-limited calls were completed through a deferred backfill. All 3{,}600 Gemini successor responses passed the same schema and categorical-label validation applied to the other versions; no invalid, missing, or unparsable response was recoded as SAFE.
 
@@ -313,11 +372,11 @@ As a conservative robustness check, the excess flip rate is also calculated usin
 Quantity & OpenAI & Gemini \\
 \midrule
 Excess flip rate (primary) & 0.112 & 0.381 \\
-\;\; 95\% CI & [.077,.150] & [.303,.458] \\
+\;\; 95\% CI & [.077,.149] & [.302,.458] \\
 \;\; cross-version flip & 0.217 & 0.389 \\
 \;\; within-version floor (pooled) & 0.105 & 0.008 \\
 \;\; floor old / new & .120/.090 & .016/.000 \\
-\;\; excess, $\max$ floor (95\% CI) & .097\,[.06,.13] & .372\,[.30,.45] \\
+\;\; excess, $\max$ floor (95\% CI) & .097\,[.06,.13] & .372\,[.29,.45] \\
 Marginal (rating-mix) shift & 0.095 & 0.319 \\
 Residual company-level churn & 0.122 & 0.070 \\
 \;\; churn 95\% CI & [.083,.161] & [.029,.120] \\
@@ -327,7 +386,7 @@ Drift direction & DISTRESS & SAFE \\
 Hit-rate old/new (chance .33) & .54/.56 & .49/.43 \\
 Balanced acc.\ old/new & .54/.57 & .49/.41 \\
 Macro-F1 old/new (baseline .36) & .52/.57 & .46/.32 \\
-Flip-cond.\ accuracy $\Delta$ & $+0.124$ & $-0.179$ \\
+Flip-cond.\ accuracy $\Delta$ & $+0.123$ & $-0.178$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -437,7 +496,7 @@ Although the absolute values differ because the statistics treat category preval
 \end{equation}
 The lower Gemini agreement is therefore not attributable solely to the prevalence sensitivity associated with Cohen's $\kappa$~\cite{feinstein}.
 
-Migration effects are also larger among observations that are already unstable within the incumbent version. Relative to stable cells, the cross-version flip rate is higher by 0.330 for OpenAI and 0.250 for Gemini. This diagnostic pattern suggests that migration-induced changes are concentrated disproportionately near existing model decision boundaries, where classifications are already more sensitive to small changes in model behavior.
+Migration effects are also larger among observations that are already unstable within the incumbent version. Relative to stable cells, the cross-version flip rate is higher by 0.330 for OpenAI and 0.250 for Gemini. Migration-induced changes are therefore concentrated disproportionately among cells that already exhibited greater output instability within the incumbent version. We describe the pattern in those terms: for proprietary models we observe within-version output instability, and do not measure proximity to any underlying decision boundary.
 
 \subsection{Secondary Accuracy Analysis}
 \label{sec:acc}
@@ -459,18 +518,20 @@ For the Gemini migration, performance declines:
 \text{Macro-F1} &: 0.463 \rightarrow 0.325.
 \end{aligned}
 \end{equation}
-The OpenAI successor produces modest numerical improvements, but the migration does not reliably improve accuracy on the specific observations whose labels change. Conditional on a cross-version flip, the estimated accuracy change is $+0.124$, with a 95\% confidence interval of $[-0.164,\,0.418]$.
+These aggregate comparisons are accompanied by ticker-clustered bootstrap intervals on the paired change, so their inferential status is explicit rather than implied. For OpenAI the balanced-accuracy change is $+0.032$ with a 95\% interval of $[-0.005,\,0.070]$, which includes zero, and the macro-F1 change is $+0.048$ with an interval of $[0.007,\,0.090]$, which does not. The OpenAI improvement is therefore weak: only the aggregate macro-F1 change is distinguishable from zero at this sample size, while the sector-restricted class-balanced metrics show no clear improvement. For Gemini both declines are clearly resolved, with balanced accuracy at $-0.080$ $[-0.140,\,-0.028]$ and macro-F1 at $-0.138$ $[-0.203,\,-0.078]$. The migration also does not reliably improve accuracy on the specific observations whose labels change. Conditional on a cross-version flip, the estimated accuracy change is $+0.123$, with a 95\% confidence interval of $[-0.164,\,0.418]$.
 
-For Gemini, the successor's large shift toward SAFE is accompanied by lower class-balanced performance. The flip-conditional accuracy change is $-0.179$, with a 95\% confidence interval of $[-0.380,\,0.030]$. The interval includes zero; the accompanying lower balanced accuracy and macro-F1 are consistent with the distributional shift toward SAFE providing no compensating classification improvement.
+For Gemini, the successor's large shift toward SAFE is accompanied by lower class-balanced performance. The flip-conditional accuracy change is $-0.178$, with a 95\% confidence interval of $[-0.380,\,0.030]$. The interval includes zero; the accompanying lower balanced accuracy and macro-F1 are consistent with the distributional shift toward SAFE providing no compensating classification improvement.
 
-The sector-restricted analysis excludes Financials and Real Estate, for which the Altman $Z''$ reference model is less suitable. The principal pattern remains: raw hit rate changes from 0.590 to 0.562 for the OpenAI migration and from 0.553 to 0.491 for the Gemini migration.
+The sector-restricted analysis excludes Financials and Real Estate, for which the Altman $Z''$ reference model is less suitable. On this subset the OpenAI direction reverses. Raw hit rate falls from 0.590 to 0.562, against the rise from 0.539 to 0.564 across all sectors, and the class-balanced statistics are flat rather than improving: balanced accuracy moves from 0.540 to 0.538 and macro-F1 from 0.526 to 0.532. The Gemini degradation persists and is larger here than in aggregate, with balanced accuracy falling from 0.499 to 0.405 and macro-F1 from 0.492 to 0.341. Because the restricted subset is where the reference model is most defensible, we treat it as the more informative of the two views: neither successor shows a clear class-balanced improvement on this subset.
 
-These results show that substantial migration-induced decision changes do not necessarily correspond to improved classification quality. The OpenAI successor shows modest numerical improvement in aggregate metrics, whereas the Gemini successor shows lower class-balanced performance; neither migration shows clear improvement among the observations whose labels change. The accuracy analysis is secondary and does not affect the primary conclusion that both migrations produce cross-version disagreement well above the within-version noise floor.
+These results show that substantial migration-induced decision changes do not necessarily correspond to improved classification quality. The OpenAI successor shows a modest numerical improvement in aggregate metrics that does not carry over to the sector-restricted subset, where the reference model is most defensible and the class-balanced statistics are flat. The Gemini successor shows lower class-balanced performance in both views. Neither migration shows clear improvement among the observations whose labels change. The accuracy analysis is secondary and does not affect the primary conclusion that both migrations produce cross-version disagreement well above the within-version noise floor.
 
 \subsection{Temperature Sensitivity}
 A supplementary temperature analysis evaluates whether the migration effect depends on the primary decoding setting of $T=0$. Both migration pairs are re-estimated on a smaller stratified subgrid at $T\in\{0,0.7,1.0\}$.
 
 For OpenAI, the estimated excess flip rates are 0.153, 0.167, and 0.208 at $T=0$, $0.7$, and $1.0$, respectively (Table~\ref{tab:temp}). For Gemini, the corresponding estimates are 0.222, 0.306, and 0.389. The estimated effect remains positive for both migration pairs at every tested temperature.
+
+The $T=0$ estimates differ from the full-grid primary values of 0.112 and 0.381 at the same nominal decoding setting, and the difference is attributable to cell selection rather than to temperature. Re-running the primary estimator on exactly the 24 subgrid cells returns 0.153 for OpenAI and 0.222 for Gemini, reproducing the $T=0$ row of Table~\ref{tab:temp} to three decimal places. That row therefore applies the primary estimator at the primary decoding setting to the small stratified subset and serves as the anchor against which the two higher temperatures are compared, rather than as an independent estimate of the migration effect.
 
 The confidence intervals are wide because the robustness grid contains only 24 company--date cells. In particular, the lower bound for Gemini at $T=0$ reaches zero. The temperature analysis should therefore be interpreted as evidence that the direction of the migration effect is preserved across the tested settings, not as an independently powered estimate of its magnitude.
 
@@ -496,7 +557,16 @@ $T$ & OpenAI & Gemini \\
 \label{sec:disc}
 Vendor-driven model-version migration leads to materially different categorical financial decisions even when the prompt, inputs, inference settings, and downstream workflow remain fixed. After accounting for within-version variability, the noise-adjusted excess cross-version disagreement is approximately 11 percentage points for the OpenAI migration and approximately 38 percentage points for the Gemini migration. The two migrations also differ structurally: OpenAI is primarily churn-dominated and shifts assessments toward greater severity, whereas Gemini is primarily prevalence-dominated and shifts the portfolio toward SAFE. Migration behavior therefore cannot be assumed to be uniformly conservative, permissive, or performance-enhancing.
 
-The prevalence--churn decomposition has direct operational significance. A prevalence-dominated migration changes the overall distribution of ratings and may affect portfolio limits, escalation volumes, and review capacity. A churn-dominated migration may leave the aggregate rating mix comparatively stable while changing which individual companies are identified as risky. The secondary accuracy analysis further shows that decision turnover does not necessarily produce better classification quality. The OpenAI successor exhibits modest numerical improvement without reliable improvement among changed observations, while the Gemini successor exhibits lower balanced accuracy and macro-F1. Vendor migration should therefore be treated as a model change requiring validation rather than as an automatic upgrade.
+The prevalence--churn decomposition has direct operational significance. A prevalence-dominated
+migration changes the overall distribution of ratings and may affect portfolio limits, escalation
+volumes, and review capacity. A churn-dominated migration may leave the aggregate rating mix
+comparatively stable while changing which individual companies are identified as risky. The
+secondary accuracy analysis further shows that decision turnover does not necessarily produce better
+classification quality. The OpenAI successor shows only weak numerical improvement in the aggregate
+analysis. This improvement is not clearly present on the sector-restricted subset, where the
+reference model is most defensible. We also find no reliable improvement among observations whose
+labels change. The Gemini successor shows lower balanced accuracy and macro-F1.
+Vendor migration should therefore be treated as a model change requiring validation rather than as an automatic upgrade.
 
 The Altman $Z''$-based label serves only as a deterministic reference proxy for the secondary outcome analysis~\cite{altman_em}; the primary instability, agreement, churn, and directional-drift results depend solely on paired model outputs. More broadly, the findings establish a deployment-level mechanism through which systems using the same vendor version could experience a common behavioral change when migrated to the same successor~\cite{kim,monoculture,esrb}. The study does not measure cross-institutional adoption, realized losses, or market-level systemic effects. It demonstrates that the shared-update mechanism exists and can be measured, motivating the governance control developed in Section~\ref{sec:gov}.
 
@@ -504,7 +574,7 @@ The Altman $Z''$-based label serves only as a deterministic reference proxy for 
 \label{sec:gov}
 SR 11-7 historically organized U.S. model-risk governance around independent validation, effective challenge, ongoing monitoring, change management, and institutional responsibility for third-party models~\cite{sr117}. Its lifecycle generally assumes that an institution can identify when a model changes and evaluate the modified model before production use. Vendor-managed foundation models weaken this assumption because the provider determines the successor version and deprecation schedule, while the surrounding prompt, application, and API interface may remain substantially unchanged. A migration can therefore substitute one decision function for another without appearing as a conventional redevelopment event.
 
-The governance gap is sharper under the current framework. SR 26-2, which replaced SR 11-7 in April 2026, expressly excludes generative and agentic AI from its scope because of their novelty and rapid evolution~\cite{sr2602}. The class of systems evaluated in this study therefore falls outside the revised guidance. Moreover, although SR 26-2 strengthens the treatment of concentration and dependency within an institution's model portfolio, it does not address correlated behavioral changes across institutions or deployments that depend on the same vendor version. The resulting gap is twofold: generative-AI systems are excluded from the revised framework, and the cross-deployment consequences of a common vendor update are not directly governed.
+The governance gap is sharper under the current framework, and the relevant provisions can be named precisely. SR 26-2 was issued jointly by the Federal Reserve, the OCC and the FDIC on 17~April~2026 and supersedes both SR 11-7 and SR 21-8~\cite{sr2602}. Footnote~3, attached to the Purpose and Scope section, states that ``Generative AI and agentic AI models are novel and rapidly evolving. As such, they are not within the scope of this guidance,'' while adding that an institution's own risk-management and governance practices should determine the controls for systems not covered, and that the guidance's principles apply to traditional statistical and quantitative models and non-generative, non-agentic AI models. The systems evaluated here are generative, so they fall outside the guidance's scope. The carve-out delegates their governance to institutional discretion rather than leaving it unaddressed. The control proposed here is intended to operationalize that delegated responsibility, not to imply an absence of governance obligations. Section~III introduces aggregate model risk in terms that are close to the mechanism measured here, describing ``interactions and dependencies among models; reliance on common assumptions, data, or methodologies; and any other factors that could adversely affect several models and their outputs simultaneously,'' but frames it within a single institution's model inventory. Section~VII addresses vendor and other third-party products, including complete models, without treating synchronized version replacement across deployments. The resulting governance challenge is therefore twofold: the generative systems studied here sit outside the scope that would otherwise supply specific validation and monitoring guidance, and the cross-deployment consequences of one vendor update are not directly addressed even for models that are in scope. Consistent with the guidance's applicability statement that the letter is expected to be most relevant to banking organizations with over \$30~billion in total assets regulated by the Federal Reserve, the control proposed below is framed for institutions already operating a model-risk function.
 
 The empirical results connect to three established governance concerns summarized in Table~\ref{tab:gov}. First, a vendor migration may constitute a material behavioral change even when no internal code or prompt changes. Second, limited deprecation notice may restrict the pre-production comparison needed for effective challenge. Third, recording only the provider or model-family name is insufficient when exact snapshots exhibit materially different behavior. Exact version identifiers should therefore be maintained as governed model artifacts, and a version change should trigger formal testing, documentation, and approval.
 
@@ -520,18 +590,22 @@ Cutover criteria should be specified before testing. Excess disagreement above a
 
 \begin{table*}[t]
 \centering
-\caption{Mapping vendor version migration to SR 11-7 provisions and the proposed control.}
+\caption{Mapping vendor version migration to model-risk provisions and the proposed control. Each provision is given with its section and title in SR 11-7 and in SR 26-2, which superseded it in April 2026. The generative systems studied here sit outside SR 26-2's scope under footnote~3, so its column gives the provisions that would otherwise apply and that the proposed control is designed to satisfy.}
 \label{tab:gov}
 \small
-\begin{tabular}{@{}p{0.30\textwidth}p{0.37\textwidth}p{0.27\textwidth}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{\dimexpr0.16\textwidth-10pt\relax}>{\raggedright\arraybackslash}p{\dimexpr0.21\textwidth-10pt\relax}>{\raggedright\arraybackslash}p{\dimexpr0.20\textwidth-10pt\relax}>{\raggedright\arraybackslash}p{\dimexpr0.22\textwidth-10pt\relax}>{\raggedright\arraybackslash}p{\dimexpr0.21\textwidth-10pt\relax}@{}}
 \toprule
-SR 11-7 provision & How version migration breaks it & Proposed control \\
+Provision & SR 11-7 & SR 26-2 & How version migration breaks it & Proposed control \\
 \midrule
-Vendor/third-party responsibility \& contingency planning & Anticipates vendor-model \emph{loss}, not silent behavioral \emph{replacement} on the vendor's schedule & Inventory the exact version string; pin the incumbent through validation \\
-Ongoing monitoring; accelerate review on material model change & The change is exogenous and silent (API surface unchanged), so it may never trigger the review it warrants & Pre-migration parallel run detects the change and quantifies its materiality \\
-Effective challenge; validation before use & Forced deprecation with limited notice removes the pre-change testable window & Parallel-run gate provides challenge and validation evidence before cutover \\
-Model inventory, change control, documentation & Frozen documentation undermined by a model that changes underneath it & Treat version-as-artifact; hash-pin the snapshot as the object of record \\
-Aggregate (institution-level) model risk & Not contemplated as correlated \emph{across} institutions via a shared vendor update & Systemic gap; flagged for supervisory attention \\
+Vendor and third-party responsibility & \S V Validation of Vendor and Other Third-Party Products & \S VII Vendor and Other Third-Party Products & Anticipates vendor-model \emph{loss}, not silent behavioral \emph{replacement} on the vendor's schedule & Inventory the exact version string; pin the incumbent through validation \\
+\addlinespace
+Ongoing monitoring & \S V Model Validation & \S V Model Validation and Monitoring & The change is exogenous and silent (API surface unchanged), so it may never trigger the review it warrants & Pre-migration parallel run detects the change and quantifies its materiality \\
+\addlinespace
+Effective challenge and validation before use & \S III Overview of Model Risk Management; \S V Model Validation & \S III Overview of Model Risk and Model Risk Management; \S V Model Validation and Monitoring & Forced deprecation with limited notice removes the pre-change testable window & Parallel-run gate provides challenge and validation evidence before cutover \\
+\addlinespace
+Model inventory and change control & \S VI Model Inventory & \S VI Governance and Controls & Frozen documentation undermined by a model that changes underneath it & Treat version-as-artifact; hash-pin the snapshot as the object of record \\
+\addlinespace
+Aggregate model risk & \S III Overview of Model Risk Management & \S III Overview of Model Risk and Model Risk Management & Not contemplated as correlated \emph{across} institutions via a shared vendor update & Systemic gap; flagged for supervisory attention \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -552,11 +626,11 @@ Aggregate (institution-level) model risk & Not contemplated as correlated \emph{
 \noindent\textbf{Single collection window.} Confirmatory responses were collected once from exact model snapshots. Provider-side changes occurring during the collection period cannot be completely ruled out or averaged across repeated collection windows. The frozen call-level dataset is therefore the empirical object of record, and the findings apply to the evaluated snapshots and collection period.
 
 \section{Conclusion}
-Vendor-managed LLM migrations are associated with material decision discontinuities within otherwise unchanged financial workflows. After accounting for within-version variability, the noise-adjusted excess cross-version disagreement is 11.2 percentage points for the OpenAI migration and 38.1 percentage points for the Gemini migration. OpenAI primarily reclassifies individual companies and shifts decisions toward greater severity; Gemini primarily changes the portfolio-wide label distribution and shifts decisions toward SAFE. Neither migration shows clear improvement among observations whose labels change; the Gemini successor also shows lower aggregate class-balanced performance.
+Vendor-managed LLM migrations are associated with material decision discontinuities within otherwise unchanged financial workflows. After accounting for within-version variability, the noise-adjusted excess cross-version disagreement is 11.2 percentage points for the OpenAI migration and 38.1 percentage points for the Gemini migration. OpenAI primarily reclassifies individual companies and shifts decisions toward greater severity; Gemini primarily changes the portfolio-wide label distribution and shifts decisions toward SAFE. Neither migration shows clear improvement among observations whose labels change. The OpenAI successor's aggregate gain is weak, resolved only on macro-F1 and not clearly present on the sector-restricted subset where the reference model is most defensible, while the Gemini successor's class-balanced performance declines in both views.
 
 The study contributes a measurement framework that separates cross-version disagreement from ordinary endpoint variability and distinguishes distributional movement from company-level churn. These measures support a pre-migration parallel-run control through which institutions can evaluate successor models before production cutover.
 
-The evidence is limited to two migration pairs, one structured classification task, and one prompt family. It does not estimate typical migration effects or realized market-level consequences. It nevertheless demonstrates a deployment-level mechanism through which systems using a shared vendor version may experience a common behavioral shock when that version is replaced.
+The evidence is limited to two migration pairs, one structured classification task, and one prompt family. It does not estimate typical migration effects, realized cross-institutional correlation, or market-level losses. It nevertheless demonstrates a deployment-level mechanism through which systems using a shared vendor version may experience a common behavioral shock when that version is replaced.
 
 Exact model versions should therefore be treated as governed artifacts, and vendor migrations should trigger documented testing, effective challenge, and change approval. The frozen, preregistered analytical package provides a reproducible basis for conducting and auditing such evaluations without assuming that future proprietary-endpoint calls will reproduce the archived responses.
 
@@ -589,55 +663,55 @@ ensure accuracy and originality.
 
 \begin{thebibliography}{99}
 \small
+\bibitem{bloomberggpt} S. Wu \emph{et al.}, ``BloombergGPT: A Large Language Model for Finance,'' arXiv:2303.17564, 2023. [Online]. Available: \url{https://arxiv.org/abs/2303.17564}
+\bibitem{finbert} D. Araci, ``FinBERT: Financial Sentiment Analysis with Pre-trained Language Models,'' arXiv:1908.10063, 2019. [Online]. Available: \url{https://arxiv.org/abs/1908.10063}
+\bibitem{sr117} Board of Governors of the Federal Reserve System and OCC, ``SR 11-7: Guidance on Model Risk Management,'' April 4, 2011 (superseded by SR 26-2). [Online]. Available: \url{https://web.archive.org/web/2024/https://www.federalreserve.gov/supervisionreg/srletters/sr1107a1.pdf}. Archived capture; the issuing page was withdrawn after supersession. Effective challenge and aggregate model risk in Section~III; ongoing monitoring and validation of vendor and other third-party products in Section~V; model inventory in Section~VI.
+\bibitem{sr2602} Board of Governors of the Federal Reserve System, OCC, and FDIC, ``SR 26-2: Revised Guidance on Model Risk Management,'' April 17, 2026 (supersedes SR 11-7 and SR 21-8); OCC Bulletin 2026-13. [Online]. Available: \url{https://www.federalreserve.gov/supervisionreg/srletters/SR2602.pdf}. Scope carve-out at footnote~3; aggregate model risk in Section~III; vendor and third-party products in Section~VII.
 \bibitem{muscle} J. Zhang \emph{et al.}, ``MUSCLE: A Model Update Strategy for Compatible LLM Evolution,'' arXiv:2407.09435, 2024. [Online]. Available: \url{https://arxiv.org/abs/2407.09435}
 \bibitem{underspec} C. Yang, Y. Shi, Q. Ma, M. X. Liu, C. K\"astner, and T. Wu, ``What Prompts Don't Say: Understanding and Managing Underspecification in LLM Prompts,'' arXiv:2505.13360, 2025. [Online]. Available: \url{https://arxiv.org/abs/2505.13360}
+\bibitem{bommasani} R. Bommasani \emph{et al.}, ``On the Opportunities and Risks of Foundation Models,'' arXiv:2108.07258, 2021. [Online]. Available: \url{https://arxiv.org/abs/2108.07258}
+\bibitem{altman} E. I. Altman, ``Financial Ratios, Discriminant Analysis and the Prediction of Corporate Bankruptcy,'' Journal of Finance, vol.~23, no.~4, pp.~589--609, 1968.
+\bibitem{altman_em} E. I. Altman, ``An Emerging Market Credit Scoring System for Corporate Bonds,'' Emerging Markets Review, vol.~6, no.~4, pp.~311--323, 2005 (see also Altman, Hartzell, and Peck, 1995), which defines the $Z''$ model and its non-manufacturer / emerging-market cutoffs (2.6 / 1.1).
 \bibitem{kim} J. Kim \emph{et al.}, ``Correlated Errors in Large Language Models,'' arXiv:2506.07962, 2025. [Online]. Available: \url{https://arxiv.org/abs/2506.07962}
 \bibitem{systemic} J. Dan\'ielsson, R. Macrae, and A. Uthemann, ``Artificial intelligence and systemic risk,'' \emph{Journal of Banking \& Finance}, vol.~140, art.~106290, 2022, doi:10.1016/j.jbankfin.2021.106290.
 \bibitem{homog} R. Bommasani, K. A. Creel, A. Kumar, D. Jurafsky, and P. Liang, ``Picking on the same person: Does algorithmic monoculture lead to outcome homogenization?'' in \emph{Advances in Neural Information Processing Systems (NeurIPS)}, vol.~35, 2022. [Online]. Available: \url{https://arxiv.org/abs/2211.13972}
 \bibitem{esrb} S.\ Cecchetti, R.\ L.\ Lumsdaine, T.\ Peltonen, and A.\ S\'anchez Serrano, ``Artificial Intelligence and Systemic Risk,'' Reports of the ESRB Advisory Scientific Committee, No.~16, Dec.\ 2025.
-\bibitem{sr117} Board of Governors of the Federal Reserve System and OCC, ``SR 11-7: Guidance on Model Risk Management,'' 2011.
-\bibitem{sr2602} Board of Governors of the Federal Reserve System, OCC, and FDIC, ``SR 26-2: Revised Guidance on Model Risk Management,'' April 17, 2026 (supersedes SR 11-7); OCC Bulletin 2026-13.
-\bibitem{mrm} National Institute of Standards and Technology, ``Artificial Intelligence Risk Management Framework: Generative AI Profile,'' NIST Trustworthy and Responsible AI, NIST AI 600-1, Jul.\ 2024, doi:10.6028/NIST.AI.600-1.
-\bibitem{gwet} K. L. Gwet, ``Computing inter-rater reliability and its variance in the presence of high agreement,'' British J.\ Math.\ Stat.\ Psychology, vol.~61, pp.~29--48, 2008.
-\bibitem{altman} E. I. Altman, ``Financial Ratios, Discriminant Analysis and the Prediction of Corporate Bankruptcy,'' Journal of Finance, vol.~23, no.~4, pp.~589--609, 1968.
-\bibitem{altman_em} E. I. Altman, ``An Emerging Market Credit Scoring System for Corporate Bonds,'' Emerging Markets Review, vol.~6, no.~4, pp.~311--323, 2005 (see also Altman, Hartzell, and Peck, 1995), which defines the $Z''$ model and its non-manufacturer / emerging-market cutoffs (2.6 / 1.1).
+\bibitem{pctrain} S. Yan \emph{et al.}, ``Positive-congruent training: Towards regression-free model updates,'' in \emph{Proc.\ IEEE/CVF Conf.\ Computer Vision and Pattern Recognition (CVPR)}, 2021, pp.~14299--14308.
+\bibitem{gama} J. Gama, I. \v{Z}liobait\.{e}, A. Bifet, M. Pechenizkiy, and A. Bouchachia, ``A survey on concept drift adaptation,'' \emph{ACM Computing Surveys}, vol.~46, no.~4, pp.~1--37, 2014.
+\bibitem{helm} P. Liang \emph{et al.}, ``Holistic Evaluation of Language Models,'' \emph{Trans.\ Machine Learning Research}, 2023; arXiv:2211.09110.
+\bibitem{sclar} M. Sclar, Y. Choi, Y. Tsvetkov, and A. Suhr, ``Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design,'' in \emph{Proc.\ Int.\ Conf.\ Learning Representations (ICLR)}, 2024; arXiv:2310.11324.
+\bibitem{monoculture} J. Kleinberg and M. Raghavan, ``Algorithmic monoculture and social welfare,'' \emph{Proc.\ Nat.\ Acad.\ Sci.}, vol.~118, no.~22, e2018340118, 2021.
+\bibitem{fsb} Financial Stability Board, ``Artificial Intelligence and Machine Learning in Financial Services,'' Nov.\ 2017.
 \bibitem{cohen} J. Cohen, ``A coefficient of agreement for nominal scales,'' \emph{Educational and Psychological Measurement}, vol.~20, no.~1, pp.~37--46, 1960.
 \bibitem{scott} W. A. Scott, ``Reliability of content analysis: The case of nominal scale coding,'' \emph{Public Opinion Quarterly}, vol.~19, no.~3, pp.~321--325, 1955.
+\bibitem{gwet} K. L. Gwet, ``Computing inter-rater reliability and its variance in the presence of high agreement,'' British J.\ Math.\ Stat.\ Psychology, vol.~61, pp.~29--48, 2008.
 \bibitem{fleiss} J. L. Fleiss, ``Measuring nominal scale agreement among many raters,'' \emph{Psychological Bulletin}, vol.~76, no.~5, pp.~378--382, 1971.
 \bibitem{feinstein} A. R. Feinstein and D. V. Cicchetti, ``High agreement but low kappa: I. The problems of two paradoxes,'' \emph{Journal of Clinical Epidemiology}, vol.~43, no.~6, pp.~543--549, 1990.
+\bibitem{mrm} National Institute of Standards and Technology, ``Artificial Intelligence Risk Management Framework: Generative AI Profile,'' NIST Trustworthy and Responsible AI, NIST AI 600-1, Jul.\ 2024, doi:10.6028/NIST.AI.600-1.
+\bibitem{simmons} J. P. Simmons, L. D. Nelson, and U. Simonsohn, ``False-positive psychology: Undisclosed flexibility in data collection and analysis allows presenting anything as significant,'' \emph{Psychological Science}, vol.~22, no.~11, pp.~1359--1366, 2011.
+\bibitem{nosek} B. A. Nosek, C. R. Ebersole, A. C. DeHaven, and D. T. Mellor, ``The preregistration revolution,'' \emph{Proc.\ Nat.\ Acad.\ Sci.}, vol.~115, no.~11, pp.~2600--2606, 2018.
+\bibitem{pineau} J. Pineau \emph{et al.}, ``Improving reproducibility in machine learning research (a report from the NeurIPS 2019 reproducibility program),'' \emph{Journal of Machine Learning Research}, vol.~22, no.~164, pp.~1--20, 2021.
 \bibitem{mcnemar} Q. McNemar, ``Note on the sampling error of the difference between correlated proportions or percentages,'' \emph{Psychometrika}, vol.~12, no.~2, pp.~153--157, 1947.
 \bibitem{efron} B. Efron, ``Bootstrap methods: Another look at the jackknife,'' \emph{Annals of Statistics}, vol.~7, no.~1, pp.~1--26, 1979.
-\bibitem{bommasani} R. Bommasani \emph{et al.}, ``On the Opportunities and Risks of Foundation Models,'' arXiv:2108.07258, 2021. [Online]. Available: \url{https://arxiv.org/abs/2108.07258}
-\bibitem{helm} P. Liang \emph{et al.}, ``Holistic Evaluation of Language Models,'' \emph{Trans.\ Machine Learning Research}, 2023; arXiv:2211.09110.
-\bibitem{bloomberggpt} S. Wu \emph{et al.}, ``BloombergGPT: A Large Language Model for Finance,'' arXiv:2303.17564, 2023. [Online]. Available: \url{https://arxiv.org/abs/2303.17564}
-\bibitem{finbert} D. Araci, ``FinBERT: Financial Sentiment Analysis with Pre-trained Language Models,'' arXiv:1908.10063, 2019. [Online]. Available: \url{https://arxiv.org/abs/1908.10063}
-\bibitem{monoculture} J. Kleinberg and M. Raghavan, ``Algorithmic monoculture and social welfare,'' \emph{Proc.\ Nat.\ Acad.\ Sci.}, vol.~118, no.~22, e2018340118, 2021.
-\bibitem{wei} J. Wei \emph{et al.}, ``Emergent Abilities of Large Language Models,'' \emph{Trans.\ Machine Learning Research}, 2022; arXiv:2206.07682.
-\bibitem{gama} J. Gama, I. \v{Z}liobait\.{e}, A. Bifet, M. Pechenizkiy, and A. Bouchachia, ``A survey on concept drift adaptation,'' \emph{ACM Computing Surveys}, vol.~46, no.~4, pp.~1--37, 2014.
-\bibitem{pctrain} S. Yan \emph{et al.}, ``Positive-congruent training: Towards regression-free model updates,'' in \emph{Proc.\ IEEE/CVF Conf.\ Computer Vision and Pattern Recognition (CVPR)}, 2021, pp.~14299--14308.
-\bibitem{sclar} M. Sclar, Y. Choi, Y. Tsvetkov, and A. Suhr, ``Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design,'' in \emph{Proc.\ Int.\ Conf.\ Learning Representations (ICLR)}, 2024; arXiv:2310.11324.
-\bibitem{fsb} Financial Stability Board, ``Artificial Intelligence and Machine Learning in Financial Services,'' Nov.\ 2017.
 \bibitem{gpt4} OpenAI, ``GPT-4 Technical Report,'' arXiv:2303.08774, 2023. [Online]. Available: \url{https://arxiv.org/abs/2303.08774}
-\bibitem{nosek} B. A. Nosek, C. R. Ebersole, A. C. DeHaven, and D. T. Mellor, ``The preregistration revolution,'' \emph{Proc.\ Nat.\ Acad.\ Sci.}, vol.~115, no.~11, pp.~2600--2606, 2018.
-\bibitem{simmons} J. P. Simmons, L. D. Nelson, and U. Simonsohn, ``False-positive psychology: Undisclosed flexibility in data collection and analysis allows presenting anything as significant,'' \emph{Psychological Science}, vol.~22, no.~11, pp.~1359--1366, 2011.
-\bibitem{pineau} J. Pineau \emph{et al.}, ``Improving reproducibility in machine learning research (a report from the NeurIPS 2019 reproducibility program),'' \emph{Journal of Machine Learning Research}, vol.~22, no.~164, pp.~1--20, 2021.
 \bibitem{openai_dep} OpenAI, ``Deprecations,'' OpenAI API Documentation, 2026. [Online]. Available: \url{https://developers.openai.com/api/docs/deprecations} (accessed Jul.~4, 2026).
 \bibitem{google_dep} Google, ``Gemini deprecations,'' Google AI for Developers, 2026. [Online]. Available: \url{https://ai.google.dev/gemini-api/docs/deprecations} (accessed Jul.~4, 2026).
+\bibitem{google_dep_archive} Google, ``Gemini deprecations,'' Google AI for Developers, archived 1~July~2026. [Online]. Available: \url{https://web.archive.org/web/20260701200825/https://ai.google.dev/gemini-api/docs/deprecations} (capture SHA-256 recorded in \texttt{docs/provenance/} of the artifact).
 \end{thebibliography}
 
-\begin{IEEEbiographynophoto}{Samir Chincholikar}
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/bio_chincholikar.jpg}}]{Samir Chincholikar}
 received the B.E. degree from the University of Mumbai, India, in 2013, the
 M.B.A. degree in finance from the Jamnalal Bajaj Institute of Management
 Studies, University of Mumbai, in 2016, and the M.S. degree in financial
-engineering from the University of Illinois Urbana-Champaign, Urbana, IL, USA,
-in 2019. He has over a decade of professional experience in quantitative risk
+engineering from the University of Illinois at Urbana-Champaign, Urbana, IL, USA,
+in 2019. He has close to a decade of professional experience in quantitative risk
 analytics and machine learning in the financial services industry. His research
 interests include large language models, multi-agent systems, the use of AI to
 automate engineering workflows, machine learning evaluation, and reproducible
 empirical methods in computational finance.
-\end{IEEEbiographynophoto}
+\end{IEEEbiography}
 
-\begin{IEEEbiographynophoto}{Robin Chawla}
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/bio_chawla.jpg}}]{Robin Chawla}
 received the B.Tech. degree in computer science and engineering from the Indian
 Institute of Technology (BHU), Varanasi, India. He has about eight years of
 professional experience as a software engineer at a proprietary trading firm,
@@ -646,7 +720,7 @@ AI to automate engineering workflows. His research interests include large
 language models, multi-agent systems, machine learning for engineering
 workflows and automation, and reproducible evaluation of generative AI
 for decision-making.
-\end{IEEEbiographynophoto}
+\end{IEEEbiography}
 
 \EOD
 

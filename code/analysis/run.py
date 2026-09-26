@@ -50,6 +50,45 @@ def analyse_pair(pair_id: str, draws: int, seed: int, sectors: dict) -> dict:
 
     agr = M.agreement_statistics(pairs)
     acc = O.accuracy(rows_old, rows_new, sectors)
+
+    # --- referee-requested additions -------------------------------------------------
+    # R1.1/R2.1: a same-seed repeat-call noise floor, constructed the same way as the
+    # cross-version contrast. The T00 re-captures are independently timed calls at the
+    # identical seed and temperature, so they give the matched floor the referees asked for.
+    rep_old = _RAW / f"runs_{pair_id}_v_old_T00.csv"
+    rep_new = _RAW / f"runs_{pair_id}_v_new_T00.csv"
+    matched = (B.matched_baseline(rows_old, rows_new, M.load_rows(rep_old), M.load_rows(rep_new))
+               if (rep_old.exists() and rep_new.exists()) else {"available": False})
+
+    # R1.2: the distribution-distance statistic, named and separated from the per-call
+    # flip probability so the two are not read as answering the same question.
+    tvd = M.total_variation_distance(pairs)
+    ci_tvd = S.cluster_bootstrap_scalar(
+        pairs, lambda ps: M.total_variation_distance(ps).get("tvd"), draws, seed)
+
+    # R2.6: the temperature subgrid's T=0 row differs from the full-grid primary estimate at
+    # the same nominal setting. Re-running the primary estimator on exactly the subgrid cells
+    # separates cell selection from any temperature effect.
+    sub_cells = sorted({(r["ticker"], r["date"]) for r in M.load_rows(rep_old)}) \
+        if rep_old.exists() else []
+    if sub_cells:
+        sp = M.restrict_pairs_to_cells(pairs, sub_cells)
+        so = [r for r in rows_old if (r["ticker"], r["date"]) in set(sub_cells)]
+        sn = [r for r in rows_new if (r["ticker"], r["date"]) in set(sub_cells)]
+        sub = B.decomposition(so, sn)
+        subgrid_recon = {"n_cells": len(sub_cells), "n_matched": len(sp),
+                         "cross_version_flip_rate": sub["cross_version"]["flip_rate"],
+                         "within_version_pooled": sub["within_version_pooled"]["flip_rate"],
+                         "excess_flip_rate": sub["excess_flip_rate_point"]}
+    else:
+        subgrid_recon = {"available": False}
+
+    # R2.4: the same class-balanced statistics on the Altman-appropriate subset, computed on
+    # matched pairs so the restricted flip rate is available alongside the accuracy figures.
+    restricted_pairs = M.restrict_pairs_excluding_sectors(pairs, sectors, ("Financials", "Real Estate"))
+    rcross, rn = M.cross_version_flip_rate(restricted_pairs)
+    restricted_flip = {"cross_version_flip_rate": rcross, "n_matched": rn,
+                       "excluded_sectors": ["Financials", "Real Estate"]}
     noise = S.noise_floor_report(pairs, rows_old, rows_new, draws=draws, seed=seed)
     all_rows = rows_old + rows_new
     n_real = sum(1 for r in all_rows if r.get("snippet_source") == "inputs_file")
@@ -74,6 +113,10 @@ def analyse_pair(pair_id: str, draws: int, seed: int, sectors: dict) -> dict:
                              "cross": boot["cross"], "within": boot["within"],
                              "n_tickers": boot["n_tickers"], "n_boot": boot["n_valid"]},
         "noise_sensitivity": noise,
+        "matched_baseline": matched,
+        "distribution_distance": {**tvd, "tvd_ci": [ci_tvd["ci_low"], ci_tvd["ci_high"]]},
+        "subgrid_reconciliation": subgrid_recon,
+        "restricted_flip": restricted_flip,
         "prevalence": {**prev, "churn_ci": [ci_churn["ci_low"], ci_churn["ci_high"]],
                        "cohen_kappa_ci": [ci_kappa["ci_low"], ci_kappa["ci_high"]]},
         "conviction_shift": {"value": conv, "n": n_conv,
@@ -138,6 +181,49 @@ def main() -> int:
         "noise.excess_conservative": _r(res["noise_sensitivity"]["conservative_excess"]),
         "noise.excess_conservative_ci_low": _r(res["noise_sensitivity"]["conservative_ci"][0]),
         "noise.excess_conservative_ci_high": _r(res["noise_sensitivity"]["conservative_ci"][1]),
+        # --- referee-requested claims (gated like every other reported number) ---
+        "matched.repeat_floor_pooled": _r(((res.get("matched_baseline") or {})
+                                           .get("repeat_floor_pooled") or {}).get("flip_rate")),
+        "matched.repeat_floor_n": (((res.get("matched_baseline") or {})
+                                    .get("repeat_floor_pooled") or {}).get("n_pairs")),
+        "matched.repeat_floor_ci_low": _r((((res.get("matched_baseline") or {})
+                                            .get("repeat_floor_pooled") or {})
+                                           .get("wilson_ci") or [None, None])[0]),
+        "matched.repeat_floor_ci_high": _r((((res.get("matched_baseline") or {})
+                                             .get("repeat_floor_pooled") or {})
+                                            .get("wilson_ci") or [None, None])[1]),
+        "matched.excess_vs_repeat_floor": _r((res.get("matched_baseline") or {})
+                                             .get("excess_vs_repeat_floor")),
+        "matched.excess_vs_repeat_ci_low": _r(((res.get("matched_baseline") or {})
+                                               .get("excess_vs_repeat_floor_ci") or [None, None])[0]),
+        "matched.excess_vs_repeat_ci_high": _r(((res.get("matched_baseline") or {})
+                                                .get("excess_vs_repeat_floor_ci") or [None, None])[1]),
+        "distance.tvd": _r((res.get("distribution_distance") or {}).get("tvd")),
+        "distance.tvd_ci_low": _r(((res.get("distribution_distance") or {})
+                                   .get("tvd_ci") or [None, None])[0]),
+        "distance.tvd_ci_high": _r(((res.get("distribution_distance") or {})
+                                    .get("tvd_ci") or [None, None])[1]),
+        "subgrid.excess_on_subgrid_cells": _r((res.get("subgrid_reconciliation") or {})
+                                              .get("excess_flip_rate")),
+        "subgrid.n_cells": ((res.get("subgrid_reconciliation") or {}).get("n_cells")),
+        "restricted.cross_version_flip_rate": _r((res.get("restricted_flip") or {})
+                                                 .get("cross_version_flip_rate")),
+        "restricted.hit_rate_old": _r(((res["accuracy"].get("restricted") or {})).get("hit_rate_old")),
+        "restricted.hit_rate_new": _r(((res["accuracy"].get("restricted") or {})).get("hit_rate_new")),
+        "restricted.balanced_old": _r(((res["accuracy"].get("restricted") or {})).get("balanced_accuracy_old")),
+        "restricted.balanced_new": _r(((res["accuracy"].get("restricted") or {})).get("balanced_accuracy_new")),
+        "restricted.macro_f1_old": _r(((res["accuracy"].get("restricted") or {})).get("macro_f1_old")),
+        "restricted.macro_f1_new": _r(((res["accuracy"].get("restricted") or {})).get("macro_f1_new")),
+        "quality.balanced_delta": _r(((res["accuracy"].get("quality_ci") or {})).get("balanced_accuracy_delta")),
+        "quality.balanced_delta_ci_low": _r((((res["accuracy"].get("quality_ci") or {})
+                                              ).get("balanced_accuracy_delta_ci") or [None, None])[0]),
+        "quality.balanced_delta_ci_high": _r((((res["accuracy"].get("quality_ci") or {})
+                                               ).get("balanced_accuracy_delta_ci") or [None, None])[1]),
+        "quality.macro_f1_delta": _r(((res["accuracy"].get("quality_ci") or {})).get("macro_f1_delta")),
+        "quality.macro_f1_delta_ci_low": _r((((res["accuracy"].get("quality_ci") or {})
+                                               ).get("macro_f1_delta_ci") or [None, None])[0]),
+        "quality.macro_f1_delta_ci_high": _r((((res["accuracy"].get("quality_ci") or {})
+                                                ).get("macro_f1_delta_ci") or [None, None])[1]),
         "accuracy.flip_conditional_delta": _r(res["accuracy"].get("flip_conditional_new_minus_old")),
         "accuracy.flip_conditional_ci_low": _r(res["accuracy"].get("flip_conditional_ci", [None, None])[0]),
         "accuracy.flip_conditional_ci_high": _r(res["accuracy"].get("flip_conditional_ci", [None, None])[1]),

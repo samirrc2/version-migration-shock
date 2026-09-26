@@ -69,6 +69,21 @@ def preprocess(src: str) -> str:
                  lambda m: "\n\\subsection*{" + m.group(1) + "}\n" + m.group(2).strip() + "\n",
                  src, flags=re.S)
 
+    # Biographies WITH a photo. Only the nophoto form was rewritten, so when the photos were
+    # added pandoc silently dropped them: the Word file kept both biographies and lost both
+    # portraits, and nothing compared the two files' image counts. The optional argument holds
+    # the \includegraphics call, which is lifted out and emitted as its own paragraph.
+    def _bio(m):
+        photo = re.search(r"\\includegraphics\[[^\]]*\]\{([^}]*)\}", m.group(1))
+        img = f"\n\\includegraphics[width=1in]{{{photo.group(1)}}}\n" if photo else ""
+        return f"\n\\subsection*{{{m.group(2)}}}\n{img}\n{m.group(3).strip()}\n"
+
+    # The optional argument is wrapped in its own braces -- [{\includegraphics[..]{..}}] -- so the
+    # pattern anchors on "[{" ... "}]". Matching on "[" ... "]" instead stops at the first "]",
+    # which belongs to \includegraphics's own options, and leaves the rest as stray LaTeX.
+    src = re.sub(r"\\begin\{IEEEbiography\}\[\{(.*?)\}\]\{([^}]*)\}(.*?)\\end\{IEEEbiography\}",
+                 _bio, src, flags=re.S)
+
     # 6. figures: point at the png files that live in paper/figures/
     return src
 

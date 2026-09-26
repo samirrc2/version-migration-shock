@@ -36,6 +36,31 @@
   "noise.excess_conservative": 0.3725,
   "noise.excess_conservative_ci_low": 0.2947,
   "noise.excess_conservative_ci_high": 0.4514,
+  "matched.repeat_floor_pooled": 0.0139,
+  "matched.repeat_floor_n": 144,
+  "matched.repeat_floor_ci_low": 0.0038,
+  "matched.repeat_floor_ci_high": 0.0492,
+  "matched.excess_vs_repeat_floor": 0.3747,
+  "matched.excess_vs_repeat_ci_low": 0.3394,
+  "matched.excess_vs_repeat_ci_high": 0.3848,
+  "distance.tvd": 0.3186,
+  "distance.tvd_ci_low": 0.2411,
+  "distance.tvd_ci_high": 0.3944,
+  "subgrid.excess_on_subgrid_cells": 0.2222,
+  "subgrid.n_cells": 24,
+  "restricted.cross_version_flip_rate": 0.3581,
+  "restricted.hit_rate_old": 0.5528,
+  "restricted.hit_rate_new": 0.4909,
+  "restricted.balanced_old": 0.4988,
+  "restricted.balanced_new": 0.4052,
+  "restricted.macro_f1_old": 0.4917,
+  "restricted.macro_f1_new": 0.341,
+  "quality.balanced_delta": -0.0801,
+  "quality.balanced_delta_ci_low": -0.1398,
+  "quality.balanced_delta_ci_high": -0.0275,
+  "quality.macro_f1_delta": -0.1383,
+  "quality.macro_f1_delta_ci_low": -0.2032,
+  "quality.macro_f1_delta_ci_high": -0.0783,
   "accuracy.flip_conditional_delta": -0.1785,
   "accuracy.flip_conditional_ci_low": -0.38,
   "accuracy.flip_conditional_ci_high": 0.0302,
@@ -193,6 +218,55 @@
             "n": 96
           }
         }
+      },
+      "restricted": {
+        "excluded_sectors": [
+          "Financials",
+          "Real Estate"
+        ],
+        "hit_rate_old": 0.5528455284552846,
+        "hit_rate_new": 0.49085365853658536,
+        "n_scored_old": 984,
+        "n_scored_new": 984,
+        "balanced_accuracy_old": 0.4987743138822276,
+        "balanced_accuracy_new": 0.4051605031764063,
+        "macro_f1_old": 0.4916847377673624,
+        "macro_f1_new": 0.34100467123246503,
+        "majority_class_baseline": 0.42378048780487804
+      },
+      "quality_ci": {
+        "n_tickers": 100,
+        "draws": 2000,
+        "balanced_accuracy_old": 0.488392569286991,
+        "balanced_accuracy_old_ci": [
+          0.4303365800107444,
+          0.5498694016731668
+        ],
+        "balanced_accuracy_new": 0.40831585988290886,
+        "balanced_accuracy_new_ci": [
+          0.36271233639654693,
+          0.452070668150812
+        ],
+        "balanced_accuracy_delta": -0.08007670940408212,
+        "balanced_accuracy_delta_ci": [
+          -0.139807993227322,
+          -0.027503330908903667
+        ],
+        "macro_f1_old": 0.4629280438001457,
+        "macro_f1_old_ci": [
+          0.4017216168894326,
+          0.5259639875417822
+        ],
+        "macro_f1_new": 0.3246625532446113,
+        "macro_f1_new_ci": [
+          0.2673754139558331,
+          0.37954254868994247
+        ],
+        "macro_f1_delta": -0.1382654905555344,
+        "macro_f1_delta_ci": [
+          -0.20324940921536527,
+          -0.07834297035529442
+        ]
       }
     },
     "precision": {
@@ -251,6 +325,71 @@
         0.4513888888888889
       ],
       "n_tickers": 100
+    },
+    "matched_baseline": {
+      "repeat_floor_v_old": {
+        "flip_rate": 0.027777777777777776,
+        "n_pairs": 72,
+        "n_differing": 2
+      },
+      "repeat_floor_v_new": {
+        "flip_rate": 0.0,
+        "n_pairs": 72,
+        "n_differing": 0
+      },
+      "repeat_floor_pooled": {
+        "flip_rate": 0.013888888888888888,
+        "n_pairs": 144,
+        "n_differing": 2,
+        "wilson_ci": [
+          0.003817054691554883,
+          0.04922349681762791
+        ]
+      },
+      "cross_version_flip_rate": 0.38861111111111113,
+      "excess_vs_repeat_floor": 0.37472222222222223,
+      "excess_vs_repeat_floor_ci": [
+        0.33938761429348324,
+        0.3847940564195562
+      ]
+    },
+    "distribution_distance": {
+      "tvd": 0.31861111111111107,
+      "n": 3600,
+      "marginals_v_old": {
+        "SAFE": 0.3888888888888889,
+        "WATCH": 0.5252777777777777,
+        "DISTRESS": 0.08583333333333333
+      },
+      "marginals_v_new": {
+        "SAFE": 0.7075,
+        "WATCH": 0.2808333333333333,
+        "DISTRESS": 0.011666666666666667
+      },
+      "categories": [
+        "SAFE",
+        "WATCH",
+        "DISTRESS"
+      ],
+      "tvd_ci": [
+        0.24111111111111114,
+        0.3944444444444444
+      ]
+    },
+    "subgrid_reconciliation": {
+      "n_cells": 24,
+      "n_matched": 72,
+      "cross_version_flip_rate": 0.2361111111111111,
+      "within_version_pooled": 0.013888888888888888,
+      "excess_flip_rate": 0.2222222222222222
+    },
+    "restricted_flip": {
+      "cross_version_flip_rate": 0.3580623306233062,
+      "n_matched": 2952,
+      "excluded_sectors": [
+        "Financials",
+        "Real Estate"
+      ]
     },
     "prevalence": {
       "n": 3600,

@@ -46,12 +46,25 @@ analyze_pair() {
 }
 
 if [[ "$MODE" == "verify" ]]; then
-  echo "[reproduce] determinism check: analyzing each pair twice and hash-comparing"
+  echo "[reproduce] determinism check: analyzing each pair under three hash seeds and hash-comparing"
+  # Two plain re-runs only catch order-dependence if the interpreter happens to pick hash seeds
+  # whose effect differs, which makes the test probabilistic. Iterating a set of string keys is
+  # the usual way this creeps in: the sum order changes and the last bits of a float move. The
+  # seeds are therefore pinned to values known to differ, so the check either catches it or the
+  # code really is order-independent.
   ok=1
   for p in "${PAIRS[@]}"; do
-    $PY code/analysis/run.py --pair "$p" >/dev/null; h1=$(sha256 "$RES/claims.json")
-    $PY code/analysis/run.py --pair "$p" >/dev/null; h2=$(sha256 "$RES/claims.json")
-    if [[ "$h1" == "$h2" ]]; then echo "  $p: IDENTICAL  ${h1:0:16}"; else echo "  $p: MISMATCH ($h1 vs $h2)"; ok=0; fi
+    hs=()
+    for seed in 0 1 12345; do
+      PYTHONHASHSEED=$seed $PY code/analysis/run.py --pair "$p" >/dev/null
+      hs+=("$(sha256 "$RES/claims.json")")
+    done
+    if [[ "${hs[0]}" == "${hs[1]}" && "${hs[1]}" == "${hs[2]}" ]]; then
+      echo "  $p: IDENTICAL  ${hs[0]:0:16}"
+    else
+      echo "  $p: MISMATCH across hash seeds (${hs[0]:0:12} / ${hs[1]:0:12} / ${hs[2]:0:12})"
+      ok=0
+    fi
   done
   [[ "$ok" == 1 ]] && echo "[reproduce] deterministic: byte-identical across re-runs" || { echo "[reproduce] NON-DETERMINISTIC"; exit 1; }
   exit 0
@@ -61,7 +74,56 @@ echo "[reproduce] regenerating results/ from frozen data/ (keys-free, \$0)"
 for p in "${PAIRS[@]}"; do
   echo "  -> $p"
   analyze_pair "$p"
+  # The temperature robustness reads the frozen T-tagged captures, so it is keys-free and belongs
+  # in the default path. Without it a fresh clone has no tempsweep_<pair>.json and the manuscript
+  # gate cannot resolve the Table 4 figures, which is how the clean-room run first failed.
+  $PY code/analysis/tempsweep.py --pair "$p" >/dev/null 2>&1 ||       echo "     [$p] tempsweep skipped (T-subgrid captures absent)"
   $PY code/render/check_claims.py | sed "s/^/     [$p] /"
 done
+# The per-pair gate defers the manuscript check until every pair's claims file exists, so it
+# runs once more here. On a fresh clone this is the invocation that actually gates main.tex.
+echo "[reproduce] manuscript number check (all pairs present)"
+$PY code/render/check_claims.py
+
+# check_claims.py only reads paper/main.tex. The README, the response letter, Table 2 cell by
+# cell and the guidance citations were checked by scripts a clean run never invoked, so a stale
+# figure in any of them survived a full reproduction. Run them here, where the results exist.
+echo "[reproduce] documentation and response-letter check"
+# Exit 2 means the manuscript, README and letter are not published in this copy -- the /code +
+# /data capsule layout. That is "not checkable here", not a pass and not a failure.
+rc=0; $PY code/render/check_docs.py || rc=$?
+if [[ "$rc" == 2 ]]; then
+  # Absent because this is a /code + /data capsule, where they are never mounted, or absent
+  # because someone deleted them from a full checkout? The first is the documented layout and
+  # is a clean run; the second is a copy that cannot be fully verified and must say so.
+  if [[ -d paper && -d submission ]]; then DOCS_INCOMPLETE=1; fi
+elif [[ "$rc" != 0 ]]; then
+  exit "$rc"
+fi
+
+# The highlighted PDF is only trustworthy if the revision rebuilds exactly from the markup. That
+# needs a built diff; skip rather than fail when the package has not been assembled (exit 2 is
+# "could not check here", which is not a pass).
+if [[ -f submission/_highlighted_build.tex || -f submission/highlighted_pdf.pdf ]]; then
+  echo "[reproduce] highlighting round-trip"
+  rc=0; $PY submission/check_highlighting.py || rc=$?
+  if [[ "$rc" == 2 ]]; then
+    DOCS_INCOMPLETE=1
+  elif [[ "$rc" != 0 ]]; then
+    exit "$rc"
+  fi
+elif [[ -d submission ]]; then
+  echo "[reproduce] highlighting round-trip SKIPPED: run bash submission/build_submission.sh first"
+  DOCS_INCOMPLETE=1
+fi
+
 echo "[reproduce] done. Outputs in $RES/claims_<pair>.json and $RES/results_<pair>.md"
 echo "[reproduce] optional live re-collection (needs API keys, ~costed): make -C code all SUBGRID=full"
+
+# Exit 2 means "a gate that applies to this copy could not run", which must not read as a pass.
+# A capsule (/code + /data only) has no document gates to run, so it exits 0.
+if [[ "${DOCS_INCOMPLETE:-0}" == 1 ]]; then
+  echo "[reproduce] INCOMPLETE: the analysis reproduced, but a document gate could not run"
+  exit 2
+fi
+exit 0

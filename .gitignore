@@ -50,10 +50,6 @@ IEEE-Access-Submission-Checklist.pdf
 section_text_for_sheets.*
 section_para_for_sheets.*
 humanized_corrected_paragraphs.md
-ssrn/*.aux
-ssrn/*.log
-ssrn/*.out
-ssrn/*.synctex.gz
 
 # ── Intentionally COMMITTED under results/ ──
 #   results/claims_<pair>.json, results/results_<pair>.md, results/tempsweep_*

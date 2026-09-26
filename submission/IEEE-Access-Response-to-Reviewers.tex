@@ -1,0 +1,544 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[margin=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{tabularx}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{ReviewerGreen}{HTML}{008000}
+\newcommand{\rvcomment}[1]{{\color{ReviewerGreen}#1}}
+\newcommand{\concern}[1]{\textbf{\color{ReviewerGreen}#1}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlist[itemize,1]{leftmargin=1.6em,labelsep=0.6em,itemsep=3pt,topsep=3pt,parsep=0pt,
+                    label=\raisebox{-0.15ex}{\large\textbullet}}
+\setlist[itemize,2]{leftmargin=1.4em,labelsep=0.5em,itemsep=2pt,topsep=3pt,parsep=0pt,
+                    label=\textendash}
+\pagestyle{plain}
+\begin{document}
+\noindent\begin{tabularx}{\textwidth}{@{}l@{\hspace{1.1em}}X@{}}
+\textbf{Original Manuscript ID:} & Access-2026-39991 \\[3pt]
+\textbf{Original Article Title:} & ``Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems''
+\end{tabularx}
+
+\vspace{18pt}
+
+\noindent\begin{tabularx}{\textwidth}{@{}l@{\hspace{1.1em}}X@{}}
+\textbf{To:} & IEEE Access Editor \\[3pt]
+\textbf{Re:} & Response to reviewers
+\end{tabularx}
+
+\vspace{16pt}
+Dear Editor,
+
+Thank you for allowing a resubmission of our manuscript, with an opportunity to address the reviewers' comments.
+
+We are uploading (a) our point-by-point response to the comments (below) (response to reviewers, under ``Author's Response Files''), (b) an updated manuscript with yellow highlighting indicating changes (as ``Highlighted PDF''), and (c) a clean updated manuscript without highlights (``Main Manuscript'').
+
+\vspace{14pt}
+Best regards, \\[22pt]
+Samir Chincholikar \\
+Robin Chawla
+
+\newpage
+
+\vspace{12pt}
+\concern{Reviewer \#1, Concern \#1}
+
+\concern{Reviewer comment:}
+
+\rvcomment{1. Redefine or defend the excess-flip estimand}
+
+\rvcomment{The within-version rates compare different replicate seeds, whereas Fcross compares the same nominal seed across versions. Because seed behavior is provider and version specific, these quantities need not share a common coupling.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We agree that Fwithin and Fcross use different constructions and need not share a common coupling.
+
+\item We therefore no longer interpret Fexcess as a variance-reduced within-cell contrast or as the causal share of decisions changed by migration.
+
+\item As an alternative sensitivity check, we estimated same-seed repeat-call disagreement on a stratified subgrid.
+
+\item The repeat-call floors are 0.028 for OpenAI and 0.014 for Gemini.
+
+\item Applying these alternative noise-floor estimates to the full-grid cross-version disagreement rates gives excess disagreement of 0.189 [0.147, 0.206] for OpenAI and 0.375 [0.339, 0.385] for Gemini.
+
+\item The substantive conclusion is unchanged.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section III-C, ``What the Two Baselines Measure, and a Repeat-Call Sensitivity,'' was added.
+
+\item The section now:
+
+\begin{itemize}
+
+\item explicitly distinguishes the construction of Fwithin and Fcross;
+
+\item narrows the interpretation of Fexcess;
+
+\item reports a same-seed repeat-call sensitivity analysis on a stratified subgrid;
+
+\item clearly states that the resulting repeat-call floor is applied as an alternative noise-floor estimate to the full-grid cross-version disagreement rate; and
+
+\item retains the preregistered endpoint as primary.
+
+\end{itemize}
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#1, Concern \#2}
+
+\concern{Reviewer comment:}
+
+\rvcomment{2. Separate distributional distance from per-call migration flips:}
+
+\rvcomment{If estimated with independent replicate draws, the proposed difference has a defensible categorical distribution-distance interpretation. That is different from the probability that a specific production decision will flip after cutover. Explain which operational question each statistic answers and avoid treating them as interchangeable.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We agree that these quantities answer different operational questions.
+
+\item TVD measures movement in the aggregate label distribution.
+
+\item Fcross measures matched decision disagreement across versions.
+
+\item We also clarify that TVD equals the marginal component M of the prevalence-churn decomposition.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section III-D, ``Distribution Distance Is Not Per-Call Flip Probability'' was added.
+
+\item The new section:
+
+\begin{itemize}
+
+\item formally distinguishes TVD from Fcross;
+
+\item reports both quantities side by side for both migration pairs;
+
+\item explains their different operational interpretations; and
+
+\item links TVD explicitly to the marginal component M.
+
+\end{itemize}
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#1, Concern \#3}
+
+\concern{Reviewer comment:}
+
+\rvcomment{5) Are there references that are not appropriate for the topic being discussed?: Yes}
+
+\rvcomment{5a) If yes, then please indicate which references should be removed.: Reference [24] Emergent Abilities of Large Language Models, does not support the sentence that a provider designated successor need not be behaviorally equivalent to its predecessor.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We agree that the cited reference did not support the statement.
+
+\item The citation has therefore been removed rather than replaced with an unrelated reference.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item The unsupported citation was removed from the relevant sentence.
+
+\item The now-unused bibliography entry was also deleted.
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#2, Concern \#1}
+
+\concern{Reviewer comment:}
+
+\rvcomment{1. Please justify the construction of the primary excess-flip endpoint. F\_within is computed from all three unordered replicate pairs within each company-date, whereas F\_cross compares matched company-date-replicate cells. Please explain why the former is the appropriate noise baseline for the latter and, if possible, add a sensitivity analysis using an alternative matched or repeated-call baseline.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item This overlaps with Reviewer \#1, Concern \#1.
+
+\item We addressed it by estimating same-seed repeat-call disagreement on a stratified subgrid, rather than relying only on an interpretive defense.
+
+\item Applying that repeat-call floor as an alternative noise-floor estimate to the full-grid cross-version disagreement rate leaves the endpoint positive for both migrations: 0.189 for OpenAI and 0.375 for Gemini.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section III-C was added.
+
+\item It now:
+
+\begin{itemize}
+
+\item explains why the preregistered within-version floor answers the intended operational question;
+
+\item explicitly acknowledges the different coupling structures; and
+
+\item reports the requested same-seed repeat-call sensitivity analysis, stating that its floor is applied to the full-grid cross-version disagreement rate.
+
+\end{itemize}
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#2, Concern \#2}
+
+\concern{Reviewer comment:}
+
+\rvcomment{2. Please make the Gemini migration provenance independently verifiable. Table 1 gives gemini-2.5-flash -> gemini-3.5-flash with an announced shutdown of October 16, 2026, sourced to [34] as accessed on July 4, 2026. Please include an archived capture or other stable provider evidence establishing the shutdown date and designated successor as of the protocol-freeze date. If the pair was selected experimentally rather than explicitly designated by the provider, the ``vendor-declared migration'' terminology should be revised throughout.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We located an archived Google deprecation-page capture dated 1 July 2026.
+
+\item It confirms:
+
+\begin{itemize}
+
+\item gemini-2.5-flash;
+
+\item shutdown date 16 October 2026; and
+
+\item gemini-3.5-flash as the recommended replacement.
+
+\end{itemize}
+
+\item The ``vendor-declared'' terminology is therefore retained: the manuscript describes the pairs as vendor-declared model-version migrations.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section IV-D, ``Models and Migration Pairs'' was revised.
+
+\item We:
+
+\begin{itemize}
+
+\item added the archived provider evidence;
+
+\item stated the shutdown date and designated successor explicitly;
+
+\item explained why an archived capture is used instead of relying on a revisable live page; and
+
+\item added the archived source as a numbered reference.
+
+\end{itemize}
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#2, Concern \#3}
+
+\concern{Reviewer comment:}
+
+\rvcomment{3. Please cite the SR 26-2 provisions with greater precision. Section VII states that SR 26-2 replaced SR 11-7 in April 2026 and expressly excludes generative and agentic AI from scope; this premise carries the governance-gap argument. Please identify the specific provisions supporting these statements and reconcile Table 5, which maps only SR 11-7 provisions, with the text's position that SR 26-2 is the operative framework.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We agree that the governance discussion required more precise sourcing.
+
+\item The revised manuscript now identifies:
+
+\begin{itemize}
+
+\item Footnote 3 for the generative/agentic AI scope carve-out;
+
+\item Section III for aggregate model risk; and
+
+\item Section VII for vendor and third-party models.
+
+\end{itemize}
+
+\item We also clarify that the carve-out delegates governance to institutional risk-management practices rather than implying an absence of governance obligations.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section VII, ``Governance: SR 11-7, SR 26-2, and a Pre-Migration Control'' was substantially revised.
+
+\item Table 5 now carries a separate column for each framework, so the mapping no longer rests on SR 11-7 alone, and each cell gives the section number together with the provision title as the guidance itself words it, rather than a section number the reader would have to look up. The five rows are the governance concepts the paper relies on: vendor and third-party responsibility; ongoing monitoring; effective challenge and validation before use; model inventory and change control; and aggregate model risk. Two further columns state, for each concept, how version migration breaks it and what control we propose.
+
+\item The caption states that the SR 26-2 column gives the provisions that would otherwise apply, because SR 26-2's own footnote 3, attached to its Purpose and Scope section, provides that generative and agentic AI models ``are not within the scope of this guidance.'' Section VII now quotes the scope exclusion and incorporates the accompanying governance language, under which an institution's own risk-management and governance practices determine the controls for systems not covered. The carve-out therefore delegates the governance of these systems to institutional discretion rather than leaving it unaddressed, and the proposed control is framed as a way to discharge that delegated responsibility.
+
+\item Reference [3] now cites an archived capture of SR 11-7, since the issuing page was withdrawn after supersession, and names the provisions relied upon. Reference [4] does the same for SR 26-2.
+
+\item The governance language was narrowed to describe a governance challenge rather than an absence of regulatory obligations.
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#2, Concern \#4}
+
+\concern{Reviewer comment:}
+
+\rvcomment{4. Please correct the description of the sector-restricted analysis. It is introduced with ``The principal pattern remains,'' but the OpenAI hit rate improves 0.539 -> 0.564 across all sectors and declines 0.590 -> 0.562 when Financials and Real Estate are excluded. Because the restricted subset is where the Altman Z`` reference is more appropriate, this reversal should be stated directly, and the Discussion's description of ''modest numerical improvement`` qualified accordingly. Please also report balanced accuracy and macro-F1 for the restricted analysis, since the manuscript argues these are required for imbalanced classes.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We agree that the earlier text incorrectly described the OpenAI restricted-sample result as a continuation rather than a reversal.
+
+\item The revised results now state explicitly:
+
+\begin{itemize}
+
+\item Full-sample OpenAI hit rate: 0.539 to 0.564
+
+\item Restricted-sample OpenAI hit rate: 0.590 to 0.562
+
+\end{itemize}
+
+\item We also added balanced accuracy and macro-F1 for the restricted sample.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section V-E, ``Secondary Accuracy Analysis'' was revised.
+
+\item We:
+
+\begin{itemize}
+
+\item explicitly report the OpenAI hit-rate reversal;
+
+\item added restricted-sample balanced accuracy and macro-F1 for both providers;
+
+\item identify the sector-restricted sample as the more informative accuracy view; and
+
+\item updated the Discussion and Conclusion so they no longer overstate the OpenAI improvement.
+
+\end{itemize}
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#2, Concern \#5}
+
+\concern{Reviewer comment:}
+
+\rvcomment{5. Please report uncertainty for the aggregate secondary comparisons or qualify them. Balanced accuracy changes 0.538 -> 0.570 for OpenAI and 0.488 -> 0.408 for Gemini, and macro-F1 changes 0.517 -> 0.565 and 0.463 -> 0.325, without intervals, unlike the flip-conditional analysis. Confidence intervals or paired bootstrap estimates would clarify whether these are inferential or descriptive.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We added ticker-clustered bootstrap confidence intervals for the changes in balanced accuracy and macro-F1.
+
+\item OpenAI:
+
+\begin{itemize}
+
+\item Balanced accuracy: +0.032 [-0.005, 0.070]
+
+\item Macro-F1: +0.048 [0.007, 0.090]
+
+\end{itemize}
+
+\item Gemini:
+
+\begin{itemize}
+
+\item Balanced accuracy: -0.080 [-0.140, -0.028]
+
+\item Macro-F1: -0.138 [-0.203, -0.078]
+
+\end{itemize}
+
+\item The OpenAI improvement is therefore characterized as weak, while the Gemini deterioration is clearly resolved.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section V-E now reports bootstrap confidence intervals for both secondary metrics and both migration pairs.
+
+\item The corresponding claims in the Results, Discussion, and Conclusion were moderated to match the inferential evidence.
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#2, Concern \#6}
+
+\concern{Reviewer comment:}
+
+\rvcomment{6. Please reconcile the temperature subgrid with the primary result. The T = 0 subgrid estimates are 0.153 for OpenAI and 0.222 for Gemini, against full-grid values of 0.112 and 0.381 at the same nominal setting. The wide intervals are explained, but the difference in point estimates is not.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We verified that the difference between the full-grid and subgrid T=0 estimates is due to cell selection, not temperature.
+
+\item Re-running the primary estimator on exactly the 24 subgrid cells reproduces:
+
+\begin{itemize}
+
+\item OpenAI: 0.153
+
+\item Gemini: 0.222
+
+\end{itemize}
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section V-F, ``Temperature Sensitivity'' was revised.
+
+\item We:
+
+\begin{itemize}
+
+\item added the restricted-cell recomputation;
+
+\item explain that the T=0 row applies the primary estimator to the small stratified subset; and
+
+\item clarify that it serves as the anchor for comparison with T=0.7 and T=1.0, rather than as an independent full-grid estimate.
+
+\end{itemize}
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#2, Concern \#7}
+
+\concern{Reviewer comment:}
+
+\rvcomment{7. Please moderate the ``decision boundary'' interpretation. That cells unstable within the incumbent version show higher cross-version flip rates is a useful observation, but within-version instability does not establish proximity to an underlying decision boundary. Describing these as cases with greater pre-existing output instability would be sufficient.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We agree that within-version instability does not establish proximity to an underlying decision boundary.
+
+\item We removed that interpretation.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section V-D, ``Robustness of Cross-Version Agreement'' was revised.
+
+\item The text now states only that migration changes are concentrated among observations with greater pre-existing within-version output instability.
+
+\item It explicitly states that proximity to an underlying decision boundary is not measured.
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#2, Concern \#8}
+
+\concern{Reviewer comment:}
+
+\rvcomment{8. Please clarify the noise-floor interpretation. A positive cluster-bootstrap interval shows that the defined cross-version disagreement exceeds the defined within-version baseline. The statement that the result cannot be explained ``solely'' by residual sampling variability should be justified under the estimator's assumptions or phrased more narrowly.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We agree that the previous language was too broad.
+
+\item The result establishes that the defined cross-version disagreement exceeds the defined within-version baseline under the estimator's assumptions.
+
+\item It does not exclude every possible sampling-related explanation.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item Section V-A, ``Migration-Induced Decision Instability'' was revised.
+
+\item The previous ``cannot be explained solely by sampling variability'' language was replaced with a narrower statement describing exactly what the confidence interval establishes.
+
+\end{itemize}
+
+\vspace{12pt}
+\concern{Reviewer \#2, Concern \#9}
+
+\concern{Reviewer comment:}
+
+\rvcomment{9. Please retain the current limitations on systemic-risk interpretation. The manuscript appropriately states that it demonstrates a potential shared-update mechanism rather than realized cross-institutional correlation or losses, and this distinction should remain explicit in the Abstract, Discussion, and Conclusion.}
+
+\textbf{Author response:}
+
+\begin{itemize}
+
+\item We agree and retained this limitation throughout the manuscript.
+
+\item The study demonstrates a deployment-level shared-update mechanism, not realized cross-institutional correlation, losses, or market-level systemic effects.
+
+\end{itemize}
+
+\textbf{Author action:}
+
+\begin{itemize}
+
+\item The limitation was verified and retained in the Abstract and Discussion.
+
+\item Section IX, Conclusion was strengthened to state explicitly that the study does not estimate:
+
+\begin{itemize}
+
+\item typical migration effects;
+
+\item realized cross-institutional correlation; or
+
+\item market-level losses.
+
+\end{itemize}
+
+\end{itemize}
+
+\end{document}

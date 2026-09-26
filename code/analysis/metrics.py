@@ -227,3 +227,71 @@ def _wls_slope(xs, ys, ws):
     num = sum(w * (x - mx) * (y - my) for w, x, y in zip(ws, xs, ys))
     den = sum(w * (x - mx) ** 2 for w, x in zip(ws, xs))
     return (num / den) if den else None
+
+# --- Reviewer-requested estimand work (R1.1/R2.1, R1.2) --------------------------
+
+def repeat_call_flip_rate(rows_main, rows_repeat) -> dict:
+    """Same-seed repeat-call disagreement within one version.
+
+    The primary noise floor compares DIFFERENT replicate seeds inside a version, while the
+    cross-version flip rate compares the SAME nominal seed across versions. Both referees
+    asked whether the former is the right counterfactual for the latter. This function
+    supplies the matched alternative: it pairs each (ticker, date, replicate) row in the main
+    capture against the independently timed re-capture that carries the identical seed, so
+    seed, cell, replicate index, temperature and version are all held fixed and only the call
+    occasion differs. Rows whose recorded seed does not match are skipped rather than counted,
+    so the statistic is exactly a same-seed repeat.
+    """
+    main = {_key(r): r for r in rows_main}
+    diff = tot = 0
+    for r in rows_repeat:
+        k = _key(r)
+        m = main.get(k)
+        if m is None or m.get("seed") != r.get("seed"):
+            continue
+        tot += 1
+        diff += (m["direction"] != r["direction"])
+    return {"flip_rate": (diff / tot if tot else None), "n_pairs": tot, "n_differing": diff}
+
+
+def total_variation_distance(pairs) -> dict:
+    """Total variation distance between the two versions' marginal label distributions.
+
+    This answers a different question from the flip rate and the two are not
+    interchangeable (R1.2). TVD measures how far the *aggregate mix* of ratings moved; it is
+    a property of the two distributions and is insensitive to which company moved. The
+    cross-version flip rate measures the probability that a *particular* decision changes at
+    cutover, which is the operational quantity for a deployment. A migration can score high
+    on one and low on the other: a permutation of labels across companies leaves TVD at zero
+    while flipping most decisions, and a uniform shift of a subset moves TVD without
+    touching the rest of the book.
+    """
+    if not pairs:
+        return {"tvd": None, "n": 0}
+    n = len(pairs)
+    po = Counter(o["direction"] for _k, o, _n in pairs)
+    pn = Counter(nw["direction"] for _k, _o, nw in pairs)
+    # Summation order must be fixed. Iterating a set of string keys varies between processes
+    # under hash randomisation, which changes the last bits of the total and breaks the
+    # byte-identical reproduction this repository depends on. The declared category order is
+    # used, with any unexpected label appended in sorted order rather than silently dropped.
+    cats = list(DIRECTIONS)
+    cats += sorted((set(po) | set(pn)) - set(cats))
+    tvd = 0.5 * sum(abs(pn.get(c, 0) / n - po.get(c, 0) / n) for c in cats)
+    return {"tvd": tvd, "n": n,
+            "marginals_v_old": {c: po.get(c, 0) / n for c in cats},
+            "marginals_v_new": {c: pn.get(c, 0) / n for c in cats},
+            "categories": cats}
+
+
+def restrict_pairs_to_cells(pairs, cells) -> list:
+    """Subset of matched pairs whose (ticker, date) is in `cells`."""
+    keep = set(cells)
+    return [(k, o, n) for (k, o, n) in pairs if (k[0], k[1]) in keep]
+
+
+def restrict_pairs_excluding_sectors(pairs, sectors: dict, exclude) -> list:
+    """Matched pairs with the named GICS sectors removed."""
+    tk_sector = {t: sec for sec, ts in sectors.items() for t in ts}
+    ex = set(exclude)
+    return [(k, o, n) for (k, o, n) in pairs if tk_sector.get(k[0], "Unknown") not in ex]

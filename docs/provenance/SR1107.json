@@ -1,0 +1,58 @@
+{
+ "document": "SR 11-7, Guidance on Model Risk Management (Attachment)",
+ "issuers": [
+  "Board of Governors of the Federal Reserve System",
+  "Office of the Comptroller of the Currency"
+ ],
+ "url": "https://www.federalreserve.gov/supervisionreg/srletters/sr1107a1.pdf",
+ "archived_url": "https://web.archive.org/web/2024/https://www.federalreserve.gov/supervisionreg/srletters/sr1107a1.pdf",
+ "archive_note": "The Federal Reserve page returns 404 since SR 26-2 superseded SR 11-7 in April 2026 (re-checked 2026-09-26 for sr1107a1.pdf, SR1107a1.pdf and sr1107.htm), so the citation rests on an archived capture. Two independent retrievals produced byte-identical files.",
+ "retrieved_utc": "2026-09-26",
+ "sha256": "0046c0e4eb705830d43312da000271655000beb2a349e1cc3802815638c62cc0",
+ "pages": 21,
+ "superseded_by": "SR 26-2 (April 17, 2026)",
+ "sections": [
+  "I. Introduction",
+  "II. Purpose and Scope",
+  "III. Overview of Model Risk Management",
+  "IV. Model Development, Implementation, and Use",
+  "V. Model Validation",
+  "VI. Governance, Policies, and Controls",
+  "VII. Conclusion"
+ ],
+ "subsections": {
+  "IV": [
+   "Model Development and Implementation"
+  ],
+  "V": [
+   "Key Elements of Comprehensive Validation",
+   "Validation of Vendor and Other Third-Party Products"
+  ],
+  "VI": [
+   "Board of Directors and Senior Management",
+   "Policies and Procedures",
+   "Roles and Responsibilities",
+   "Internal Audit",
+   "External Resources",
+   "Model Inventory"
+  ]
+ },
+ "provisions_cited_by_the_paper": {
+  "section_III_effective_challenge": "A guiding principle for managing model risk is \"effective challenge\" of models, that is, critical analysis by objective, informed parties who can identify model limitations and assumptions and produce appropriate changes. Effective challenge depends on a combination of incentives, competence, and influence.",
+  "section_III_aggregate_risk": "Banks should consider risk from individual models and in the aggregate. Aggregate model risk is affected by interaction and dependencies among models; reliance on common assumptions, data, or methodologies; and any other factors that could adversely affect several models and their outputs at the same time.",
+  "section_V_ongoing_monitoring": "Ongoing monitoring is essential to evaluate whether changes in products, exposures, activities, clients, or market conditions necessitate adjustment, redevelopment, or replacement of the model and to verify that any extension of the model beyond its original scope is valid.",
+  "section_V_vendor_contingency": "Banks should have contingency plans for instances when the vendor model is no longer available or cannot be supported by the vendor."
+ },
+ "retrievals": [
+  {
+   "source": "web.archive.org capture of the Federal Reserve PDF",
+   "utc": "2026-09-26",
+   "sha256": "0046c0e4eb705830d43312da000271655000beb2a349e1cc3802815638c62cc0"
+  },
+  {
+   "source": "copy supplied by the author (~/Downloads/sr1107a1.pdf)",
+   "utc": "2026-09-26",
+   "sha256": "0046c0e4eb705830d43312da000271655000beb2a349e1cc3802815638c62cc0"
+  }
+ ]
+}

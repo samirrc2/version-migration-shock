@@ -1,0 +1,14 @@
+{
+ "url": "https://ai.google.dev/gemini-api/docs/deprecations",
+ "archive_url": "https://web.archive.org/web/20260701200825/https://ai.google.dev/gemini-api/docs/deprecations",
+ "archive_timestamp_utc": "2026-07-01T20:08:25Z",
+ "retrieved_utc": "2026-09-24",
+ "sha256_of_capture": "bfce33186e043a466fc9e585ffea8d060f90f0fcb147c8c28ecf25af98f697b6",
+ "extracted": {
+  "model": "gemini-2.5-flash",
+  "release_date": "June 17, 2025",
+  "shutdown_date": "October 16, 2026",
+  "recommended_replacement": "gemini-3.5-flash"
+ },
+ "note": "Archived state of the provider deprecation page three days before the protocol-freeze access date of 2026-07-04. Confirms the shutdown date and the designated successor recorded in Table 1. The live page has since been revised: as of 2026-09-24 it lists no announced shutdown for gemini-2.5-flash and names '3.5 Flash-Lite or 3.8 Flash' as the recommendation, which is itself an instance of the unilateral revisability this study describes."
+}

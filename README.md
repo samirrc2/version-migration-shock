@@ -10,7 +10,7 @@ Financial institutions deploying LLM agents inherit a risk absent from classical
 
 **Main findings:**
 
-- Both migrations produce a large, highly significant shock, but of **opposite character**. OpenAI (`gpt-5-nano-2025-08-07`→`gpt-5.4-nano`) flips **0.112** of assessments above the noise floor (95% CI [0.077, 0.150]) as genuine per-company reconsideration toward DISTRESS. Gemini (`gemini-2.5-flash`→`gemini-3.5-flash`) flips **0.381** (95% CI [0.303, 0.458]) as a wholesale distributional shift toward SAFE.
+- Both migrations produce a large, highly significant shock, but of **opposite character**. OpenAI (`gpt-5-nano-2025-08-07`→`gpt-5.4-nano`) flips **0.112** of assessments above the noise floor (95% CI [0.077, 0.149]) as genuine per-company reconsideration toward DISTRESS. Gemini (`gemini-2.5-flash`→`gemini-3.5-flash`) flips **0.381** (95% CI [0.302, 0.458]) as a wholesale distributional shift toward SAFE.
 - The result survives the conservative max-of-both-versions noise floor (OpenAI 0.097 [0.06, 0.13]; Gemini 0.372 [0.30, 0.45]).
 - Neither migration improves class-balanced accuracy; the Gemini shift **degrades** it toward chance (macro-F1 0.46→0.32). Both incumbents clear the 0.36 majority-class baseline (models are competent).
 - The character of a migration shock does not generalize across vendors — an idiosyncratic, synchronized channel current model-risk guidance does not address (SR 26-2 places generative AI out of scope).
@@ -46,7 +46,7 @@ The artifact enables independent reproduction of the article's computational res
 
 ---
 
-## Code Ocean
+### Code Ocean capsule
 
 A [Code Ocean](https://codeocean.com/) compute capsule for this artifact is available at
 [https://doi.org/10.24433/CO.2874343.v1](https://doi.org/10.24433/CO.2874343.v1)
@@ -181,7 +181,7 @@ The primary endpoint is `excess_flip_rate = cross_version_flip_rate − within_v
 
 ### Expected results
 
-After `bash code/reproduce.sh`, both pairs must pass the gate (`[check] OK — 39 required claims present`) and `results/claims_<pair>.json` must contain:
+After `bash code/reproduce.sh`, both pairs must pass the gate (`[check] OK — 64 required claims present`) and `results/claims_<pair>.json` must contain:
 
 | Quantity | `openai_nano` | `gemini_flash` |
 |----------|--------------:|---------------:|
@@ -196,6 +196,14 @@ After `bash code/reproduce.sh`, both pairs must pass the gate (`[check] OK — 3
 | Cohen κ / Scott π / Gwet AC1 | 0.60 / 0.60 / 0.70 | 0.33 / 0.27 / 0.47 |
 | McNemar drift *p* | 5.67×10⁻¹⁸ | 1.39×10⁻⁵⁹ |
 | Balanced accuracy old→new | 0.538→0.570 | 0.488→0.408 |
+| Same-seed repeat-call floor (matched) | 0.0278 [0.0109, 0.0692] | 0.0139 [0.0038, 0.0492] |
+| Excess vs matched floor (sensitivity) | 0.1888 | 0.3747 |
+| Label-distribution distance (TVD) | 0.0946 [0.0597, 0.138] | 0.3186 [0.2411, 0.3944] |
+| Excess on the 24 robustness cells | 0.1528 | 0.2222 |
+| Restricted balanced acc. old→new | 0.5397→0.5383 | 0.4988→0.4052 |
+| Restricted macro-F1 old→new | 0.5264→0.5319 | 0.4917→0.341 |
+| Balanced-acc. Δ (95% CI) | 0.032 [-0.0046, 0.07] | -0.0801 [-0.1398, -0.0275] |
+| Macro-F1 Δ (95% CI) | 0.0484 [0.0073, 0.0903] | -0.1383 [-0.2032, -0.0783] |
 | Macro-F1 old→new (baseline 0.357) | 0.517→0.565 | 0.463→0.325 |
 
 These are the same quantities reported in the article's Results section (Table 1). The determinism check must print `deterministic: byte-identical across re-runs`.
@@ -210,10 +218,11 @@ These are the same quantities reported in the article's Results section (Table 1
 
 ## 5. Other Notes
 
+- **Provider and regulatory provenance:** `docs/provenance/` holds the archived provider deprecation page behind Table 1 and the SR 26-2 guidance, each with a SHA-256 receipt.
 - **Pre-registration and freeze records:** `PREREGISTRATION.md`, `PREREGISTRATION.freeze.txt`, `PREREGISTRATION_AMENDMENTS.md`
 - **Model manifest and run playbook:** `docs/model_manifest.md`, `docs/STUDY_RUN.md`
 - **Provenance:** every capture is SHA-256-stamped in `DATA_MANIFEST.md` and `data/frozen/*.freeze.json`; the frozen CSVs are the object of record and must not be regenerated (a correction requires a new versioned file plus a manifest changelog entry).
-- **Anti-drift gate:** `code/render/check_claims.py` fails if any reported number disagrees with the frozen analysis or a required claim (`code/config/slots.yaml`) is missing.
+- **Anti-drift gate:** `code/render/check_claims.py` fails if any reported number disagrees with the frozen analysis, if a required claim (`code/config/slots.yaml`) is missing, or if any figure in `paper/main.tex` traces to no analysis output. External constants are allowlisted with a reason in `slots.yaml`.
 - **Manuscript source:** official IEEE Access LaTeX under `paper/` (`paper/main.tex` is canonical; compiles to `paper/main.pdf`). Figures live only in `paper/figures/`.
 - **Submission notes:** see `SUBMISSION_ARTIFACT.md` (GitHub + Code Ocean).
 - **Issues and support:** GitHub Issues, or the author emails in Section 1.
@@ -248,22 +257,24 @@ version-migration-shock/
 │   └── outcomes/  ground_truth.json  (Altman labels)
 │
 ├── results/     claims_<pair>.json, results_<pair>.md, tempsweep_<pair>.json  (committed; Code Ocean /results)
-└── paper/       IEEE Access manuscript (`main.tex` canonical) + figures/
+├── paper/       IEEE Access manuscript (`main.tex` canonical) + figures/
+└── submission/  upload set: main_manuscript.{pdf,docx}, highlighted_pdf.pdf,
+                 IEEE-Access-Response-to-Reviewers.pdf  (bash submission/build_submission.sh)
 ```
 
 `inputs/` (legacy price context for the inactive directional task) and generated artifacts (`logs/`, `.venv/`) are gitignored. Committed analysis outputs live under `results/`.
 
-### Reviewer quick start
+### Reproducing from a clean checkout
 
 ```bash
 git clone https://github.com/samirrc2/version-migration-shock.git
 cd version-migration-shock
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-bash code/reproduce.sh          # ~1 min, no keys, no cost
+bash code/reproduce.sh          # no API keys required
 ```
 
-Confirm both pairs report `[check] OK`, and that `results/claims_openai_nano.json` / `results/claims_gemini_flash.json` match the Expected Results table in Section 4. Optionally run `bash code/reproduce.sh --verify` for the determinism proof.
+Both pairs should report `[check] OK`, and `results/claims_openai_nano.json` and `results/claims_gemini_flash.json` should match the Expected Results table in Section 4. `bash code/reproduce.sh --verify` repeats the analysis under three hash seeds and compares the output hashes.
 
 ## 6. License
 
