@@ -4,15 +4,25 @@
 # lives in highlight_markup.py; see its docstring for why latexdiff's own preamble is
 # discarded rather than restyled.
 #
-#   bash submission/build_highlighted.sh            # against git HEAD
+#   bash submission/build_highlighted.sh            # against the as-submitted tag
 #   bash submission/build_highlighted.sh <ref>      # against another ref
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="$HOME/Library/TinyTeX/bin/universal-darwin:$PATH"
-BASE_REF="${1:-HEAD}"
+# The baseline is the version the reviewers read, which is a fixed point in history -- not
+# "whatever was committed last". This defaulted to HEAD, which worked only while the revision
+# was uncommitted; committing it moved the baseline onto the revision itself and the next build
+# failed outright. A tag keeps it pinned.
+BASE_REF="${1:-as-submitted}"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
+if ! git rev-parse --verify --quiet "$BASE_REF^{commit}" >/dev/null; then
+  echo "ERROR: baseline ref '$BASE_REF' does not exist. The highlighted PDF must be diffed" >&2
+  echo "       against the manuscript as submitted; create the tag with:" >&2
+  echo "         git tag -a as-submitted <commit> -m 'Manuscript as submitted'" >&2
+  exit 3
+fi
 git show "$BASE_REF:paper/main.tex" > "$WORK/old.tex"
 cp paper/main.tex "$WORK/new.tex"
 

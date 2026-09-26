@@ -164,13 +164,33 @@ def check_pdf_text_parity():
                       f"text; {same_start}/{len(cp)} pages start at the same point")
 
 
+def base_ref():
+    """The baseline the BUILD uses, read from build_highlighted.sh rather than copied.
+
+    This was hardcoded to "HEAD" here while the build defaulted to "HEAD" too. Pinning the
+    build to the as-submitted tag left the two disagreeing, so the audit validated a diff of
+    the revision against itself -- one addition, one deletion -- and still reported OK. A check
+    that reads its own baseline from somewhere else is not checking the artifact that ships.
+    """
+    src = (ROOT / "submission" / "build_highlighted.sh").read_text(encoding="utf-8")
+    m = re.search(r'BASE_REF="\$\{1:-([^}]+)\}"', src)
+    if not m:
+        sys.exit("could not read BASE_REF from submission/build_highlighted.sh")
+    return m.group(1)
+
+
 def main():
-    base = sys.argv[1] if len(sys.argv) > 1 else "HEAD"
+    base = sys.argv[1] if len(sys.argv) > 1 else base_ref()
     old = subprocess.run(["git", "show", f"{base}:paper/main.tex"],
                          capture_output=True, text=True, cwd=ROOT).stdout
     new = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8")
     if not old:
         sys.exit(f"could not read paper/main.tex at {base}")
+    # A revision that differs from its baseline by almost nothing means the baseline is wrong,
+    # not that the revision is clean. Without this the audit passes vacuously.
+    if abs(len(new) - len(old)) < 200:
+        sys.exit(f"baseline '{base}' is {len(old)} chars against a {len(new)}-char revision; "
+                 f"that is not the as-submitted manuscript — check BASE_REF")
 
     # exactly what build_highlighted.sh holds constant before diffing
     m = re.search(r"\\begin\{thebibliography\}.*?\\end\{thebibliography\}", new, re.S)
