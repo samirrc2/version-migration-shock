@@ -82,7 +82,12 @@ PYX
 # revision (III-C and III-D) sitting under unhighlighted headings, so a reviewer saw the new
 # prose but no sign that the sections themselves were new. Including them compiles cleanly in
 # the IEEE template and adds exactly those two runs.
-latexdiff --type=CFONT --math-markup=0 \
+# --append-textcmd=tfootnote: the title-block footnote carries the submission date. Without
+# this latexdiff replaces the whole \tfootnote command -- \DIFaddbegin \tfootnote{...}
+# \DIFaddend rather than \DIFadd{...} around the changed words -- and since only \DIFadd is
+# mapped to \texthl, the new date rendered plain. A reviewer comparing the two PDFs saw the
+# date change with no mark on it.
+latexdiff --type=CFONT --math-markup=0 --append-textcmd="tfootnote" \
           "$WORK/old.tex" "$WORK/new.tex" > "$WORK/diff.tex" 2>/dev/null || true
 python3 submission/highlight_markup.py "$WORK/diff.tex"
 
