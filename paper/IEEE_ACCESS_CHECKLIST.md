@@ -19,7 +19,7 @@ Legend: ✅ Done (verified in folder) · 👤 Author action (submission portal /
 | 7 | Grammar reviewed (Paperpal Preflight offered) | ✅ / 👤 | Prose is clean and consistent. 👤 Optional: run Paperpal Preflight for a final pass. |
 | 8 | References accurate, relevant, none retracted | ✅ Done | 34 references, **all cited**, no orphans, no broken keys. Author-less entries previously fixed. 👤 Final retraction spot-check recommended. |
 | 9 | Not under submission elsewhere | 👤 | Author attestation — not verifiable from files. |
-| 10 | Supplementary material ready | ✅ Done | Code + frozen data on GitHub and a Code Ocean capsule (DOI `10.24433/CO.2874343.v1`), cited in Data & Code Availability. |
+| 10 | Supplementary material ready | ✅ Done | Code + frozen data on GitHub and a Code Ocean capsule (DOI `10.24433/CO.2874343.v2`), cited in Data & Code Availability. |
 | 11 | Abbreviations defined at first use (even if in abstract) | ✅ Done (1 minor) | LLM defined in abstract + body; API, GICS spelled out; SR 11-7/26-2 contextual. **Minor:** "JSON" is not expanded at first use — optional to spell out once. |
 | 12 | 3–10 keywords | ✅ Done | **9 keywords**, alphabetical. |
 | 13 | Select a manuscript type | 👤 | Select **"Research Article"** at submission (hypothesis + experiment + result). |
