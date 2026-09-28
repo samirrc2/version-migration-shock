@@ -27,7 +27,7 @@ This repository is the frozen dataset and deterministic analysis pipeline that r
 | **Authors** | Samir Chincholikar, Robin Chawla |
 | **Affiliations** | Independent researchers |
 | **Code repository** | https://github.com/samirrc2/version-migration-shock |
-| **Persistent DOI** | https://doi.org/10.24433/CO.2874343.v1 (`10.24433/CO.2874343.v1`) |
+| **Persistent DOI** | https://doi.org/10.24433/CO.2874343.v2 (`10.24433/CO.2874343.v2`) |
 | **Contact** | Samir Chincholikar: samir.chincholikar@gmail.com; Robin Chawla: robin.chawla.cse14@iitbhu.ac.in |
 | **ORCID** | Samir Chincholikar: https://orcid.org/0009-0007-2779-3492; Robin Chawla: https://orcid.org/0009-0007-2807-3948 |
 
@@ -49,14 +49,14 @@ The artifact enables independent reproduction of the article's computational res
 ### Code Ocean capsule
 
 A [Code Ocean](https://codeocean.com/) compute capsule for this artifact is available at
-[https://doi.org/10.24433/CO.2874343.v1](https://doi.org/10.24433/CO.2874343.v1)
-(DOI `10.24433/CO.2874343.v1`).
+[https://doi.org/10.24433/CO.2874343.v2](https://doi.org/10.24433/CO.2874343.v2)
+(DOI `10.24433/CO.2874343.v2`).
 
 | Status | Detail |
 |--------|--------|
 | Capsule | Keys-free Reproducible Run via `/code/run` → `code/reproduce.sh` |
 | Environment | `environment/Dockerfile` (Code Ocean `py-r` base + pinned pip; default path needs PyYAML) |
-| Public link / DOI | https://doi.org/10.24433/CO.2874343.v1 |
+| Public link / DOI | https://doi.org/10.24433/CO.2874343.v2 |
 | Local reproduce | `bash code/reproduce.sh` or `./code/run` |
 
 The frozen dataset is committed to the repository, so the capsule reproduces every number with **no external download, no API keys, and no inference cost**.
