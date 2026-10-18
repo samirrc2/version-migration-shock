@@ -56,3 +56,8 @@ humanized_corrected_paragraphs.md
 # Transient scratch inside results/ (overwritten every reproduce):
 results/claims.json
 results/PILOT_RESULTS.md
+
+# Final-files checklist: records the reviewer-driven changes and the submission ID.
+# Kept on disk for the author, not published.
+submission/final_submission/Final Files Checklist Completed.docx
+submission/final_submission/Final Files Checklist Completed.pdf
