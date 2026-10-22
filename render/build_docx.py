@@ -44,6 +44,15 @@ def preprocess(src: str) -> str:
     # 2. numbered citations from bibitem order, then strip the cls-only line pieces
     src = repl_cites(src, cmap)
 
+    # 2b. resolve \ref against paper/main.aux, which pandoc cannot do for itself. Two
+    # references (Table 1 and Table 5) reached the Word file as "Table [tab:models]" and
+    # "Table [tab:gov]". Taking the numbers from the aux file of the PDF build means the
+    # Word file cannot disagree with the PDF about a table number.
+    aux = TEX.with_suffix(".aux")
+    if aux.exists():
+        labels = dict(re.findall(r"\\newlabel\{([^}]+)\}\{\{(?:\\mbox\s*\{)?([^}]+)\}", aux.read_text()))
+        src = re.sub(r"\\ref\{([^}]+)\}", lambda m: labels.get(m.group(1), m.group(1)), src)
+
     # 3. neutralize IEEE front-matter macros -> plain content
     src = re.sub(r"\\history\{[^}]*\}", "", src)
     src = re.sub(r"\\doi\{[^}]*\}", "", src)
@@ -83,6 +92,23 @@ def preprocess(src: str) -> str:
     # which belongs to \includegraphics's own options, and leaves the rest as stray LaTeX.
     src = re.sub(r"\\begin\{IEEEbiography\}\[\{(.*?)\}\]\{([^}]*)\}(.*?)\\end\{IEEEbiography\}",
                  _bio, src, flags=re.S)
+
+    # 7. bibliography -> REFERENCES heading + explicitly numbered entries.
+    # pandoc renders \begin{thebibliography}{99} by emitting the "99" width argument as
+    # literal text and dropping both the section heading and the per-entry numbers. The
+    # Word file therefore carried an unnumbered reference list while its own body cited
+    # [29] and [31], so every citation pointed at nothing. The numbers below come from the
+    # same cmap that numbers the in-text citations, so the two cannot drift apart.
+    def _bib(m):
+        parts = re.split(r"\\bibitem\{([^}]+)\}", m.group(1))
+        out = ["\\section*{REFERENCES}"]
+        for k in range(1, len(parts), 2):
+            key, text = parts[k], " ".join(parts[k + 1].split())
+            out.append(f"[{cmap[key]}] {text}")
+        return "\n\n".join(out) + "\n"
+
+    src = re.sub(r"\\begin\{thebibliography\}\{[^}]*\}(.*?)\\end\{thebibliography\}",
+                 _bib, src, flags=re.S)
 
     # 6. figures: point at the png files that live in paper/figures/
     return src

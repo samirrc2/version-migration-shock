@@ -169,9 +169,15 @@ Gemini ($[0.004,0.049]$, $n=144$). Applying these alternative empirical noise-fl
 full-grid cross-version disagreement rates gives excess disagreement of $0.189$ $[0.147,0.206]$ for
 OpenAI and $0.375$ $[0.339,0.385]$ for Gemini, compared with the preregistered values of $0.112$ and
 $0.381$. The alternative noise-floor estimate therefore leaves the substantive conclusion unchanged.
+For OpenAI, the preregistered primary estimate ($0.112$) is more conservative than the
+repeat-call sensitivity estimate ($0.189$).
 We retain the preregistered definition as primary and report this repeat-call analysis as a
 sensitivity check because the repeat-call subgrid covers eight companies on three dates and is not
-intended as a second full-scale confirmatory experiment.
+intended as a second full-scale confirmatory experiment. The repeat-call sensitivity
+intervals subtract the Wilson confidence bounds for the repeat-call noise floor from the
+fixed full-grid cross-version flip estimate, propagating only noise-floor uncertainty.
+Consequently, their widths are not directly comparable to the primary company-clustered
+bootstrap intervals, which account for uncertainty in both components.
 
 A secondary observation follows from the same comparison. Of the 144 reissued OpenAI calls, four
 returned a different label, three of the 72 on the incumbent version and one of the 72 on the
@@ -223,7 +229,7 @@ where $M$ measures distributional movement and $C$ measures residual company-lev
 
 We complement this decomposition with three chance-corrected agreement statistics (Cohen's $\kappa$~\cite{cohen}, Scott's $\pi$~\cite{scott}, and Gwet's AC1~\cite{gwet}) computed between the paired incumbent and successor labels. Reporting multiple statistics reduces dependence on any single formulation of expected agreement, particularly when the category marginals are imbalanced.
 
-As a supporting directional diagnostic, a continuity-corrected McNemar test~\cite{mcnemar} is applied to the binary indicator $\mathbb{I}(y=\text{DISTRESS})$, which examines whether movement into the most severe category differs from movement out of it. Because the McNemar test is applied at the matched-cell level without company-level clustering, its $p$-values are reported only as descriptive directional diagnostics and are not the primary inferential evidence for migration instability. This diagnostic supplements, and does not replace, the primary evidence, which follows the hierarchy: (i) the noise-adjusted excess cross-version disagreement; (ii) the company-cluster bootstrap confidence intervals; (iii) the prevalence--churn decomposition; (iv) the transition matrices; and (v) the McNemar test as a supporting directional diagnostic.
+As a supporting directional diagnostic, a continuity-corrected McNemar test~\cite{mcnemar} is applied to the binary indicator $\mathbb{I}(y=\text{DISTRESS})$, which examines whether movement into the most severe category differs from movement out of it. Because the McNemar test is applied at the matched-cell level without company-level clustering, its $p$-values are reported only as descriptive directional diagnostics and are not the primary inferential evidence for migration instability. This diagnostic supplements, and does not replace, the primary evidence, which follows the hierarchy: (i) the noise-adjusted excess cross-version disagreement; (ii) the company-clustered bootstrap confidence intervals; (iii) the prevalence--churn decomposition; (iv) the transition matrices; and (v) the McNemar test as a supporting directional diagnostic.
 
 \subsection{Version Isolation and Uncertainty Quantification}
 To isolate the effect of model version, the incumbent and successor versions are evaluated on matched company--date--replicate cells using identical prompts, financial inputs, inference settings, and cell-level seeds. For each cell $s=(j,t,r)$, the seed is constructed as
@@ -234,13 +240,13 @@ The same seed is transmitted to $v_{\mathrm{old}}$ and $v_{\mathrm{new}}$ for th
 
 The paired cross-version analysis includes only cells with valid categorical outputs from both the incumbent and successor versions. This matched-pair requirement ensures that the flip rate, transition matrix, agreement statistics, and directional tests are computed from identical evaluation units. Call failures and invalid responses are reported separately so that any difference in matched sample size remains auditable.
 
-Statistical uncertainty is estimated using a cluster bootstrap~\cite{efron} with companies as the resampling unit. Clustering at the company level preserves dependence among repeated analysis dates and replicates for the same firm. For each of 2{,}000 bootstrap replications, companies are sampled with replacement, all associated dates, replicates, and paired version outputs are retained, and the relevant statistics are recomputed.
+Statistical uncertainty is estimated using a company-clustered bootstrap~\cite{efron} with companies as the resampling unit. Clustering at the company level preserves dependence among repeated analysis dates and replicates for the same firm. For each of 2{,}000 bootstrap replications, companies are sampled with replacement, all associated dates, replicates, and paired version outputs are retained, and the relevant statistics are recomputed.
 
 Percentile-based 95\% confidence intervals are generated using a fixed random-number-generator seed of 42. The preregistered primary hypothesis is considered supported when
 \begin{equation}
 F_{\mathrm{excess}}>0
 \end{equation}
-and the corresponding 95\% cluster-bootstrap confidence interval excludes zero. The same company-level bootstrap procedure is used for the conservative maximum-floor estimate and for the prevalence--churn quantities reported in the robustness analysis.
+and the corresponding 95\% company-clustered bootstrap confidence interval excludes zero. The same company-clustered bootstrap procedure is used for the conservative maximum-floor estimate and for the prevalence--churn quantities reported in the robustness analysis.
 
 \section{Experimental Design}
 \subsection{Evaluation Grid}
@@ -303,7 +309,7 @@ The rule-based reference is used only for the secondary accuracy analysis. The p
 Because the $Z''$ model is not equally applicable across all industries, the full-sector analysis is supplemented by a robustness evaluation that excludes Financials and Real Estate. This distinction allows the migration effect to be measured over the complete company grid while limiting the interpretation of classification accuracy to sectors for which the reference model is more appropriate.
 
 \subsection{Models and Migration Pairs}
-The study evaluates two vendor-declared model-version migrations, each involving an incumbent model and a vendor-positioned successor version. We record the exact snapshot identifiers and treat them as experimental artifacts, so that the analysis refers to specific deployed versions rather than broader model-family names, whose capabilities providers typically document only at the level of aggregate technical reports~\cite{gpt4}. The evaluated migration pairs are summarized in Table~\ref{tab:models}; the exact model identifiers and each announced shutdown date are recorded from the providers' deprecation documentation as of the protocol-freeze date (4~July~2026)~\cite{openai_dep,google_dep}. So that the designation is independently verifiable rather than resting on a live page, an archived capture of the Google deprecation page dated 1~July~2026 is included in the reproducibility artifact~\cite{google_dep_archive}. It records \texttt{gemini-2.5-flash} with a release date of 17~June~2025, a shutdown date of 16~October~2026, and \texttt{gemini-3.5-flash} as the recommended replacement, which is the pairing evaluated here. Provider deprecation pages are revisable without notice, which is one reason the designation is recorded from an archived capture rather than a live URL. The successor versions actually evaluated are fixed by the frozen experiment and are reported as run.
+The study evaluates two vendor-declared model-version migrations, each involving an incumbent model and a vendor-positioned successor version. We record the exact snapshot identifiers and treat them as experimental artifacts, so that the analysis refers to specific deployed versions rather than broader model-family names, whose capabilities providers typically document only at the level of aggregate technical reports~\cite{gpt4}. The evaluated migration pairs are summarized in Table~\ref{tab:models}; the exact model identifiers and each announced shutdown date are recorded from the providers' deprecation documentation as of the protocol-freeze date (4~July~2026)~\cite{openai_dep,google_dep}. So that the designation is independently verifiable rather than resting on a live page, an archived capture of the Google deprecation page dated 1~July~2026 is included in the reproducibility artifact~\cite{google_dep_archive}. It records \texttt{gemini-2.5-flash} with a release date of 17~June~2025, a shutdown date of 16~October~2026, and \texttt{gemini-3.5-flash} as the recommended replacement, which is the pairing evaluated here. Provider deprecation pages are revisable without notice, which is one reason the designation is recorded from an archived capture rather than a live URL. The successor versions actually evaluated are fixed by the frozen experiment and are reported as run. OpenAI has since revised its deprecation page, which now lists \texttt{gpt-5.6-luna} as the replacement for \texttt{gpt-5-nano-2025-08-07}. The pairing evaluated here reflects the designation at the protocol-freeze date.
 
 \begin{table*}[t]
 \centering
@@ -348,13 +354,13 @@ For the OpenAI migration, 3{,}490 company--date--replicate cells contain valid, 
 \begin{equation}
 F_{\mathrm{excess}}^{\mathrm{OpenAI}} = 0.217-0.105 = 0.112,
 \end{equation}
-with a 95\% cluster-bootstrap confidence interval of $[0.077,\,0.149]$. This is an excess of 11.2 percentage points over the estimated within-version floor.
+with a 95\% company-clustered bootstrap confidence interval of $[0.077,\,0.149]$. This is an excess of 11.2 percentage points over the estimated within-version floor.
 
 For the Gemini migration, all 3{,}600 planned cells contain valid, matched labels. The gross cross-version flip rate is 0.389, compared with a pooled within-version noise floor of 0.008. The excess flip rate is therefore
 \begin{equation}
 F_{\mathrm{excess}}^{\mathrm{Gemini}} = 0.389-0.008 = 0.381,
 \end{equation}
-with a 95\% cluster-bootstrap confidence interval of $[0.302,\,0.458]$. For the Gemini migration, the cross-version disagreement rate therefore exceeds the within-version noise floor by 38.1 percentage points, beyond ordinary within-version variation.
+with a 95\% company-clustered bootstrap confidence interval of $[0.302,\,0.458]$. For the Gemini migration, the cross-version disagreement rate therefore exceeds the within-version noise floor by 38.1 percentage points, beyond ordinary within-version variation.
 
 There is a substantial difference between the two estimates. The Gemini migration produces an excess flip rate more than three times that of the OpenAI migration. Both confidence intervals exclude zero. Under the estimator's assumptions this establishes that the cross-version disagreement defined in Section~\ref{subsec:noisefloor} exceeds the within-version replicate baseline defined alongside it; it is a statement about those two defined quantities, not a general exclusion of every sampling-related explanation.
 
@@ -518,7 +524,7 @@ For the Gemini migration, performance declines:
 \text{Macro-F1} &: 0.463 \rightarrow 0.325.
 \end{aligned}
 \end{equation}
-These aggregate comparisons are accompanied by ticker-clustered bootstrap intervals on the paired change, so their inferential status is explicit rather than implied. For OpenAI the balanced-accuracy change is $+0.032$ with a 95\% interval of $[-0.005,\,0.070]$, which includes zero, and the macro-F1 change is $+0.048$ with an interval of $[0.007,\,0.090]$, which does not. The OpenAI improvement is therefore weak: only the aggregate macro-F1 change is distinguishable from zero at this sample size, while the sector-restricted class-balanced metrics show no clear improvement. For Gemini both declines are clearly resolved, with balanced accuracy at $-0.080$ $[-0.140,\,-0.028]$ and macro-F1 at $-0.138$ $[-0.203,\,-0.078]$. The migration also does not reliably improve accuracy on the specific observations whose labels change. Conditional on a cross-version flip, the estimated accuracy change is $+0.123$, with a 95\% confidence interval of $[-0.164,\,0.418]$.
+These aggregate comparisons are accompanied by company-clustered bootstrap intervals on the paired change, so their inferential status is explicit rather than implied. For OpenAI the balanced-accuracy change is $+0.032$ with a 95\% interval of $[-0.005,\,0.070]$, which includes zero, and the macro-F1 change is $+0.048$ with an interval of $[0.007,\,0.090]$, which does not. The OpenAI improvement is therefore weak: only the aggregate macro-F1 change is distinguishable from zero at this sample size, while the sector-restricted class-balanced metrics show no clear improvement. For Gemini both declines are clearly resolved, with balanced accuracy at $-0.080$ $[-0.140,\,-0.028]$ and macro-F1 at $-0.138$ $[-0.203,\,-0.078]$. The migration also does not reliably improve accuracy on the specific observations whose labels change. Conditional on a cross-version flip, the estimated accuracy change is $+0.123$, with a 95\% confidence interval of $[-0.164,\,0.418]$.
 
 For Gemini, the successor's large shift toward SAFE is accompanied by lower class-balanced performance. The flip-conditional accuracy change is $-0.178$, with a 95\% confidence interval of $[-0.380,\,0.030]$. The interval includes zero; the accompanying lower balanced accuracy and macro-F1 are consistent with the distributional shift toward SAFE providing no compensating classification improvement.
 
@@ -712,14 +718,17 @@ empirical methods in computational finance.
 \end{IEEEbiography}
 
 \begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/bio_chawla.jpg}}]{Robin Chawla}
-received the B.Tech. degree in computer science and engineering from the Indian
-Institute of Technology (BHU), Varanasi, India. He has about eight years of
-professional experience as a software engineer at a proprietary trading firm,
-focused on low-latency systems, performance-oriented software, and the use of
-AI to automate engineering workflows. His research interests include large
-language models, multi-agent systems, machine learning for engineering
-workflows and automation, and reproducible evaluation of generative AI
-for decision-making.
+received the B.Tech. degree in Computer Science and Engineering from the
+Indian Institute of Technology (BHU), Varanasi, India. He has approximately eight
+years of professional experience in software engineering, specializing in low-latency
+trading infrastructure, high-performance computing, concurrent systems, and
+engineering automation. His professional expertise encompasses the development of
+high-performance software systems and the application of artificial intelligence to
+complex engineering challenges. His research focuses on applied artificial
+intelligence, with particular emphasis on large language models, multi-agent systems,
+AI reliability and governance, and their applications in financial risk assessment and
+decision-making. His work also explores reproducible evaluation methodologies for
+assessing the performance and real-world implications of generative AI systems.
 \end{IEEEbiography}
 
 \EOD

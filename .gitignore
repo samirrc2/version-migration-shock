@@ -61,3 +61,29 @@ results/PILOT_RESULTS.md
 # Kept on disk for the author, not published.
 submission/final_submission/Final Files Checklist Completed.docx
 submission/final_submission/Final Files Checklist Completed.pdf
+
+# de1: peer-review correspondence and the machinery that produced it.
+# The paper is published; only the artifact belongs in the public record.
+# Every file below remains on disk for the author.
+submission/IEEE-Access-Response-to-Reviewers.docx
+submission/IEEE-Access-Response-to-Reviewers.pdf
+submission/IEEE-Access-Response-to-Reviewers.tex
+submission/response_to_reviewers.txt
+submission/CHANGES.md
+submission/Completed_ Resubmission-Checklist.pdf
+submission/highlighted_pdf.pdf
+submission/build_highlighted.sh
+submission/build_response.py
+submission/check_highlighting.py
+submission/highlight_markup.py
+submission/build_submission.sh
+submission/main_manuscript.pdf
+submission/main_manuscript.docx
+paper/IEEE_ACCESS_CHECKLIST.md
+
+# de1: proof-stage correspondence with IEEE production (author queries and the
+# corrections letter). Live working documents, never published.
+submission/AQ_responses.md
+submission/final_corrections.tex
+submission/final_corrections.pdf
+submission/_ Final-Files-Checklist.docx

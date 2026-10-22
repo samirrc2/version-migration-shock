@@ -101,22 +101,6 @@ elif [[ "$rc" != 0 ]]; then
   exit "$rc"
 fi
 
-# The highlighted PDF is only trustworthy if the revision rebuilds exactly from the markup. That
-# needs a built diff; skip rather than fail when the package has not been assembled (exit 2 is
-# "could not check here", which is not a pass).
-if [[ -f submission/_highlighted_build.tex || -f submission/highlighted_pdf.pdf ]]; then
-  echo "[reproduce] highlighting round-trip"
-  rc=0; $PY submission/check_highlighting.py || rc=$?
-  if [[ "$rc" == 2 ]]; then
-    DOCS_INCOMPLETE=1
-  elif [[ "$rc" != 0 ]]; then
-    exit "$rc"
-  fi
-elif [[ -d submission ]]; then
-  echo "[reproduce] highlighting round-trip SKIPPED: run bash submission/build_submission.sh first"
-  DOCS_INCOMPLETE=1
-fi
-
 echo "[reproduce] done. Outputs in $RES/claims_<pair>.json and $RES/results_<pair>.md"
 echo "[reproduce] optional live re-collection (needs API keys, ~costed): make -C code all SUBGRID=full"
 

@@ -42,15 +42,9 @@ ALLOW = {
         "2874343.1": "Code Ocean DOI fragment",
         "0.1": "illustrative tolerance in prose",
     },
-    "submission/response_to_reviewers.txt": {
-        "2.5": "model version string",
-        "3.5": "model version string",
-        "5.4": "model version string",
-        "39991.0": "manuscript ID fragment",
-    },
 }
 
-DOCS = ["README.md", "submission/response_to_reviewers.txt"]
+DOCS = ["README.md"]
 
 
 def pool():
@@ -232,50 +226,6 @@ def manuscript_map():
     return out, len(re.findall(r"\\begin\{table\*?\}", body))
 
 
-def check_citations():
-    """Every Section/Table the reviewer response points at must exist and be named correctly.
-
-    A response letter that cites a section which moved, or quotes a title that has since been
-    reworded, tells the editor to look somewhere the text no longer is. Quoted titles are
-    compared with trailing punctuation removed: the letter writes
-    "...Repeat-Call Sensitivity," with the comma inside the quotation marks, which is correct
-    and is not a mismatch.
-    """
-    sections, n_tables = manuscript_map()
-    letter = (ROOT / "submission" / "response_to_reviewers.txt").read_text(encoding="utf-8")
-    checks = 0
-    fails = []
-    for ref in re.findall(r"Section ([IVX]+(?:-[A-Z])?)", letter):
-        checks += 1
-        if ref not in sections:
-            fails.append(f"response letter: Section {ref} does not exist in the manuscript")
-    for ref, quoted in re.findall(r'Section ([IVX]+(?:-[A-Z])?),\s*"([^"]+)"', letter):
-        checks += 1
-        want = sections.get(ref, "")
-        if quoted.rstrip(",.;:").strip() != want.strip():
-            fails.append(f"response letter: Section {ref} is titled {want!r}, "
-                         f"but the letter quotes {quoted!r}")
-    for ref in re.findall(r"Table (\d+)", letter):
-        checks += 1
-        if not 1 <= int(ref) <= n_tables:
-            fails.append(f"response letter: Table {ref} cited, paper has {n_tables}")
-    return checks, fails
-
-
-# Quotations in the author's own blocks that are deliberately NOT in the manuscript, because
-# the letter is quoting text the revision removed. Each needs a reason; anything else quoted as
-# the paper's wording must actually be the paper's wording.
-REMOVED_QUOTES = {
-    "cannot be explained solely by sampling variability":
-        "the superseded claim, quoted in R2 C8 to say it was replaced with a narrower statement",
-}
-
-
-# Wording the revision committed to removing, with the concern that prompted each. The letter
-# tells the editor these claims are gone; nothing checked the manuscript for their return, and
-# two of them came back in sections other than the one the reviewer had quoted -- III-B kept an
-# "alone would produce" reading of the same claim, and III-C asserted a floor ordering the
-# paper's own next paragraph contradicts for Gemini.
 RETIRED = {
     r"sampling variability alone":
         "R2 C8: the letter says the 'solely/alone' exclusion was replaced by a "
@@ -339,23 +289,23 @@ def check_docx_parity():
     import zipfile
     tex = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8")
     want = len(re.findall(r"\\includegraphics", tex))
-    docx = ROOT / "submission" / "main_manuscript.docx"
+    docx = ROOT / "paper" / "main.docx"
     if not docx.exists():
-        return 0, ["submission/main_manuscript.docx missing; cannot compare formats"]
+        return 0, ["paper/main.docx missing; cannot compare formats"]
     with zipfile.ZipFile(docx) as z:
         media = [n for n in z.namelist() if n.startswith("word/media/")]
         body = z.read("word/document.xml").decode("utf-8", "replace")
     fails = []
     if len(media) != want:
-        fails.append(f"main.tex includes {want} image(s); main_manuscript.docx embeds "
+        fails.append(f"main.tex includes {want} image(s); main.docx embeds "
                      f"{len(media)}. The DOCX preprocessor dropped some.")
     for leak in ("includegraphics", "IEEEbiography", "\\begin{"):
         if leak.replace("\\", "\\") in body:
-            fails.append(f"main_manuscript.docx contains raw LaTeX ({leak!r}); the preprocessor "
+            fails.append(f"main.docx contains raw LaTeX ({leak!r}); the preprocessor "
                          f"left an environment unconverted")
     for who in ("Samir Chincholikar", "Robin Chawla"):
         if who not in body:
-            fails.append(f"main_manuscript.docx is missing the biography for {who}")
+            fails.append(f"main.docx is missing the biography for {who}")
     return 1 + len(media) + 2, fails
 
 
@@ -375,49 +325,6 @@ def check_retired_language():
     return checks, fails
 
 
-def check_letter_content():
-    """The letter's own figures and quotations, bound to the manuscript.
-
-    check_citations only asks whether a cited section exists, and the figure scan only asks
-    whether a number occurs somewhere in the analysis. Neither notices a letter that tells the
-    editor the paper now reports a value it does not report, or that quotes wording the paper
-    does not use. The reviewer's own blocks are excluded: those are their words, and may quote
-    the version being replaced.
-    """
-    letter = (ROOT / "submission" / "response_to_reviewers.txt").read_text(encoding="utf-8")
-    tex = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8")
-    flat = re.sub(r"\{,\}", ",", tex)                 # 14{,}400 -> 14,400
-
-    def norm(s):
-        s = re.sub(r"\\[a-zA-Z]+\s*", "", s)
-        s = re.sub(r"[{}$~\\]", "", s)
-        s = s.replace("``", '"').replace("''", '"').replace("--", "-").replace(",", "")
-        return re.sub(r"\s+", " ", s).strip().lower()
-
-    flat_norm = norm(tex)
-    parts = re.split(r"(?m)^(Reviewer comment:|Author response:|Author action:)\s*$", letter)
-    author = "\n".join(parts[i + 1] for i in range(1, len(parts), 2)
-                       if parts[i] != "Reviewer comment:")
-    checks, fails = 0, []
-
-    for m in re.finditer(r"(?<![\w.])(\d+\.\d+)(?![\w])", author):
-        checks += 1
-        _v, shown = signed(author, m)
-        if shown.lstrip("-") not in flat or (shown.startswith("-") and shown not in
-                                             flat.replace("$-", "-").replace("−", "-")):
-            ctx = re.sub(r"\s+", " ", author[max(0, m.start() - 60):m.end() + 25]).strip()
-            fails.append(f"response letter reports {shown}, which does not appear in "
-                         f"paper/main.tex: ...{ctx}...")
-
-    for q in re.findall(r'"([^"]{15,200})"', author):
-        checks += 1
-        key = re.sub(r"\s+", " ", q).strip().rstrip(" .,")
-        if key in REMOVED_QUOTES:
-            continue
-        if norm(q).rstrip(" .,") not in flat_norm:
-            fails.append(f"response letter quotes {key[:70]!r} as the paper's wording; "
-                         f"paper/main.tex does not contain it")
-    return checks, fails
 
 
 def check_sr2602():
@@ -480,99 +387,6 @@ def check_sr2602():
 FOOTNOTE = ("3",)   # SR 26-2's scope carve-out for generative and agentic AI
 
 
-def check_letter_table5():
-    """The response letter's account of Table 5, bound to the table itself.
-
-    The letter tells the reviewer what Table 5 now contains. Nothing checked that, so when the
-    table was restructured the letter kept describing the layout before it -- it promised a
-    section number and title for every entry while listing only the SR 26-2 side, and named
-    four row concepts for a table that has five. Two bindings, because the letter went stale
-    in both ways: the concepts it names must be exactly the table's first column, and any
-    provision it spells out longhand must be a provision the table actually prints.
-    """
-    tex = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8")
-    i = tex.find("Mapping vendor version migration")
-    if i < 0:
-        return 0, ["Table 5 not found in paper/main.tex"]
-    block = tex[tex.find(r"\toprule", i):tex.find(r"\bottomrule", i)]
-    concepts, titles, ncols = [], set(), 0
-    for line in block.split(r"\\"):
-        cells = [c.strip() for c in re.split(r"(?<!\\)&", line)]
-        if len(cells) != 5 or not cells[0]:
-            continue
-        head = re.sub(r"\s+", " ",
-                      re.sub(r"\\(toprule|midrule|addlinespace)", "", cells[0])).strip()
-        if cells[1].strip() == "SR 11-7":
-            ncols = len(cells)          # the header row states the table's shape
-            continue
-        concepts.append(head.lower())
-        for cell in (cells[1], cells[2]):
-            for num, title in re.findall(r"\\S\s*([IVX]+)\s+([^;&]+?)(?=\s*;\s*\\S|\s*$)",
-                                         re.sub(r"\s+", " ", cell)):
-                titles.add(f"section {num.lower()}, {title.strip().lower()}")
-    if not concepts or not ncols:
-        return 0, ["Table 5: header or rows not parsed; checker and table have diverged"]
-
-    cap = re.sub(r"\s+", " ", tex[tex.rfind(r"\caption", 0, i):tex.find(r"\toprule", i)])
-
-    letter = (ROOT / "submission" / "response_to_reviewers.txt").read_text(encoding="utf-8")
-    i = letter.find("Reviewer #2, Concern #3")
-    blk = re.sub(r"\s+", " ", letter[i:letter.find("Reviewer #2, Concern #4")])
-    checks, fails = 0, []
-
-    m = re.search(r"The (?:five|four|three|six) rows are [^:]*: (.+?)\.", blk)
-    if not m:
-        fails.append("letter no longer lists Table 5's rows; it cannot be bound to the table")
-    else:
-        named = [re.sub(r"^and ", "", s.strip().lower()) for s in m.group(1).split(";")]
-        checks += 1
-        if named != concepts:
-            fails.append(f"letter names Table 5's rows as {named}, table has {concepts}")
-        if len(named) != len(concepts):
-            fails.append(f"letter says {len(named)} rows, Table 5 has {len(concepts)}")
-
-    # A provision written out longhand in the letter must be one the table prints. This is what
-    # caught nothing before: the letter listed SR 26-2 titles for a table that had gained an
-    # SR 11-7 column, and four titles for five rows.
-    for m in re.finditer(r"[Ss]ection ([IVX]+), ([A-Z][^.;:]{6,70}?)(?=[.;]|, and | and )", blk):
-        checks += 1
-        claim = f"section {m.group(1).lower()}, {m.group(2).strip().lower()}"
-        if claim not in titles:
-            fails.append(f"letter cites {m.group(0)!r} as a Table 5 provision; the table does "
-                         f"not print it")
-    # The letter and the caption both rest on SR 26-2's footnote 3. "footnote 3" alone names no
-    # document and no reviewer can check it, so the letter must attribute it and quote it, and
-    # the quotation must be the archived text -- not a paraphrase that drifts toward the claim
-    # we want it to support.
-    for doc, text in (("letter", blk), ("Table 5 caption", cap)):
-        m = re.search(r"footnote[~ ]*(\d+)", text)
-        checks += 1
-        if not m:
-            fails.append(f"{doc}: the scope carve-out is no longer attributed to a footnote")
-        elif m.group(1) != FOOTNOTE[0]:
-            fails.append(f"{doc}: cites footnote {m.group(1)}; the carve-out is footnote "
-                         f"{FOOTNOTE[0]} of SR 26-2")
-    prov = json.loads((ROOT / "docs" / "provenance" / "SR2602.json").read_text(encoding="utf-8"))
-    archived = re.sub(r"\s+", " ", prov["provisions_cited_by_the_paper"]["footnote_3"]).lower()
-    # Only the quotations offered as the guidance's own words: the sentence citing the footnote.
-    # Scanning the whole block flagged the section title, which is quoted for a different reason.
-    sent = next((s for s in re.split(r"(?<=[.!]) ", blk) if "footnote" in s), "")
-    for q in re.findall(r'"([^"]{12,200})"', sent):
-        checks += 1
-        if re.sub(r"\s+", " ", q).lower().strip(" .") not in archived:
-            fails.append(f"letter quotes {q[:60]!r} from the guidance; the archived SR 26-2 "
-                         f"footnote {FOOTNOTE[0]} does not contain those words")
-    if "not within the scope of this guidance" not in archived:
-        fails.append("archived SR 26-2 footnote 3 no longer carries the carve-out language the "
-                     "paper's argument rests on")
-        checks += 1
-    return checks, fails
-
-# ── Table 2, the results table, bound row by row ─────────────────────────────────────────
-# The pool test only asks whether a printed figure exists somewhere in the analysis, which is
-# not enough for this table: a wrong CI bound can round-match an unrelated bootstrap value.
-# It is also the table that carried the superseded [.077,.150] for months, because its
-# numbers are set without a leading zero and the manuscript gate never scanned that form.
 TABLE2 = [
     (r"95\% CI",                        ["excess_flip_rate.ci_low", "excess_flip_rate.ci_high"]),
     ("cross-version flip",              ["cross_version_flip_rate.value"]),
@@ -640,7 +454,7 @@ def check_table2(claims):
 # layout none of them are present. That must read as "not checkable here", not as a failure and
 # certainly not as a traceback: adding this gate to reproduce.sh without the guard made the
 # capsule's Reproducible Run crash on a missing README.md after the analysis had already passed.
-INPUTS = ("README.md", "paper/main.tex", "submission/response_to_reviewers.txt")
+INPUTS = ("README.md", "paper/main.tex")
 
 
 def main():
@@ -709,9 +523,6 @@ def main():
           f"against {len(p)} analysis values")
     print(f"[docs] {tchecks} README table cells bound to claim keys "
           f"across {tmatched}/{len(TABLE)} rows")
-    cchecks, cfails = check_citations()
-    fails.extend(cfails)
-    print(f"[docs] {cchecks} response-letter citations resolved against the manuscript")
     t2checks = t2matched = 0
     if len(claims) == len(PAIRS):
         t2checks, t2matched, t2fails = check_table2(claims)
@@ -742,16 +553,6 @@ def main():
     fails.extend(rfails)
     print(f"   {rchecks} retired claim(s) confirmed absent from the manuscript")
 
-    kchecks, kfails = check_letter_content()
-    fails.extend(kfails)
-    print(f"   {kchecks} figure(s) and quotation(s) in the letter's own blocks bound to the "
-          f"manuscript")
-    for k, why in REMOVED_QUOTES.items():
-        print(f"   allowed  letter quotes removed text: {k[:46]!r} — {why[:60]}")
-
-    lchecks, lfails = check_letter_table5()
-    fails.extend(lfails)
-    print(f"[docs] {lchecks} claim(s) the letter makes about Table 5 bound to the table")
     for rel, a in ALLOW.items():
         for k, why in sorted(a.items()):
             print(f"   allowed  {rel}: {k} — {why}")
