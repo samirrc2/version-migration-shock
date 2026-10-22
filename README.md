@@ -1,5 +1,13 @@
 # Version Migration as a Correlated Shock
 
+**Published IEEE Access article:** [Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems](https://doi.org/10.1109/ACCESS.2026.3745706) · **DOI `10.1109/ACCESS.2026.3745706`**.
+
+**Executable Code Ocean replication:** [Open the frozen-data reproduction capsule](https://doi.org/10.24433/CO.2874343.v2) · **DOI `10.24433/CO.2874343.v2`**.
+
+**Research guide:** [50 source-grounded questions and answers on LLM model migration and financial risk](https://samirrc2.github.io/version-migration-shock/).
+
+> **Citation distinction:** Cite the IEEE Access DOI for the peer-reviewed findings and the Code Ocean DOI when citing the executable artifact. They are different research objects.
+
 Computational artifact for the IEEE Access article:
 
 **Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems**
