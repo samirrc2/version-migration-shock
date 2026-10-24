@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="google-site-verification" content="DBH1A0D-_fsoNEoOii3jE_VjbG_RmTnX0Ms2dYFOFng" />
-<title>Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems | Evidence and 50 literature-review questions</title>
-<meta name="description" content="Evidence-led guide to vendor LLM version migration: excess-flip estimation, backward compatibility, credit-risk rating instability, algorithmic monoculture and model governance. 50 research-grade questions with source sections.">
+<title>Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems | 100 questions about LLM version updates in financial systems</title>
+<meta name="description" content="Evidence-led guide to vendor LLM version migration: excess-flip estimation, backward compatibility, credit-risk rating instability, algorithmic monoculture and model governance. 50 research questions and 50 generic questions with source sections.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://samirrc2.github.io/version-migration-shock/">
 <meta name="citation_title" content="Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems">
@@ -17,7 +17,7 @@
 <meta name="citation_abstract_html_url" content="https://samirrc2.github.io/version-migration-shock/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems">
-<meta property="og:description" content="50 academically oriented questions on the statistical evaluation and financial-governance consequences of LLM version migrations, grounded in the IEEE Access article.">
+<meta property="og:description" content="100 source-grounded questions covering version update issues in AI finance systems, LLM reliability, financial risk classification and model governance.">
 <meta property="og:url" content="https://samirrc2.github.io/version-migration-shock/">
 <meta name="twitter:card" content="summary">
 <style>
@@ -43,7 +43,7 @@ h2{color:#1d5385;font-size:1.46rem;line-height:1.3;margin-top:28px}h3{font-size:
 .toc{padding:18px 22px;background:#f3f7fc;border:1px solid #dce6f0;border-radius:7px;margin:25px 0}
 .toc ol{columns:2;column-gap:32px;padding-left:22px;margin:8px 0}.toc li{break-inside:avoid;font-size:.91rem;margin:6px 0}
 .topic{padding:12px 0 14px;border-top:1px solid #dee8f1;scroll-margin-top:20px}.topic h2{margin:15px 0 18px}
-.qa{padding:5px 0;scroll-margin-top:20px}.qa p{margin:0 0 10px}.qlink{text-decoration:none;font-size:.83rem;margin-right:2px}
+.qa{padding:5px 0;scroll-margin-top:20px}.generic-questions{border-top:2px solid #b6cadf;padding-top:18px;margin-top:28px;scroll-margin-top:20px}.generic-topic{border-top:1px solid #dee8f1;padding:16px 0 8px;scroll-margin-top:20px}.generic-topic h3{font-size:1.18rem;color:#1d5385;margin:12px 0 14px}.generic-qa{padding:5px 0;scroll-margin-top:20px}.generic-qa h4{font-size:1.05rem;line-height:1.45;margin:14px 0 8px}.generic-qa p{margin:0 0 10px}.qa p{margin:0 0 10px}.qlink{text-decoration:none;font-size:.83rem;margin-right:2px}
 .reference{font-size:.8rem;color:#556b81;padding-bottom:9px}
 .sources{background:#f2f6fb;border:1px solid #dce6f0;border-radius:8px;padding:20px;margin:28px 0 0;overflow-wrap:anywhere}
 .sources h2:first-child{margin-top:0}.citecode{background:#fff;border:1px solid #dce4ee;border-radius:6px;padding:13px;font-size:.79rem;white-space:pre-wrap;overflow-wrap:anywhere}
@@ -53,7 +53,7 @@ footer{border-top:1px solid #dce5ed;color:#52677b;font-size:.85rem;padding:24px 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems","name":"Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems","author":[{"@type":"Person","name":"Samir Chincholikar","sameAs":"https://orcid.org/0009-0007-2779-3492"},{"@type":"Person","name":"Robin Chawla","sameAs":"https://orcid.org/0009-0007-2807-3948"}],"datePublished":"2026","isPartOf":{"@type":"Periodical","name":"IEEE Access"},"identifier":{"@type":"PropertyValue","propertyID":"DOI","value":"10.1109/ACCESS.2026.3745706"},"url":"https://doi.org/10.1109/ACCESS.2026.3745706","abstract":"Financial institutions increasingly deploy large language models (LLMs) within credit and other decision-support workflows. However, vendor-driven model updates can alter behavior even when an institution holds its prompts, inputs, and downstream processes fixed. We quantify the decision instability associated with two prespecified model-version transitions: an OpenAI efficient-model update and a Google Gemini Flash update. Across both transitions, the experiment covers 100 companies, 12 analysis dates, and three replicates per version, producing 14,400 model calls. Identical inputs and matched per-cell seeds hold sampling conditions fixed, and within-version replicate disagreement provides an empirical noise floor. The primary endpoint is the excess cross-version flip rate above this floor. For the OpenAI migration, the cross-version disagreement rate exceeds the within-version noise floor by 11.2 percentage points (95% CI: 7.7–14.9); for the Gemini migration this excess is 38.1 percentage points (95% CI: 30.2–45.8). A prevalence–churn decomposition shows that the OpenAI update primarily reconsiders individual companies and shifts decisions toward greater severity, while the Gemini update produces a broad distributional shift toward the SAFE category. Neither migration shows clear improvement among observations whose labels change; the Gemini successor also shows lower aggregate class-balanced performance. Vendor version migration can therefore create material, directionally unpredictable decision discontinuities within otherwise unchanged LLM pipelines. We propose a pre-migration parallel-run control that measures excess flip rate, label-distribution shift, per-company churn, and directional drift before production cutover. The findings provide controlled evidence of deployment-level migration risk; broader cross-task and cross-institution effects remain for future study.","about":["LLM model update regression","version migration risk","noise-adjusted flip rate","financial AI governance","algorithmic monoculture","model risk management","prevalence and churn decomposition","third-party model validation"],"subjectOf":{"@type":"WebPage","url":"https://samirrc2.github.io/version-migration-shock/"},"encoding":{"@type":"CreativeWork","name":"Archived Code Ocean reproducibility capsule","url":"https://doi.org/10.24433/CO.2874343.v2","identifier":"10.24433/CO.2874343.v2"}}</script>
 </head>
 <body>
-<header><div class="wrap"><span class="brand">Version migration · Financial AI research</span><nav aria-label="Navigation"><a href="#abstract">Paper abstract</a><a href="#citation-relevance">When to cite</a><a href="#questions">Literature questions</a><a href="#citation">Citation</a></nav></div></header>
+<header><div class="wrap"><span class="brand">Version migration · Financial AI research</span><nav aria-label="Navigation"><a href="#abstract">Paper abstract</a><a href="#citation-relevance">When to cite</a><a href="#questions">Research questions</a><a href="#generic-questions">Generic questions</a><a href="#citation">Citation</a></nav></div></header>
 <main class="wrap">
 <p class="eyebrow">IEEE Access · peer-reviewed study · 2026</p>
 <h1>Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems</h1>
@@ -74,7 +74,7 @@ footer{border-top:1px solid #dce5ed;color:#52677b;font-size:.85rem;padding:24px 
 </ul>
 <p><strong>Related literature:</strong> <a href="https://doi.org/10.18653/v1/2024.findings-emnlp.430">MUSCLE: A Model Update Strategy for Compatible LLM Evolution</a> addresses update compatibility and negative flips. This paper investigates the additional, deployment-level financial decision and governance implications of vendor snapshot migrations.</p>
 </section>
-<section id="questions"><h2>50 research questions, organized by literature problem</h2>
+<section id="questions"><h2>Research Questions (50), organized by literature problem</h2>
 <p>Each question below corresponds to a substantive problem in model evaluation, financial decision analytics or governance. Answers distinguish measured evidence, proposed controls and questions the paper does not directly test. The article DOI identifies the peer-reviewed findings; the Code Ocean DOI is for independent rerunning of the archived analysis.</p>
 <nav class="toc" aria-label="Research topics"><strong>Research areas</strong><ol><li><a href="#topic-1">Estimating migration-induced instability</a></li>
 <li><a href="#topic-2">Model-update regression and backward compatibility</a></li>
@@ -137,6 +137,302 @@ footer{border-top:1px solid #dce5ed;color:#52677b;font-size:.85rem;padding:24px 
 <section class="qa" id="question-48" aria-labelledby="q-48"><h3 id="q-48"><a href="#question-48" class="qlink" aria-label="Link to question 48">48.</a> Which financial AI workflows could plausibly be exposed to vendor-model-version instability?</h3><p>The paper motivates the problem using credit screening, counterparty assessment, disclosure review and operational triage, while experimentally testing only structured credit-health classification. The additional workflows are research and governance motivations, not demonstrated domains with measured effect sizes in this study.</p><p class="reference">Paper evidence: § I, § IV, § VIII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access article</a></p></section>
 <section class="qa" id="question-49" aria-labelledby="q-49"><h3 id="q-49"><a href="#question-49" class="qlink" aria-label="Link to question 49">49.</a> How generalizable are measured model migration effects across tasks, prompts and provider releases?</h3><p>The paper deliberately restricts inference to two version pairs, one prompt family, one structured task and one response-collection window. It offers evidence that sizable discontinuities can occur and differ in structure, but no estimated distribution of effects across vendors, domains or all software releases.</p><p class="reference">Paper evidence: § VIII–IX · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access article</a></p></section>
 <section class="qa" id="question-50" aria-labelledby="q-50"><h3 id="q-50"><a href="#question-50" class="qlink" aria-label="Link to question 50">50.</a> How can future research translate classification instability into economic costs or systemic exposure?</h3><p>A subsequent study would need observed downstream actions, decision thresholds, concentrated vendor adoption and economic outcomes to link measured class changes to review costs, missed risk, capital use or joint losses. The published work supplies measurable candidate exposure variables but neither calibrates a loss function nor estimates an economy-wide risk multiplier.</p><p class="reference">Paper evidence: § VI–VIII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access article</a></p></section></section>
+
+<section id="generic-questions" class="generic-questions" aria-labelledby="generic-questions-title">
+<h2 id="generic-questions-title">Generic Questions (50)</h2>
+<p>These 50 additional questions describe practical problems people encounter when searching for research on <strong>AI model version updates in financial systems</strong>, unexpected LLM changes in banking, credit-classification drift and shared vendor risks. They complement the 50 technical <a href="#questions">research questions</a> above. Each answer is tied to the published article, with careful distinctions between measured results and hypothetical real-world consequences.</p>
+<p><strong>Peer-reviewed source:</strong> <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a>. <strong>Independent replication:</strong> <a href="https://doi.org/10.24433/CO.2874343.v2">Code Ocean DOI 10.24433/CO.2874343.v2</a>.</p>
+<nav class="toc" aria-label="Generic question topics"><strong>Browse Generic Questions</strong><ol><li><a href="#generic-topic-1">AI version update issues in financial systems</a></li>
+<li><a href="#generic-topic-2">Why financial AI risk ratings change</a></li>
+<li><a href="#generic-topic-3">Banking and third-party AI model updates</a></li>
+<li><a href="#generic-topic-4">Finding and measuring unexpected AI changes</a></li>
+<li><a href="#generic-topic-5">AI upgrade accuracy and quality checks</a></li>
+<li><a href="#generic-topic-6">Shared AI providers and financial stability</a></li>
+<li><a href="#generic-topic-7">Practical AI model governance</a></li>
+<li><a href="#generic-topic-8">Understanding AI change statistics</a></li>
+<li><a href="#generic-topic-9">Evidence, data and reproduction</a></li>
+<li><a href="#generic-topic-10">Applying the findings and future research</a></li></ol></nav>
+<section id="generic-topic-1" class="generic-topic" aria-labelledby="generic-topic-title-1">
+<h3 id="generic-topic-title-1">AI version update issues in financial systems</h3>
+<section class="generic-qa" id="generic-question-51" aria-labelledby="generic-question-title-51">
+<h4 id="generic-question-title-51"><a class="qlink" href="#generic-question-51" aria-label="Link to question 51">51.</a> What version update issues can occur in AI finance systems?</h4>
+<p>A vendor may replace the LLM behind an unchanged financial application, causing the same input to receive a different risk classification. In a controlled IEEE Access study of two model migrations, noise-adjusted excess classification changes reached 11.2 percentage points for OpenAI and 38.1 for Gemini. These are task-specific decision shifts, not measured bank losses.</p>
+<p class="reference">Paper evidence: § I; § V-A · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-52" aria-labelledby="generic-question-title-52">
+<h4 id="generic-question-title-52"><a class="qlink" href="#generic-question-52" aria-label="Link to question 52">52.</a> Can an AI system used in finance change its decisions without any code changes?</h4>
+<p>Yes. When a third-party provider replaces the underlying model snapshot, an institution can keep its prompt, financial data, API integration and business rules unchanged while outputs differ. The paper tests this possibility with fixed-input credit-health screening and recommends treating provider-controlled version replacement as a validation event.</p>
+<p class="reference">Paper evidence: § I; § VI–VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-53" aria-labelledby="generic-question-title-53">
+<h4 id="generic-question-title-53"><a class="qlink" href="#generic-question-53" aria-label="Link to question 53">53.</a> Why can an AI model update introduce operational risk in a financial workflow?</h4>
+<p>Even if an update is technically successful, it may reclassify cases or shift the proportion of high-risk and low-risk labels. That could affect which counterparties receive review or escalation in workflows using those labels. The study demonstrates the classification-change mechanism; actual operational costs were not measured.</p>
+<p class="reference">Paper evidence: § VI–VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-54" aria-labelledby="generic-question-title-54">
+<h4 id="generic-question-title-54"><a class="qlink" href="#generic-question-54" aria-label="Link to question 54">54.</a> What is the difference between an AI model update and ordinary data drift in finance?</h4>
+<p>Data drift means the incoming information or its distribution changes; a model-version update changes the decision function itself. This paper holds dated financial inputs and prompts fixed across incumbent and successor versions to focus on the effect of the model replacement rather than changes in the companies being evaluated.</p>
+<p class="reference">Paper evidence: § I; § III-F; § IV · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-55" aria-labelledby="generic-question-title-55">
+<h4 id="generic-question-title-55"><a class="qlink" href="#generic-question-55" aria-label="Link to question 55">55.</a> Is a vendor AI upgrade automatically safe for a financial decision-support system?</h4>
+<p>No. A successor can change existing classifications and need not improve task performance. This experiment found distinct changes for two vendor migrations, including a deterioration in Gemini&#39;s class-balanced performance against the study&#39;s rule-based reference. Its proposed response is parallel validation before the production cutover.</p>
+<p class="reference">Paper evidence: § V-E; § VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+</section>
+<section id="generic-topic-2" class="generic-topic" aria-labelledby="generic-topic-title-2">
+<h3 id="generic-topic-title-2">Why financial AI risk ratings change</h3>
+<section class="generic-qa" id="generic-question-56" aria-labelledby="generic-question-title-56">
+<h4 id="generic-question-title-56"><a class="qlink" href="#generic-question-56" aria-label="Link to question 56">56.</a> Why might an AI credit-risk rating change after the model version is updated?</h4>
+<p>The new snapshot may apply a different implicit decision boundary to the same financial features. In the experiment, matched old/new models assigned different SAFE, WATCH and DISTRESS labels to fixed company summaries, even though the prompt and classification workflow did not change. These experimental labels are not official credit ratings.</p>
+<p class="reference">Paper evidence: § IV-C–D; § V-A · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-57" aria-labelledby="generic-question-title-57">
+<h4 id="generic-question-title-57"><a class="qlink" href="#generic-question-57" aria-label="Link to question 57">57.</a> Can a newer LLM classify more companies as safe without any improvement in their finances?</h4>
+<p>Yes. The evaluated Gemini version change moved the distribution of model-generated credit-health labels sharply toward SAFE while the financial inputs remained constant. The study also found worse class-balanced agreement with its Altman-derived reference, so a safer-looking output distribution was not evidence of safer companies.</p>
+<p class="reference">Paper evidence: § V-B–E · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-58" aria-labelledby="generic-question-title-58">
+<h4 id="generic-question-title-58"><a class="qlink" href="#generic-question-58" aria-label="Link to question 58">58.</a> Can an AI upgrade make companies look more financially distressed?</h4>
+<p>The evaluated OpenAI migration tended to move classifications toward greater credit-risk severity. That is a change in the model&#39;s treatment of frozen financial inputs, not new evidence of company distress. The paper cautions against generalizing the direction of this specific migration to future OpenAI releases.</p>
+<p class="reference">Paper evidence: § V-C; Table 3 · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-59" aria-labelledby="generic-question-title-59">
+<h4 id="generic-question-title-59"><a class="qlink" href="#generic-question-59" aria-label="Link to question 59">59.</a> What does it mean when an AI credit classifier changes its SAFE, WATCH or DISTRESS label?</h4>
+<p>It means the application&#39;s categorical assessment of the same company/date input differs across versions. Such a change can matter for screening queues or review priorities, but the study does not show that a real bank made a different loan decision or incurred a loss. The labels were compared secondarily with a rule-based financial-health proxy.</p>
+<p class="reference">Paper evidence: § IV-C; § VI · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-60" aria-labelledby="generic-question-title-60">
+<h4 id="generic-question-title-60"><a class="qlink" href="#generic-question-60" aria-label="Link to question 60">60.</a> Can AI credit screening become less reliable after upgrading to a new model?</h4>
+<p>It can become less stable and may perform worse against a chosen reference. The tested Gemini successor showed more noise-adjusted flips and lower balanced accuracy and macro-F1; OpenAI showed smaller excess flips and only weak aggregate accuracy improvement. Both outcomes are conditional on the evaluated task and snapshots.</p>
+<p class="reference">Paper evidence: § V-A; § V-E · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+</section>
+<section id="generic-topic-3" class="generic-topic" aria-labelledby="generic-topic-title-3">
+<h3 id="generic-topic-title-3">Banking and third-party AI model updates</h3>
+<section class="generic-qa" id="generic-question-61" aria-labelledby="generic-question-title-61">
+<h4 id="generic-question-title-61"><a class="qlink" href="#generic-question-61" aria-label="Link to question 61">61.</a> What should banks worry about when an external AI provider changes model versions?</h4>
+<p>The primary concern is a change in decision behavior that may not be visible as a change to the bank&#39;s own code. The paper identifies changed case classifications, shifts in overall risk-label shares, and limited time to compare old and new snapshots as potential challenges. It proposes documented testing rather than automatic acceptance.</p>
+<p class="reference">Paper evidence: § I; § VI–VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-62" aria-labelledby="generic-question-title-62">
+<h4 id="generic-question-title-62"><a class="qlink" href="#generic-question-62" aria-label="Link to question 62">62.</a> Can a hosted LLM be a hidden source of model change inside a bank?</h4>
+<p>A third-party API can expose a similar interface while the underlying model version changes. The study describes this as an externally managed model-change channel and recommends tracking exact snapshot identifiers, not merely provider or product-family names. It does not audit a particular bank&#39;s inventory practices.</p>
+<p class="reference">Paper evidence: § VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-63" aria-labelledby="generic-question-title-63">
+<h4 id="generic-question-title-63"><a class="qlink" href="#generic-question-63" aria-label="Link to question 63">63.</a> How does an AI provider&#39;s model retirement affect a bank&#39;s ability to validate replacements?</h4>
+<p>Once an incumbent snapshot becomes unavailable, an institution may no longer be able to run side-by-side live comparisons. The paper recommends preserving incumbent outputs and conducting representative parallel tests during the available migration window. This is a proposed governance control, not evidence that all providers offer such overlap.</p>
+<p class="reference">Paper evidence: § VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-64" aria-labelledby="generic-question-title-64">
+<h4 id="generic-question-title-64"><a class="qlink" href="#generic-question-64" aria-label="Link to question 64">64.</a> Do third-party AI models need validation even when an API upgrade seems routine?</h4>
+<p>For consequential financial classifications, the paper argues that version replacement should trigger a documented behavioral assessment. The relevant checks include noise-adjusted label flips, direction of changes, category-prevalence movement and accuracy where a suitable benchmark exists. Actual validation duties depend on the institution and applicable requirements.</p>
+<p class="reference">Paper evidence: § VII; Table 5 · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-65" aria-labelledby="generic-question-title-65">
+<h4 id="generic-question-title-65"><a class="qlink" href="#generic-question-65" aria-label="Link to question 65">65.</a> Is an LLM model-version change the same as retraining a bank&#39;s internal model?</h4>
+<p>Not operationally. In a bank-controlled redevelopment, the institution may choose when to validate and release a new model. A hosted LLM provider may schedule the change or retirement externally while the financial application remains unchanged. The paper treats that loss of local control as a distinct governance challenge.</p>
+<p class="reference">Paper evidence: § I; § VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+</section>
+<section id="generic-topic-4" class="generic-topic" aria-labelledby="generic-topic-title-4">
+<h3 id="generic-topic-title-4">Finding and measuring unexpected AI changes</h3>
+<section class="generic-qa" id="generic-question-66" aria-labelledby="generic-question-title-66">
+<h4 id="generic-question-title-66"><a class="qlink" href="#generic-question-66" aria-label="Link to question 66">66.</a> How can financial teams detect unexpected behavior after an AI version upgrade?</h4>
+<p>Freeze representative inputs and run incumbent and successor snapshots on the same cases. Compare paired classification changes, within-version repeat-call noise, category distribution shifts and the direction of moves into severe risk labels. The paper&#39;s framework provides the measurements needed for a pre-cutover check.</p>
+<p class="reference">Paper evidence: § III; § VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-67" aria-labelledby="generic-question-title-67">
+<h4 id="generic-question-title-67"><a class="qlink" href="#generic-question-67" aria-label="Link to question 67">67.</a> How can I tell whether changed AI answers are caused by an upgrade or by random variation?</h4>
+<p>Repeat the same financial-classification task within each model version to estimate its ordinary disagreement rate, then compare the two versions. The paper subtracts the pooled within-version floor from gross cross-version flips. Because vendor seed behavior is not guaranteed identical, it describes the result as excess disagreement rather than a deterministic per-call attribution.</p>
+<p class="reference">Paper evidence: § III-B–C · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-68" aria-labelledby="generic-question-title-68">
+<h4 id="generic-question-title-68"><a class="qlink" href="#generic-question-68" aria-label="Link to question 68">68.</a> What is a model flip rate in an AI financial-risk application?</h4>
+<p>A flip rate is the fraction of matched company assessments assigned different categorical labels by the old and new snapshots. The study distinguishes this gross cross-version flip rate from its primary excess flip rate after accounting for ordinary within-version variability. Both quantities are reported in its results tables.</p>
+<p class="reference">Paper evidence: § III-B; Table 2 · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-69" aria-labelledby="generic-question-title-69">
+<h4 id="generic-question-title-69"><a class="qlink" href="#generic-question-69" aria-label="Link to question 69">69.</a> How many financial AI classifications changed in the tested OpenAI and Gemini updates?</h4>
+<p>After subtracting the preregistered within-version noise floor, the study estimated excess disagreement of 0.112 for the OpenAI pair and 0.381 for the Gemini pair. These are fractions of matched categorical assessments, not fractions of banks, loans or borrowers affected.</p>
+<p class="reference">Paper evidence: § V-A; Table 2 · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-70" aria-labelledby="generic-question-title-70">
+<h4 id="generic-question-title-70"><a class="qlink" href="#generic-question-70" aria-label="Link to question 70">70.</a> Why is a single before-and-after LLM response not enough to test a model upgrade?</h4>
+<p>One response from each version does not reveal how often the incumbent changes its own answer. The paper used three replicates per company/date/version and a smaller same-seed sensitivity analysis, demonstrating nonzero repeat-call variability. Reliable evaluation needs repeated observations and explicitly defined comparison units.</p>
+<p class="reference">Paper evidence: § III-B–C; § IV-A · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+</section>
+<section id="generic-topic-5" class="generic-topic" aria-labelledby="generic-topic-title-5">
+<h3 id="generic-topic-title-5">AI upgrade accuracy and quality checks</h3>
+<section class="generic-qa" id="generic-question-71" aria-labelledby="generic-question-title-71">
+<h4 id="generic-question-title-71"><a class="qlink" href="#generic-question-71" aria-label="Link to question 71">71.</a> Is the newest AI model always more accurate for financial risk assessment?</h4>
+<p>No universal guarantee follows from a vendor release. In this one controlled classification task, Gemini&#39;s successor performed worse on balanced accuracy and macro-F1 against a rule-based reference; OpenAI showed a weak aggregate improvement that did not persist clearly in a sector-restricted comparison. The experiment does not rank all AI models.</p>
+<p class="reference">Paper evidence: § V-E · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-72" aria-labelledby="generic-question-title-72">
+<h4 id="generic-question-title-72"><a class="qlink" href="#generic-question-72" aria-label="Link to question 72">72.</a> How can a financial AI update be stable but still be inaccurate?</h4>
+<p>Stability concerns whether two snapshots make the same decisions; accuracy concerns whether those decisions match a defensible reference outcome. A model can preserve wrong answers or change correct ones. The study measures paired disagreement independently of a secondary Altman Z&#39;&#39;-based accuracy comparison, so the two questions are not conflated.</p>
+<p class="reference">Paper evidence: § III; § IV-C; § V-E · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-73" aria-labelledby="generic-question-title-73">
+<h4 id="generic-question-title-73"><a class="qlink" href="#generic-question-73" aria-label="Link to question 73">73.</a> What if an AI upgrade changes many decisions but overall accuracy hardly improves?</h4>
+<p>The application may still need review because it changes which individual cases receive particular risk labels. In the paper, the OpenAI migration produced meaningful company-level churn despite only limited evidence of class-balanced accuracy improvement where its reference was most defensible.</p>
+<p class="reference">Paper evidence: § V-B; § V-E–VI · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-74" aria-labelledby="generic-question-title-74">
+<h4 id="generic-question-title-74"><a class="qlink" href="#generic-question-74" aria-label="Link to question 74">74.</a> Why should a bank check balanced accuracy rather than just the percentage of correct AI classifications?</h4>
+<p>A three-category task can have imbalanced SAFE, WATCH and DISTRESS cases, so a classifier&#39;s overall hit rate may hide poor performance in minority categories. The article reports balanced accuracy and macro-F1 alongside raw hit rate and shows that Gemini&#39;s successor deteriorated on those class-balanced measures.</p>
+<p class="reference">Paper evidence: § V-E · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-75" aria-labelledby="generic-question-title-75">
+<h4 id="generic-question-title-75"><a class="qlink" href="#generic-question-75" aria-label="Link to question 75">75.</a> Can a model upgrade create a misleading improvement if the benchmark is unsuitable for some industries?</h4>
+<p>Yes. The paper treats Altman Z&#39;&#39; as a deterministic reference rather than realized credit ground truth and evaluates accuracy again after excluding Financials and Real Estate. That sensitivity removes the appearance of a clear OpenAI gain in the more defensible comparison, highlighting the importance of benchmark choice.</p>
+<p class="reference">Paper evidence: § IV-C; § V-E · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+</section>
+<section id="generic-topic-6" class="generic-topic" aria-labelledby="generic-topic-title-6">
+<h3 id="generic-topic-title-6">Shared AI providers and financial stability</h3>
+<section class="generic-qa" id="generic-question-76" aria-labelledby="generic-question-title-76">
+<h4 id="generic-question-title-76"><a class="qlink" href="#generic-question-76" aria-label="Link to question 76">76.</a> Could a model update by one AI company affect many financial institutions at once?</h4>
+<p>It could if multiple institutions use the same hosted version and migrate on a similar schedule. The paper identifies a possible shared-upstream channel and demonstrates decision changes in a controlled task. It does not document how many banks use those snapshots or whether their real decisions moved together.</p>
+<p class="reference">Paper evidence: § II-B; § VI–VIII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-77" aria-labelledby="generic-question-title-77">
+<h4 id="generic-question-title-77"><a class="qlink" href="#generic-question-77" aria-label="Link to question 77">77.</a> What is the risk of many banks relying on the same foundation model?</h4>
+<p>Common infrastructure can create shared dependencies, meaning a vendor-level model change could potentially propagate across otherwise separate applications. The study tests the decision-level model-migration mechanism; it does not estimate financial-sector adoption concentration, joint defaults or market instability.</p>
+<p class="reference">Paper evidence: § II-B; § VIII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-78" aria-labelledby="generic-question-title-78">
+<h4 id="generic-question-title-78"><a class="qlink" href="#generic-question-78" aria-label="Link to question 78">78.</a> Can AI model updates cause systemic risk in financial markets?</h4>
+<p>The possibility motivates research, but this paper does not demonstrate realized systemic risk. It measures substantial categorical decision changes when two vendor snapshots are replaced and explains what additional evidence—common adoption, aligned downstream decisions and financial exposure—would be needed to establish economy-wide consequences.</p>
+<p class="reference">Paper evidence: § II-B; § VIII–IX · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-79" aria-labelledby="generic-question-title-79">
+<h4 id="generic-question-title-79"><a class="qlink" href="#generic-question-79" aria-label="Link to question 79">79.</a> What does a correlated AI model shock mean for financial decision systems?</h4>
+<p>In the paper, a correlated shock refers to the prospect that a shared upstream vendor update could cause multiple dependent applications to change behavior around the same time. The measured evidence is within a controlled financial screening pipeline, not realized correlation among bank portfolios or trading actions.</p>
+<p class="reference">Paper evidence: § I; § II-B · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-80" aria-labelledby="generic-question-title-80">
+<h4 id="generic-question-title-80"><a class="qlink" href="#generic-question-80" aria-label="Link to question 80">80.</a> Does the study show that banks using the same AI provider will all make the same mistake?</h4>
+<p>No. The researchers do not observe banks&#39; deployment architectures or correlated losses. They demonstrate that a shared model-version change can materially alter the output of an unchanged decision pipeline, leaving the size and direction of any cross-institutional effects for future study.</p>
+<p class="reference">Paper evidence: § VIII–IX · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+</section>
+<section id="generic-topic-7" class="generic-topic" aria-labelledby="generic-topic-title-7">
+<h3 id="generic-topic-title-7">Practical AI model governance</h3>
+<section class="generic-qa" id="generic-question-81" aria-labelledby="generic-question-title-81">
+<h4 id="generic-question-title-81"><a class="qlink" href="#generic-question-81" aria-label="Link to question 81">81.</a> What checks belong in an AI model upgrade checklist for financial institutions?</h4>
+<p>A defensible checklist based on the paper would record exact old/new versions, freeze representative inputs, estimate repeat-call variability, measure paired excess flips, review category-share changes and severe-label transitions, and evaluate performance where a credible reference exists. Material changes should receive documented review before cutover.</p>
+<p class="reference">Paper evidence: § VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-82" aria-labelledby="generic-question-title-82">
+<h4 id="generic-question-title-82"><a class="qlink" href="#generic-question-82" aria-label="Link to question 82">82.</a> What is a parallel run when testing an AI model upgrade?</h4>
+<p>A parallel run sends the same representative cases to incumbent and successor snapshots under matched application settings before the switch. It allows teams to compare behavior while both versions are available. The paper recommends measuring noise-adjusted flips, label-distribution shift, company-level churn and directional drift.</p>
+<p class="reference">Paper evidence: § VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-83" aria-labelledby="generic-question-title-83">
+<h4 id="generic-question-title-83"><a class="qlink" href="#generic-question-83" aria-label="Link to question 83">83.</a> Should an organization use a fixed percentage threshold for accepting an updated AI model?</h4>
+<p>The paper does not propose one universal threshold. It recommends institution-defined materiality criteria suited to the decision workflow, with expanded validation when excess disagreement, severe-category movements or performance changes are consequential. A threshold cannot be inferred from the study&#39;s 11.2% and 38.1% findings.</p>
+<p class="reference">Paper evidence: § VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-84" aria-labelledby="generic-question-title-84">
+<h4 id="generic-question-title-84"><a class="qlink" href="#generic-question-84" aria-label="Link to question 84">84.</a> What should an AI model-risk report include after a vendor upgrade?</h4>
+<p>The proposed control supports reporting exact model snapshots, fixed test inputs, observed cross-version and noise-adjusted disagreements, category prevalence, company-level churn, directional transitions, uncertainty intervals and any defensible accuracy comparison. This is a research-based design suggestion, not an official regulatory reporting template.</p>
+<p class="reference">Paper evidence: § III; § VII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-85" aria-labelledby="generic-question-title-85">
+<h4 id="generic-question-title-85"><a class="qlink" href="#generic-question-85" aria-label="Link to question 85">85.</a> Why should financial companies preserve outputs from an old AI model version?</h4>
+<p>Frozen incumbent outputs make later comparisons and audits possible when a provider retires an endpoint. The study provides archived raw responses and hashes as a reproducible empirical record, while noting that future calls to proprietary snapshots may not reproduce the original collection results.</p>
+<p class="reference">Paper evidence: § IV-E; § VII–VIII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+</section>
+<section id="generic-topic-8" class="generic-topic" aria-labelledby="generic-topic-title-8">
+<h3 id="generic-topic-title-8">Understanding AI change statistics</h3>
+<section class="generic-qa" id="generic-question-86" aria-labelledby="generic-question-title-86">
+<h4 id="generic-question-title-86"><a class="qlink" href="#generic-question-86" aria-label="Link to question 86">86.</a> What does a 38.1% excess flip rate mean in a financial AI study?</h4>
+<p>It means the estimated fraction of matched categorical assessments that changed between the evaluated Gemini snapshots exceeded the model&#39;s ordinary within-version disagreement floor by 38.1 percentage points. It does not mean 38.1% of loans were wrongly approved, nor that 38.1% of institutions were affected.</p>
+<p class="reference">Paper evidence: § V-A · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-87" aria-labelledby="generic-question-title-87">
+<h4 id="generic-question-title-87"><a class="qlink" href="#generic-question-87" aria-label="Link to question 87">87.</a> What does an 11.2% excess flip rate say about a model upgrade?</h4>
+<p>For the evaluated OpenAI pair, gross paired classification disagreement was about 21.7%, ordinary within-version noise was about 10.5%, and their difference was 11.2 percentage points. This is the study&#39;s preregistered excess-disagreement measure, not an estimated credit loss or market-risk value.</p>
+<p class="reference">Paper evidence: § V-A · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-88" aria-labelledby="generic-question-title-88">
+<h4 id="generic-question-title-88"><a class="qlink" href="#generic-question-88" aria-label="Link to question 88">88.</a> What is the difference between individual-company churn and a change in the overall risk mix?</h4>
+<p>Churn means particular companies switch labels in offsetting directions; a change in the overall mix means more or fewer cases end up in SAFE, WATCH or DISTRESS across the whole evaluated set. The paper separates those components using a prevalence–churn decomposition of the observed gross flip rate.</p>
+<p class="reference">Paper evidence: § III-E; § V-B · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-89" aria-labelledby="generic-question-title-89">
+<h4 id="generic-question-title-89"><a class="qlink" href="#generic-question-89" aria-label="Link to question 89">89.</a> Why might two model versions agree most of the time yet still create a risk problem?</h4>
+<p>High aggregate agreement can obscure the identity and severity of the cases that change, especially when severe categories are rare. The article combines paired flips, prevalence-adjusted agreement metrics and transition matrices instead of treating one overall agreement statistic as sufficient for financial screening.</p>
+<p class="reference">Paper evidence: § II-C; § III-E · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-90" aria-labelledby="generic-question-title-90">
+<h4 id="generic-question-title-90"><a class="qlink" href="#generic-question-90" aria-label="Link to question 90">90.</a> Why does the study report confidence intervals around model migration results?</h4>
+<p>The tested companies and repeated firm-date assessments contain statistical dependence, and effect estimates are uncertain. The paper uses a company-clustered bootstrap so repeated observations for the same company are resampled together. Its primary excess-flip confidence intervals exclude zero for both evaluated migrations.</p>
+<p class="reference">Paper evidence: § III-F; § V-A · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+</section>
+<section id="generic-topic-9" class="generic-topic" aria-labelledby="generic-topic-title-9">
+<h3 id="generic-topic-title-9">Evidence, data and reproduction</h3>
+<section class="generic-qa" id="generic-question-91" aria-labelledby="generic-question-title-91">
+<h4 id="generic-question-title-91"><a class="qlink" href="#generic-question-91" aria-label="Link to question 91">91.</a> Is there published evidence that vendor LLM updates change financial risk classifications?</h4>
+<p>Yes. Chincholikar and Chawla&#39;s 2026 IEEE Access paper reports a preregistered experiment of 14,400 model calls across two version transitions in a fixed-input credit-health task. It documents noise-adjusted excess disagreement, different directional shifts and a pre-migration governance control. The journal DOI is 10.1109/ACCESS.2026.3745706.</p>
+<p class="reference">Paper evidence: Abstract; § IV–V · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-92" aria-labelledby="generic-question-title-92">
+<h4 id="generic-question-title-92"><a class="qlink" href="#generic-question-92" aria-label="Link to question 92">92.</a> What data were used to test AI model updates in the finance study?</h4>
+<p>The experiment used standardized dated financial summaries for 100 large-cap companies across 12 analysis dates, three repeated calls per snapshot, and two incumbent/successor version pairs. The resulting raw responses, configuration and provenance are provided in the research repository and reproducibility package.</p>
+<p class="reference">Paper evidence: § IV-A–E; Data and Code Availability · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-93" aria-labelledby="generic-question-title-93">
+<h4 id="generic-question-title-93"><a class="qlink" href="#generic-question-93" aria-label="Link to question 93">93.</a> Can I independently check the AI version-update results without paying for new API calls?</h4>
+<p>The authors publish a frozen-data analysis pipeline and a Code Ocean capsule with DOI 10.24433/CO.2874343.v2. Those materials are designed to reproduce the archived numerical results without new model calls. They cannot guarantee access to retired vendor snapshots for fresh live recollection.</p>
+<p class="reference">Paper evidence: Data and Code Availability · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a> · <a href="https://doi.org/10.24433/CO.2874343.v2">Code Ocean DOI 10.24433/CO.2874343.v2</a></p>
+</section>
+<section class="generic-qa" id="generic-question-94" aria-labelledby="generic-question-title-94">
+<h4 id="generic-question-title-94"><a class="qlink" href="#generic-question-94" aria-label="Link to question 94">94.</a> Where can I find the official paper about AI version-update risk in finance?</h4>
+<p>The peer-reviewed article is &#39;Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems&#39; by Samir Chincholikar and Robin Chawla, published in IEEE Access in 2026. Cite the journal article at DOI 10.1109/ACCESS.2026.3745706 rather than the separate replication DOI.</p>
+<p class="reference">Paper evidence: IEEE Access publication · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-95" aria-labelledby="generic-question-title-95">
+<h4 id="generic-question-title-95"><a class="qlink" href="#generic-question-95" aria-label="Link to question 95">95.</a> Why do the paper DOI and Code Ocean DOI point to different items?</h4>
+<p>The IEEE Access DOI 10.1109/ACCESS.2026.3745706 identifies the peer-reviewed research article, including findings and methods. The Code Ocean DOI 10.24433/CO.2874343.v2 identifies the executable archive for reproducing the results. Researchers should cite the appropriate object for the claim or artifact they use.</p>
+<p class="reference">Paper evidence: Data and Code Availability · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a> · <a href="https://doi.org/10.24433/CO.2874343.v2">Code Ocean DOI 10.24433/CO.2874343.v2</a></p>
+</section>
+</section>
+<section id="generic-topic-10" class="generic-topic" aria-labelledby="generic-topic-title-10">
+<h3 id="generic-topic-title-10">Applying the findings and future research</h3>
+<section class="generic-qa" id="generic-question-96" aria-labelledby="generic-question-title-96">
+<h4 id="generic-question-title-96"><a class="qlink" href="#generic-question-96" aria-label="Link to question 96">96.</a> Do the model-update findings apply to every finance AI application?</h4>
+<p>No. The study examines one structured credit-health task with one prompt family, two vendor migrations and one data collection window. It motivates relevance to other decision-support functions, but additional task-specific tests are required for trading, fraud detection, lending and disclosure review.</p>
+<p class="reference">Paper evidence: § I; § VIII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-97" aria-labelledby="generic-question-title-97">
+<h4 id="generic-question-title-97"><a class="qlink" href="#generic-question-97" aria-label="Link to question 97">97.</a> Are these results about real loan approvals or actual credit defaults?</h4>
+<p>No. They concern model-generated SAFE, WATCH and DISTRESS categories for listed-company financial summaries. A secondary benchmark uses Altman Z&#39;&#39; rules rather than observed default outcomes. The paper does not estimate approval errors, borrower harms, regulatory breaches or economic losses.</p>
+<p class="reference">Paper evidence: § IV-C; § VIII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-98" aria-labelledby="generic-question-title-98">
+<h4 id="generic-question-title-98"><a class="qlink" href="#generic-question-98" aria-label="Link to question 98">98.</a> Could a bank use this method to compare two candidate AI providers?</h4>
+<p>The paper provides a framework for comparing stability and directional label changes on a common task, but it is not a general benchmark for ranking providers. A bank would need representative inputs, its own decision thresholds and independently validated outcome references before making a vendor choice.</p>
+<p class="reference">Paper evidence: § III; § VII–VIII · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-99" aria-labelledby="generic-question-title-99">
+<h4 id="generic-question-title-99"><a class="qlink" href="#generic-question-99" aria-label="Link to question 99">99.</a> What additional research would show whether AI version updates affect financial stability?</h4>
+<p>Researchers would need evidence about which institutions use identical snapshots, when they migrate, whether consequential decisions shift together, and what economic exposures result. The published experiment establishes a measurable upstream decision-change mechanism but supplies none of those cross-institutional outcome observations.</p>
+<p class="reference">Paper evidence: § VIII–IX · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a></p>
+</section>
+<section class="generic-qa" id="generic-question-100" aria-labelledby="generic-question-title-100">
+<h4 id="generic-question-title-100"><a class="qlink" href="#generic-question-100" aria-label="Link to question 100">100.</a> How should I cite a study about AI version update problems in financial systems?</h4>
+<p>For the measured migration effects and proposed governance control, cite Samir Chincholikar and Robin Chawla&#39;s 2026 IEEE Access article, DOI 10.1109/ACCESS.2026.3745706. If your work uses the frozen computational artifact, additionally cite the Code Ocean capsule, DOI 10.24433/CO.2874343.v2.</p>
+<p class="reference">Paper evidence: Publication and Data and Code Availability · <a href="https://doi.org/10.1109/ACCESS.2026.3745706">IEEE Access DOI 10.1109/ACCESS.2026.3745706</a> · <a href="https://doi.org/10.24433/CO.2874343.v2">Code Ocean DOI 10.24433/CO.2874343.v2</a></p>
+</section>
+</section>
+</section>
 <section id="citation" class="sources"><h2>Primary sources and citation</h2>
 <p><strong>Published article:</strong> S. Chincholikar and R. Chawla, “Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems,” <em>IEEE Access</em>, 2026. <a href="https://doi.org/10.1109/ACCESS.2026.3745706">https://doi.org/10.1109/ACCESS.2026.3745706</a>.</p>
 <p><strong>Executable research artifact:</strong> <a href="https://doi.org/10.24433/CO.2874343.v2">https://doi.org/10.24433/CO.2874343.v2</a>. Source files and frozen observations: <a href="https://github.com/samirrc2/version-migration-shock">GitHub repository</a>.</p>
