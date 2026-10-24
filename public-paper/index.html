@@ -21,39 +21,229 @@
 <meta property="og:url" content="https://samirrc2.github.io/version-migration-shock/">
 <meta name="twitter:card" content="summary">
 <style>
-:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#253348;background:#f6f8fb;line-height:1.75}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0}a{color:#19558d}a:hover{text-decoration-thickness:2px}a:focus-visible{outline:3px solid #286ead;outline-offset:3px}
-.wrap{width:min(990px,calc(100% - 36px));margin-inline:auto}header{background:#fff;border-bottom:1px solid #dbe6f1}
-header .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 0}
-.brand{font-weight:800;letter-spacing:.07em;font-size:.79rem;color:#375b7d;text-transform:uppercase}
-header nav{display:flex;flex-wrap:wrap;gap:17px;font-size:.87rem}main{padding:35px 0 58px}
-.eyebrow{color:#255b8c;font-size:.77rem;letter-spacing:.1em;font-weight:750;text-transform:uppercase}
-h1{font-size:clamp(2rem,4.9vw,3.25rem);line-height:1.17;letter-spacing:-.033em;margin:9px 0 15px}
-h2{color:#1d5385;font-size:1.46rem;line-height:1.3;margin-top:28px}h3{font-size:1.07rem;line-height:1.42;margin:17px 0 8px}
-.authors{font-size:1.06rem;font-weight:650;color:#445b70}.meta{color:#536a80;font-size:.92rem}
-.links{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.links a{border:1px solid #b6c9df;background:#fff;padding:10px 13px;text-decoration:none;border-radius:7px;font-size:.9rem;font-weight:680}
-.links a.primary{background:#1d558a;color:#fff;border-color:#1d558a}
-.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:25px 0}
-.metric{background:#fff;border:1px solid #dce6f0;border-radius:8px;padding:18px}.metric b{font-size:1.95rem;color:#1b538c;display:block}.metric small{font-size:.86rem;color:#42596f;display:block}
-.scope{background:#eaf1f9;border-left:4px solid #2865a2;border-radius:5px;padding:16px 20px;margin:20px 0}
-.paper{background:#fff;border:1px solid #dbe4ef;border-radius:11px;padding:clamp(18px,4vw,39px)}
-.paper .abstract{color:#3b5269;font-size:.95rem}
-.fit{border:1px solid #dce8f1;border-radius:8px;padding:20px;background:#f4f8fd;margin:24px 0}
-.fit h2{margin:0 0 12px}.fit ul{margin:0;padding-left:23px}.fit li{padding:4px 0}
-.toc{padding:18px 22px;background:#f3f7fc;border:1px solid #dce6f0;border-radius:7px;margin:25px 0}
-.toc ol{columns:2;column-gap:32px;padding-left:22px;margin:8px 0}.toc li{break-inside:avoid;font-size:.91rem;margin:6px 0}
-.topic{padding:12px 0 14px;border-top:1px solid #dee8f1;scroll-margin-top:20px}.topic h2{margin:15px 0 18px}
-.qa{padding:5px 0;scroll-margin-top:20px}.generic-questions{border-top:2px solid #b6cadf;padding-top:18px;margin-top:28px;scroll-margin-top:20px}.generic-topic{border-top:1px solid #dee8f1;padding:16px 0 8px;scroll-margin-top:20px}.generic-topic h3{font-size:1.18rem;color:#1d5385;margin:12px 0 14px}.generic-qa{padding:5px 0;scroll-margin-top:20px}.generic-qa h4{font-size:1.05rem;line-height:1.45;margin:14px 0 8px}.generic-qa p{margin:0 0 10px}.qa p{margin:0 0 10px}.qlink{text-decoration:none;font-size:.83rem;margin-right:2px}
-.reference{font-size:.8rem;color:#556b81;padding-bottom:9px}
-.sources{background:#f2f6fb;border:1px solid #dce6f0;border-radius:8px;padding:20px;margin:28px 0 0;overflow-wrap:anywhere}
-.sources h2:first-child{margin-top:0}.citecode{background:#fff;border:1px solid #dce4ee;border-radius:6px;padding:13px;font-size:.79rem;white-space:pre-wrap;overflow-wrap:anywhere}
-footer{border-top:1px solid #dce5ed;color:#52677b;font-size:.85rem;padding:24px 0 33px}
-@media(max-width:690px){.metrics{grid-template-columns:1fr}.toc ol{columns:1}}
+
+/*
+ * CLASSICAL ACADEMIC — shared visual template
+ * White paper, Georgia text, black typographic hierarchy, fine grey rules.
+ * No decorative card fills, pill buttons, gradients or branded accent colors.
+ */
+:root{
+  color-scheme:light;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:16px;line-height:1.74;
+  color:#252525;background:#fff;
+  font-synthesis: none;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:#252525;overflow-wrap:break-word}
+a{color:#1e1e1e;text-decoration:underline;text-decoration-color:#8e8e8e;text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:#000;text-decoration-color:#000}
+a:focus-visible,summary:focus-visible{outline:2px solid #222;outline-offset:4px}
+.wrap{width:min(100% - 44px,880px);margin-inline:auto}
+header{background:#fff;border-bottom:1px solid #bdbdbd;text-align:center}
+header .wrap,header .top,header .header-inner{
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  gap:12px;padding:24px 0 18px
+}
+header .brand,header .header-inner .brand{
+  font:700 .77rem/1.4 Arial,Helvetica,sans-serif;
+  letter-spacing:.21em;text-transform:uppercase;color:#222
+}
+header nav{display:flex;justify-content:center;flex-wrap:wrap;gap:7px 20px;font:400 .72rem/1.45 Arial,Helvetica,sans-serif}
+header nav a,header .header-link{font:400 .72rem/1.45 Arial,Helvetica,sans-serif;text-transform:none}
+main.wrap,main{padding-top:45px;padding-bottom:72px}
+.eyebrow{
+  text-align:center;font:700 .67rem/1.6 Arial,Helvetica,sans-serif;
+  text-transform:uppercase;letter-spacing:.14em;color:#666;
+  margin:0 auto 17px;max-width:760px
+}
+h1{
+  font:400 clamp(2.1rem,4.8vw,3.45rem)/1.18 Georgia,"Times New Roman",serif;
+  letter-spacing:-.025em;color:#171717;
+  max-width:815px;margin:0 auto 16px;text-align:center
+}
+main > .authors,main > .meta,main > .dek{
+  text-align:center;max-width:790px;margin-left:auto;margin-right:auto
+}
+main > .authors{
+  font:400 .84rem/1.7 Arial,Helvetica,sans-serif;
+  color:#4e4e4e;margin-top:10px;margin-bottom:12px
+}
+main > .meta{
+  font:400 .76rem/1.75 Arial,Helvetica,sans-serif;
+  color:#5b5b5b;margin-top:9px;margin-bottom:13px
+}
+main > .dek{
+  font:400 1.04rem/1.64 Georgia,"Times New Roman",serif;
+  color:#3c3c3c;margin-top:14px;margin-bottom:17px
+}
+h2,h3,h4{color:#222;letter-spacing:normal}
+h2{
+  font:400 1.63rem/1.3 Georgia,"Times New Roman",serif;
+  margin:29px 0 15px
+}
+h3{
+  font:400 1.25rem/1.37 Georgia,"Times New Roman",serif;
+  margin:18px 0 9px
+}
+h4{
+  font:400 1.17rem/1.42 Georgia,"Times New Roman",serif;
+  margin:16px 0 9px
+}
+p{margin:11px 0 17px}
+strong,b{font-weight:700}
+.links,main > p:has(> .btn),main > p:has(> .link){
+  text-align:center;display:flex;justify-content:center;gap:8px 24px;
+  flex-wrap:wrap;align-items:baseline;margin:18px auto 20px
+}
+.links a,.links a.primary,.btn,.cta,.secondary-cta,.link,header .header-link{
+  display:inline-block;background:transparent;color:#222;
+  border:0;border-radius:0;box-shadow:none;
+  font:400 .76rem/1.55 Arial,Helvetica,sans-serif;
+  text-decoration:underline;text-underline-offset:4px;
+  text-decoration-color:#777;padding:5px 0;margin:0
+}
+.links a.primary,.btn,.cta{
+  font-weight:700;color:#171717;
+}
+.links a:hover,.btn:hover,.cta:hover,.secondary-cta:hover,.link:hover{background:transparent;color:#000}
+.metrics{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;
+  margin:35px 0 30px;padding:17px 0 18px;
+  border-top:1px solid #b1b1b1;border-bottom:1px solid #b1b1b1
+}
+.metric{
+  background:transparent;border:0;border-radius:0;box-shadow:none;
+  text-align:center;padding:10px 18px;min-width:0
+}
+.metric + .metric{border-left:1px solid #d4d4d4}
+.metric b,.metric strong,.metric .number{
+  display:block;margin:0 0 6px;
+  font:400 clamp(1.75rem,3.2vw,2.35rem)/1.2 Georgia,"Times New Roman",serif;
+  letter-spacing:-.018em;color:#202020
+}
+.metric span,.metric small,.metric p{
+  display:block;margin:0;
+  font:400 .72rem/1.55 Arial,Helvetica,sans-serif;color:#666
+}
+.metric p strong{font-weight:600;color:#4a4a4a}
+.scope,.note,.notice{
+  background:transparent;color:#404040;
+  border:0;border-radius:0;border-top:1px solid #d0d0d0;border-bottom:1px solid #d0d0d0;
+  box-shadow:none;margin:22px 0 40px;padding:17px 0;
+  font-size:.94rem;line-height:1.7
+}
+article,article.paper,.paper{
+  background:#fff;border:0;border-radius:0;
+  box-shadow:none;padding:0;margin:0
+}
+article section{scroll-margin-top:24px}
+article > section:first-child h2{margin-top:14px}
+.paper .abstract, .abstract{font-size:.98rem;line-height:1.77;color:#333}
+.intro,.questions-intro{padding-bottom:15px;border-bottom:1px solid #c5c5c5}
+.intro h2,.questions-intro h2{margin-top:10px}
+.fit,.citation-relevance,.sources,.reference,.citation,section.reference{
+  background:transparent;color:#282828;box-shadow:none;
+  border:0;border-radius:0;padding:0;margin:33px 0 25px
+}
+.fit,.citation-relevance{border-top:1px solid #bfbfbf;padding-top:14px}
+.fit ul{padding-left:23px;margin:10px 0 20px}
+.fit li{margin:7px 0}
+.toc,.generic-toc,.question-list{
+  background:transparent;color:#2b2b2b;box-shadow:none;
+  border:0;border-radius:0;border-top:1px solid #bfbfbf;border-bottom:1px solid #d1d1d1;
+  padding:18px 0 17px;margin:25px 0
+}
+.toc strong,.generic-toc strong{
+  font:700 .72rem/1.5 Arial,Helvetica,sans-serif;
+  text-transform:uppercase;letter-spacing:.13em;color:#515151
+}
+.toc ol,.generic-toc ol,.question-list ol{
+  padding-left:23px;columns:2;column-gap:40px;margin:10px 0 0
+}
+.toc li,.generic-toc li,.question-list li{
+  font:400 .85rem/1.55 Georgia,"Times New Roman",serif;
+  break-inside:avoid;margin:0 0 8px
+}
+.question-list summary{
+  color:#333;cursor:pointer;
+  font:700 .76rem/1.5 Arial,Helvetica,sans-serif;letter-spacing:.04em
+}
+.topic,.topic-section,.generic-topic{
+  background:transparent;
+  border:0;border-top:1px solid #c6c6c6;
+  padding:22px 0 6px;margin:29px 0 0;scroll-margin-top:22px
+}
+.topic h2,.topic-section > h2{
+  font:400 1.53rem/1.3 Georgia,"Times New Roman",serif;
+  letter-spacing:0;color:#222;margin:0 0 21px
+}
+.generic-topic h3{
+  font:400 1.53rem/1.3 Georgia,"Times New Roman",serif;
+  color:#222;margin:0 0 21px
+}
+.qa,.answer-block,.generic-qa{padding:5px 0 13px;scroll-margin-top:22px}
+.qa h3,.answer-block h3,.generic-qa h4{
+  font:400 1.17rem/1.44 Georgia,"Times New Roman",serif;
+  color:#191919;margin:6px 0 10px
+}
+.qa p,.answer-block p,.generic-qa p{color:#353535;margin:0 0 10px;line-height:1.75}
+.index,.question-number,.generic-index,.qlink{
+  font:400 .78rem/1.5 Arial,Helvetica,sans-serif;
+  color:#666;text-decoration:none;margin-right:5px
+}
+.reference, .generic-source,.topic-source,.more,.evidence{
+  font:400 .74rem/1.62 Arial,Helvetica,sans-serif;
+  color:#606060
+}
+.topic-source,.more{margin:14px 0 8px}
+.generic-source{padding-bottom:8px}
+.generic-questions{
+  border:0;border-top:2px solid #292929;
+  padding:20px 0 0;margin:49px 0 0;scroll-margin-top:22px
+}
+.generic-questions > h2{margin-top:0}
+.sources,section.sources,section.citation,section.reference{
+  border:0;border-top:2px solid #222;background:transparent;
+  padding:17px 0 0;margin-top:44px;overflow-wrap:anywhere
+}
+.sources h2:first-child,.reference h2:first-child,.citation h2:first-child{margin-top:0}
+.citecode,pre{
+  background:#fff;color:#242424;border:1px solid #c8c8c8;border-radius:0;
+  padding:14px 17px;white-space:pre-wrap;overflow-wrap:anywhere;
+  font:400 .76rem/1.65 "Courier New",monospace
+}
+footer{border-top:1px solid #c6c6c6;color:#626262;background:#fff;
+  font:400 .73rem/1.65 Arial,Helvetica,sans-serif;
+  padding:23px 0 36px
+}
+@media(max-width:700px){
+  .wrap{width:min(100% - 34px,880px)}
+  header .wrap,header .top,header .header-inner{padding:19px 0 16px}
+  header nav{gap:9px 15px}
+  main.wrap,main{padding-top:30px;padding-bottom:45px}
+  h1{font-size:clamp(1.9rem,7vw,2.65rem)}
+  .metrics{grid-template-columns:1fr;padding:4px 0}
+  .metric{padding:14px 6px}
+  .metric + .metric{border-left:0;border-top:1px solid #dadada}
+  .toc ol,.generic-toc ol,.question-list ol{columns:1}
+  .topic,.topic-section,.generic-topic{padding-top:18px}
+  .qa h3,.answer-block h3,.generic-qa h4{font-size:1.12rem}
+}
+@media print{
+  header nav{display:none}
+  main.wrap,main{padding-top:18px}
+  .wrap{width:100%}
+  article a{color:#111}
+  .qa,.answer-block,.generic-qa{break-inside:avoid}
+}
+
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems","name":"Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems","author":[{"@type":"Person","name":"Samir Chincholikar","sameAs":"https://orcid.org/0009-0007-2779-3492"},{"@type":"Person","name":"Robin Chawla","sameAs":"https://orcid.org/0009-0007-2807-3948"}],"datePublished":"2026","isPartOf":{"@type":"Periodical","name":"IEEE Access"},"identifier":{"@type":"PropertyValue","propertyID":"DOI","value":"10.1109/ACCESS.2026.3745706"},"url":"https://doi.org/10.1109/ACCESS.2026.3745706","abstract":"Financial institutions increasingly deploy large language models (LLMs) within credit and other decision-support workflows. However, vendor-driven model updates can alter behavior even when an institution holds its prompts, inputs, and downstream processes fixed. We quantify the decision instability associated with two prespecified model-version transitions: an OpenAI efficient-model update and a Google Gemini Flash update. Across both transitions, the experiment covers 100 companies, 12 analysis dates, and three replicates per version, producing 14,400 model calls. Identical inputs and matched per-cell seeds hold sampling conditions fixed, and within-version replicate disagreement provides an empirical noise floor. The primary endpoint is the excess cross-version flip rate above this floor. For the OpenAI migration, the cross-version disagreement rate exceeds the within-version noise floor by 11.2 percentage points (95% CI: 7.7–14.9); for the Gemini migration this excess is 38.1 percentage points (95% CI: 30.2–45.8). A prevalence–churn decomposition shows that the OpenAI update primarily reconsiders individual companies and shifts decisions toward greater severity, while the Gemini update produces a broad distributional shift toward the SAFE category. Neither migration shows clear improvement among observations whose labels change; the Gemini successor also shows lower aggregate class-balanced performance. Vendor version migration can therefore create material, directionally unpredictable decision discontinuities within otherwise unchanged LLM pipelines. We propose a pre-migration parallel-run control that measures excess flip rate, label-distribution shift, per-company churn, and directional drift before production cutover. The findings provide controlled evidence of deployment-level migration risk; broader cross-task and cross-institution effects remain for future study.","about":["LLM model update regression","version migration risk","noise-adjusted flip rate","financial AI governance","algorithmic monoculture","model risk management","prevalence and churn decomposition","third-party model validation"],"subjectOf":{"@type":"WebPage","url":"https://samirrc2.github.io/version-migration-shock/"},"encoding":{"@type":"CreativeWork","name":"Archived Code Ocean reproducibility capsule","url":"https://doi.org/10.24433/CO.2874343.v2","identifier":"10.24433/CO.2874343.v2"}}</script>
 </head>
 <body>
-<header><div class="wrap"><span class="brand">Version migration · Financial AI research</span><nav aria-label="Navigation"><a href="#abstract">Paper abstract</a><a href="#citation-relevance">When to cite</a><a href="#questions">Research questions</a><a href="#generic-questions">Generic questions</a><a href="#citation">Citation</a></nav></div></header>
+<header><div class="wrap"><span class="brand">RESEARCH PAPERS</span><nav aria-label="Navigation"><a href="#abstract">Paper abstract</a><a href="#citation-relevance">When to cite</a><a href="#questions">Research questions</a><a href="#generic-questions">Generic questions</a><a href="#citation">Citation</a></nav></div></header>
 <main class="wrap">
 <p class="eyebrow">IEEE Access · peer-reviewed study · 2026</p>
 <h1>Version Migration as a Correlated Shock: Model Updates as an Unmanaged Risk Channel in LLM-Based Financial Systems</h1>
